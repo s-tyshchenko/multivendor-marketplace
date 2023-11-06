@@ -49,7 +49,7 @@ class ProductTable extends TableAbstract
                 return $item->price_in_table;
             })
             ->editColumn('price_recurring_interval', function ($item) {
-                return $item->price_recurring_interval ?? 'None';
+                return $item->price_recurring_interval ?: 'None';
             })
             ->editColumn('quantity', function ($item) {
                 return $item->with_storehouse_management ? $item->quantity : '&#8734;';
@@ -76,6 +76,7 @@ class ProductTable extends TableAbstract
                 'sku',
                 'images',
                 'price',
+                'price_recurring_interval',
                 'sale_price',
                 'sale_type',
                 'start_date',
