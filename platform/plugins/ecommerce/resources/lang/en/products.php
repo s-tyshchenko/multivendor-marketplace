@@ -93,6 +93,7 @@ return [
         'price_recurring_interval' => 'Recurring Interval'
     ],
     'price' => 'Price',
+    'price_recurring_interval' => 'Recurring Interval',
     'quantity' => 'Quantity',
     'type' => 'Type',
     'image' => 'Thumbnail',
