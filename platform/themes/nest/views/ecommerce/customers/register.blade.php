@@ -61,6 +61,16 @@
                                                     @endif
                                                     <span class="d-inline-block"><small data-base-url="{{ route('public.store', '') }}">{{ route('public.store', (string)old('shop_url')) }}</small></span>
                                                 </div>
+                                                <div class="form-group country-wrapper">
+                                                    <select class="form-control" name="country" id="country" placeholder="{{ __('Country') }}">
+                                                        @foreach(\Botble\Stripe\Services\Gateways\StripeConnectService::getAllowedCountriesList() as $code => $name)
+                                                            <option value="{{ $code }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('shop_url'))
+                                                        <span class="text-danger">{{ $errors->first('country') }}</span>
+                                                    @endif
+                                                </div>
                                                 <div class="form-group">
                                                     <input class="form-control" name="shop_phone" id="shop-phone" type="text" value="{{ old('shop_phone') }}" placeholder="{{ __('Shop phone') }}">
                                                     @if ($errors->has('shop_phone'))
