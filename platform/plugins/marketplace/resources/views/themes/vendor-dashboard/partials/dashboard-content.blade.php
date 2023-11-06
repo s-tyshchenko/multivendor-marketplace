@@ -1,11 +1,34 @@
 <div class="ps-section__left">
     <div class="row">
         <div class="col-12">
-            <button
-                id="vendor-retrieve-stripe-connect-link"
-                class="btn btn-primary"
-                data-action="{{ route('payments.stripe.connect-link') }}"
-            >Stripe Connect</button>
+            <div
+                class="alert alert-success"
+                role="alert"
+            >
+                @if (empty($user->vendorInfo->stripe_connect_id) || !$stripeConnectAccount->details_submitted)
+                    <h4 class="alert-heading">
+                        {{ __('Get started with Stripe Connect on our platform!') }}
+                    </h4>
+                    <p>{{ __('Connect Stripe Connect: Onboard to sell and receive payments') }}</p>
+                    <button
+                        id="vendor-retrieve-stripe-connect-link"
+                        class="btn btn-primary"
+                        data-action="{{ route('payments.stripe.connect-link') }}"
+                    >Create Stripe Connect Account
+                    </button>
+                @else
+                    <h4 class="alert-heading">
+                        {{ __('Manage your Stripe Connect account') }}
+                    </h4>
+                    <p>{{ __('Access your ordsers and earnings with ease') }}</p>
+                    <button
+                        id="vendor-retrieve-stripe-connect-link"
+                        class="btn btn-primary"
+                        data-action="{{ route('payments.stripe.connect-link') }}"
+                    >Log in to Stripe
+                    </button>
+                @endif
+            </div>
         </div>
 
         @if (!$totalProducts)
@@ -36,7 +59,7 @@
                             width="24"
                             height="24"
                         >
-                            <use xlink:href="#check-circle-fill" />
+                            <use xlink:href="#check-circle-fill"/>
                         </svg>
                         {{ __('Congratulations on being a vendor at :site_title', ['site_title' => theme_option('site_title')]) }}
                     </h4>
@@ -73,7 +96,7 @@
                             width="24"
                             height="24"
                         >
-                            <use xlink:href="#info-fill" />
+                            <use xlink:href="#info-fill"/>
                         </svg>
                         {{ __('You have :total product(s) but no orders yet', ['total' => $totalProducts]) }}
                     </h4>
@@ -157,37 +180,37 @@
                 <div class="table-responsive">
                     <table class="table ps-table">
                         <thead>
-                            <tr>
-                                <th>{{ __('ID') }}</th>
-                                <th>{{ __('Date') }}</th>
-                                <th>{{ __('Customer') }}</th>
-                                <th>{{ __('Payment') }}</th>
-                                <th>{{ __('Status') }}</th>
-                                <th>{{ __('Total') }}</th>
-                            </tr>
+                        <tr>
+                            <th>{{ __('ID') }}</th>
+                            <th>{{ __('Date') }}</th>
+                            <th>{{ __('Customer') }}</th>
+                            <th>{{ __('Payment') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th>{{ __('Total') }}</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @forelse ($data['orders'] as $order)
-                                <tr>
-                                    <td><a
-                                            href="{{ route('marketplace.vendor.orders.edit', $order->id) }}">{{ get_order_code($order->id) }}</a>
-                                    </td>
-                                    <td><strong>{{ $order->created_at->translatedFormat('M d, Y') }}</strong></td>
-                                    <td><a
-                                            href="{{ route('marketplace.vendor.orders.edit', $order->id) }}"><strong>{{ $order->user->name ?: $order->address->name }}</strong></a>
-                                    </td>
-                                    <td>{!! BaseHelper::clean($order->payment->status->toHtml()) !!}</td>
-                                    <td>{!! BaseHelper::clean($order->status->toHtml()) !!}</td>
-                                    <td><strong>{{ format_price($order->amount) }}</strong></td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td
-                                        class="text-center"
-                                        colspan="6"
-                                    >{{ __('No orders!') }}</td>
-                                </tr>
-                            @endforelse
+                        @forelse ($data['orders'] as $order)
+                            <tr>
+                                <td><a
+                                        href="{{ route('marketplace.vendor.orders.edit', $order->id) }}">{{ get_order_code($order->id) }}</a>
+                                </td>
+                                <td><strong>{{ $order->created_at->translatedFormat('M d, Y') }}</strong></td>
+                                <td><a
+                                        href="{{ route('marketplace.vendor.orders.edit', $order->id) }}"><strong>{{ $order->user->name ?: $order->address->name }}</strong></a>
+                                </td>
+                                <td>{!! BaseHelper::clean($order->payment->status->toHtml()) !!}</td>
+                                <td>{!! BaseHelper::clean($order->status->toHtml()) !!}</td>
+                                <td><strong>{{ format_price($order->amount) }}</strong></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td
+                                    class="text-center"
+                                    colspan="6"
+                                >{{ __('No orders!') }}</td>
+                            </tr>
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -209,33 +232,33 @@
                 <div class="table-responsive">
                     <table class="table ps-table">
                         <thead>
-                            <tr>
-                                <th>{{ __('ID') }}</th>
-                                <th>{{ __('Name') }}</th>
-                                <th>{{ __('Amount') }}</th>
-                                <th>{{ __('Status') }}</th>
-                                <th>{{ __('Created at') }}</th>
-                            </tr>
+                        <tr>
+                            <th>{{ __('ID') }}</th>
+                            <th>{{ __('Name') }}</th>
+                            <th>{{ __('Amount') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th>{{ __('Created at') }}</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @forelse ($data['products'] as $product)
-                                <tr>
-                                    <td>{{ $product->id }}</td>
-                                    <td><a
-                                            href="{{ route('marketplace.vendor.products.edit', $product->id) }}"><strong>{{ $product->name }}</strong></a>
-                                    </td>
-                                    <td><strong>{!! BaseHelper::clean($product->price_in_table) !!}</strong></td>
-                                    <td>{!! BaseHelper::clean($product->status->toHtml()) !!}</td>
-                                    <td><strong>{{ $product->created_at->translatedFormat('M d, Y') }}</strong></td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td
-                                        class="text-center"
-                                        colspan="6"
-                                    >{{ __('No products!') }}</td>
-                                </tr>
-                            @endforelse
+                        @forelse ($data['products'] as $product)
+                            <tr>
+                                <td>{{ $product->id }}</td>
+                                <td><a
+                                        href="{{ route('marketplace.vendor.products.edit', $product->id) }}"><strong>{{ $product->name }}</strong></a>
+                                </td>
+                                <td><strong>{!! BaseHelper::clean($product->price_in_table) !!}</strong></td>
+                                <td>{!! BaseHelper::clean($product->status->toHtml()) !!}</td>
+                                <td><strong>{{ $product->created_at->translatedFormat('M d, Y') }}</strong></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td
+                                    class="text-center"
+                                    colspan="6"
+                                >{{ __('No products!') }}</td>
+                            </tr>
+                        @endforelse
                         </tbody>
                     </table>
                 </div>

@@ -8,6 +8,7 @@ use Botble\Marketplace\Models\VendorInfo;
 use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Payment\Supports\PaymentHelper;
 use Botble\Stripe\Http\Requests\StripePaymentCallbackRequest;
+use Botble\Stripe\Services\Gateways\StripeConnectService;
 use Botble\Stripe\Services\Gateways\StripePaymentService;
 use Botble\Support\Http\Requests\Request;
 use Exception;
@@ -36,30 +37,20 @@ class StripeController extends Controller
         }
 
         if (empty($vendorInfo->stripe_connect_id)) {
-            $stripeAccount = \Stripe\Account::create([
-                'type' => 'express',
-                'email' => $customer->email
-            ]);
+            $stripeAccount = StripeConnectService::createAccount($customer->email);
 
             $vendorInfo->setAttribute('stripe_connect_id', $stripeAccount->id);
             $vendorInfo->save();
         }
 
         if (!isset($stripeAccount)) {
-            $stripeAccount = \Stripe\Account::retrieve($vendorInfo->stripe_connect_id);
+            $stripeAccount = StripeConnectService::getAccount($vendorInfo->stripe_connect_id);
         }
 
         if (!$stripeAccount->details_submitted) {
-            $accountLinks = \Stripe\AccountLink::create([
-                'account' => $vendorInfo->stripe_connect_id,
-                'refresh_url' => config('app.url') . '/vendor/stripe.php',
-                'return_url' => config('app.url') . '/vendor/account.php',
-                'type' => 'account_onboarding',
-            ]);
-
-            $link = $accountLinks->url;
+            $link = StripeConnectService::getOnboardingLink($vendorInfo->stripe_connect_id);
         } else {
-            $link = "https://dashboard.stripe.com/accounts/{$vendorInfo->stripe_connect_id}";
+            $link = StripeConnectService::getLoginLink($vendorInfo->stripe_connect_id);
         }
 
         return response()->json(['link' => $link]);

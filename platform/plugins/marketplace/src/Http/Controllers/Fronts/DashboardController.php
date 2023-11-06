@@ -21,6 +21,7 @@ use Botble\Media\Chunks\Receiver\FileReceiver;
 use Botble\Media\Facades\RvMedia;
 use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Slug\Facades\SlugHelper;
+use Botble\Stripe\Services\Gateways\StripeConnectService;
 use Botble\Theme\Facades\Theme;
 use Exception;
 use Illuminate\Auth\Events\Registered;
@@ -65,6 +66,7 @@ class DashboardController
         [$startDate, $endDate, $predefinedRange] = EcommerceHelper::getDateRangeInReport($request);
 
         $user = auth('customer')->user();
+        $stripeConnectAccount = StripeConnectService::getAccount($user->vendorInfo->stripe_connect_id);
         $store = $user->store;
         $data = compact('startDate', 'endDate', 'predefinedRange');
 
@@ -161,7 +163,7 @@ class DashboardController
 
         $totalProducts = $store->products()->count();
         $totalOrders = $store->orders()->count();
-        $compact = compact('user', 'store', 'data', 'totalProducts', 'totalOrders');
+        $compact = compact('user', 'stripeConnectAccount','store', 'data', 'totalProducts', 'totalOrders');
 
         if ($request->ajax()) {
             return $response
