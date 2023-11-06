@@ -66,7 +66,13 @@ class DashboardController
         [$startDate, $endDate, $predefinedRange] = EcommerceHelper::getDateRangeInReport($request);
 
         $user = auth('customer')->user();
-        $stripeConnectAccount = StripeConnectService::getAccount($user->vendorInfo->stripe_connect_id);
+
+        if (empty($user->vendorInfo->stripe_connect_id)) {
+            $stripeConnectAccount = StripeConnectService::createAccount($user->email);
+        } else {
+            $stripeConnectAccount = StripeConnectService::getAccount($user->vendorInfo->stripe_connect_id);
+        }
+
         $store = $user->store;
         $data = compact('startDate', 'endDate', 'predefinedRange');
 
