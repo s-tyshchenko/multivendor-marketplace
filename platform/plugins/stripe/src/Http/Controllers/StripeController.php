@@ -1,0 +1,132 @@
+<?php
+
+namespace Botble\Stripe\Http\Controllers;
+
+use Botble\Base\Http\Responses\BaseHttpResponse;
+use Botble\Ecommerce\Models\Customer;
+use Botble\Marketplace\Models\VendorInfo;
+use Botble\Payment\Enums\PaymentStatusEnum;
+use Botble\Payment\Supports\PaymentHelper;
+use Botble\Stripe\Http\Requests\StripePaymentCallbackRequest;
+use Botble\Stripe\Services\Gateways\StripePaymentService;
+use Botble\Support\Http\Requests\Request;
+use Exception;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Arr;
+use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
+
+class StripeController extends Controller
+{
+    public function connect()
+    {
+        Stripe::setApiKey(setting('payment_stripe_secret'));
+        Stripe::setClientId(setting('payment_stripe_client_id'));
+
+        /** @var Customer $customer */
+        $customer = auth('customer')->user();
+
+        /** @var VendorInfo $vendorInfo */
+        $vendorInfo = $customer->vendorInfo;
+
+        if (!$customer->is_vendor || empty($vendorInfo)) {
+            return response()->setStatusCode(403, 'You\'re not allowed to access this action');
+        }
+
+        if (empty($vendorInfo->stripe_connect_id)) {
+            $stripeAccount = \Stripe\Account::create([
+                'type' => 'express',
+                'email' => $customer->email
+            ]);
+
+            $vendorInfo->setAttribute('stripe_connect_id', $stripeAccount->id);
+            $vendorInfo->save();
+        }
+
+        if (!isset($stripeAccount)) {
+            $stripeAccount = \Stripe\Account::retrieve($vendorInfo->stripe_connect_id);
+        }
+
+        if (!$stripeAccount->details_submitted) {
+            $accountLinks = \Stripe\AccountLink::create([
+                'account' => $vendorInfo->stripe_connect_id,
+                'refresh_url' => config('app.url') . '/vendor/stripe.php',
+                'return_url' => config('app.url') . '/vendor/account.php',
+                'type' => 'account_onboarding',
+            ]);
+
+            $link = $accountLinks->url;
+        } else {
+            $link = "https://dashboard.stripe.com/accounts/{$vendorInfo->stripe_connect_id}";
+        }
+
+        return response()->json(['link' => $link]);
+    }
+
+    public function success(
+        StripePaymentCallbackRequest $request,
+        StripePaymentService $stripePaymentService,
+        BaseHttpResponse $response
+    )
+    {
+        try {
+            $stripePaymentService->setClient();
+
+            $session = Session::retrieve($request->input('session_id'));
+
+            if ($session->payment_status == 'paid') {
+                $metadata = $session->metadata->toArray();
+
+                $orderIds = json_decode($metadata['order_id'], true);
+
+                $charge = PaymentIntent::retrieve($session->payment_intent);
+
+                if (!$charge->latest_charge) {
+                    return $response
+                        ->setError()
+                        ->setNextUrl(PaymentHelper::getCancelURL())
+                        ->setMessage(__('No payment charge. Please try again!'));
+                }
+
+                $chargeId = $charge->latest_charge;
+
+                do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
+                    'amount' => $metadata['amount'],
+                    'currency' => strtoupper($session->currency),
+                    'charge_id' => $chargeId,
+                    'order_id' => $orderIds,
+                    'customer_id' => Arr::get($metadata, 'customer_id'),
+                    'customer_type' => Arr::get($metadata, 'customer_type'),
+                    'payment_channel' => STRIPE_PAYMENT_METHOD_NAME,
+                    'status' => PaymentStatusEnum::COMPLETED,
+                ]);
+
+                return $response
+                    ->setNextUrl(PaymentHelper::getRedirectURL() . '?charge_id=' . $chargeId)
+                    ->setMessage(__('Checkout successfully!'));
+            }
+
+            return $response
+                ->setError()
+                ->setNextUrl(PaymentHelper::getCancelURL())
+                ->setMessage(__('Payment failed!'));
+        } catch (Exception $exception) {
+            return $response
+                ->setError()
+                ->setNextUrl(PaymentHelper::getCancelURL())
+                ->withInput()
+                ->setMessage($exception->getMessage() ?: __('Payment failed!'));
+        }
+    }
+
+    public function error(BaseHttpResponse $response)
+    {
+        return $response
+            ->setError()
+            ->setNextUrl(PaymentHelper::getCancelURL())
+            ->withInput()
+            ->setMessage(__('Payment failed!'));
+    }
+}
