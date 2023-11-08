@@ -145,8 +145,8 @@ class ProductCategoryHelper
                 'ec_product_categories.name',
                 'parent_id',
             ])
-            ->orderByDesc('created_at')
-            ->orderBy('order');
+            ->orderBy('order')
+            ->orderByDesc('created_at');
 
         $categories = $this->applyQuery($query)->get();
 
@@ -187,8 +187,8 @@ class ProductCategoryHelper
         }
 
         $query = $query
-            ->orderByDesc('ec_product_categories.created_at')
             ->orderBy('ec_product_categories.order')
+            ->orderByDesc('ec_product_categories.created_at')
             ->when(
                 ! empty($categoryIds),
                 fn (Builder $query) => $query->whereIn('ec_product_categories.id', $categoryIds)

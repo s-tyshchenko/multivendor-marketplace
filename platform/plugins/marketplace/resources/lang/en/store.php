@@ -44,5 +44,4 @@ return [
     'vendor_information' => 'Vendor information',
     'vendor_name' => 'Name',
     'withdrawal_approval_notification' => 'This withdrawal request has been created by :vendor. Their current balance is :balance.',
-    'create_custom_order' => 'Create custom order'
 ];

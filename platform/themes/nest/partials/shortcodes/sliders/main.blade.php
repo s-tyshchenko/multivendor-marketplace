@@ -119,11 +119,11 @@
                                         @foreach ($categories->take(10) as $category)
                                             <li>
                                                 <a href="{{ $category->url }}">
-                                                    @if ($category->getMetaData('icon_image', true))
-                                                        <img src="{{ RvMedia::getImageUrl($category->getMetaData('icon_image', true)) }}" alt="{{ $category->name }}" width="30" height="30">
-                                                    @elseif ($category->getMetaData('icon', true))
-                                                        <i class="{{ $category->getMetaData('icon', true) }}"></i>
-                                                    @endif {!! BaseHelper::clean($category->name) !!}
+                                                    @if ($categoryImage = $category->icon_image)
+                                                        <img src="{{ RvMedia::getImageUrl($categoryImage) }}" alt="{{ $category->name }}" width="30" height="30">
+                                                    @elseif ($categoryIcon = $category->icon)
+                                                        <i class="{{ $categoryIcon }}"></i>
+                                                    @endif {{ $category->name }}
                                                 </a>
                                             </li>
                                         @endforeach
@@ -136,11 +136,11 @@
                                             @foreach ($categories->skip(10) as $category)
                                                 <li>
                                                     <a href="{{ $category->url }}">
-                                                        @if ($category->getMetaData('icon_image', true))
-                                                            <img src="{{ RvMedia::getImageUrl($category->getMetaData('icon_image', true)) }}" alt="{{ $category->name }}" width="30" height="30">
-                                                        @elseif ($category->getMetaData('icon', true))
-                                                            <i class="{{ $category->getMetaData('icon', true) }}"></i>
-                                                        @endif {!! BaseHelper::clean($category->name) !!}
+                                                        @if ($categoryImage = $category->icon_image)
+                                                            <img src="{{ RvMedia::getImageUrl($categoryImage) }}" alt="{{ $category->name }}" width="30" height="30">
+                                                        @elseif ($categoryIcon = $category->icon)
+                                                            <i class="{{ $categoryIcon }}"></i>
+                                                        @endif {{ $category->name }}
                                                     </a>
                                                 </li>
                                             @endforeach
@@ -182,10 +182,10 @@
                         </div>
                     </div>
                     <div class="col-lg-3">
-                        <div class="row">
+                        <div class="row mt-20">
                             @if (is_plugin_active('ads'))
                                 @foreach (get_ads_keys_from_shortcode($shortcode) as $key)
-                                    <div class="col-md-6 col-lg-12">
+                                    <div class="col-md-6 col-lg-12 mt-10">
                                         {!! display_ad($key, 'banner-' . ($loop->index + 1)) !!}
                                     </div>
                                 @endforeach
@@ -195,7 +195,6 @@
                 </div>
             </div>
         </section>
-        <!--End hero slider-->
     @else
         <section class="home-slider position-relative mb-30">
             <div class="home-slide-cover">

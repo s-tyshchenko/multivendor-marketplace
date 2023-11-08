@@ -1,4 +1,4 @@
-@if ($keys->count())
+@if ($keys->isNotEmpty())
     @if ($style == 'style-5')
         <section class="section-padding">
             <div class="container">

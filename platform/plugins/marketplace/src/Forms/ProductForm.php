@@ -16,6 +16,7 @@ use Botble\Ecommerce\Models\Product;
 use Botble\Ecommerce\Models\ProductAttributeSet;
 use Botble\Ecommerce\Models\ProductCollection;
 use Botble\Ecommerce\Models\ProductLabel;
+use Botble\Ecommerce\Models\ProductTag;
 use Botble\Ecommerce\Models\ProductVariation;
 use Botble\Ecommerce\Models\Tax;
 use Botble\Marketplace\Facades\MarketplaceHelper;
@@ -57,7 +58,12 @@ class ProductForm extends BaseProductForm
                 ->where('configurable_product_id', $productId)
                 ->count();
 
-            $tags = $this->getModel()->tags()->pluck('name')->implode(',');
+            $tags = $this->getModel()
+                ->tags()
+                ->select('name')
+                ->get()
+                ->map(fn (ProductTag $item) => $item->name)
+                ->implode(',');
         }
 
         $productAttributeSets = ProductAttributeSet::getAllWithSelected($productId, []);

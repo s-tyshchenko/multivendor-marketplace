@@ -85,7 +85,6 @@ class SaveVendorInformationListener
                 // Create vendor info
                 VendorInfo::query()->create([
                     'customer_id' => $customer->getKey(),
-                    'country' => BaseHelper::clean($this->request->input('country')),
                 ]);
             }
 

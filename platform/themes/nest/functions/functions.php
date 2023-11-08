@@ -311,13 +311,6 @@ add_action([BASE_ACTION_AFTER_CREATE_CONTENT, BASE_ACTION_AFTER_UPDATE_CONTENT],
             break;
 
         case ProductCategory::class:
-            if ($request->has('icon')) {
-                MetaBox::saveMetaBoxData($object, 'icon', $request->input('icon'));
-            }
-
-            if ($request->has('icon_image')) {
-                MetaBox::saveMetaBoxData($object, 'icon_image', $request->input('icon_image'));
-            }
 
             if ($request->has('background_color')) {
                 MetaBox::saveMetaBoxData($object, 'background_color', $request->input('background_color'));

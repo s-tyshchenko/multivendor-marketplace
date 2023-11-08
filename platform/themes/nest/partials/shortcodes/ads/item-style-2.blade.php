@@ -1,5 +1,5 @@
 <div class="banner-img style-6 wow animate__animated animate__fadeInUp {{ $class ?? '' }}" @if (!empty($loop)) data-wow-delay="{{ $loop->iteration * 2 / 10 }}" @endif>
-    <img src="{{ RvMedia::getImageUrl($ads->image) }}" alt="{{ $ads->name }}">
+    {!! AdsManager::displayAds($ads->key) !!}
     <div class="banner-text">
         <p class="mb-10 mt-30 font-heading h6">{!! BaseHelper::clean(nl2br($ads->getMetaData('subtitle', true) ?: '')) !!}</p>
         @if ($buttonText = $ads->getMetaData('button_text', true))

@@ -3,65 +3,23 @@
 namespace Botble\Stripe\Http\Controllers;
 
 use Botble\Base\Http\Responses\BaseHttpResponse;
-use Botble\Ecommerce\Models\Customer;
-use Botble\Marketplace\Models\VendorInfo;
 use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Payment\Supports\PaymentHelper;
 use Botble\Stripe\Http\Requests\StripePaymentCallbackRequest;
-use Botble\Stripe\Services\Gateways\StripeConnectService;
 use Botble\Stripe\Services\Gateways\StripePaymentService;
-use Botble\Support\Http\Requests\Request;
 use Exception;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Stripe\Checkout\Session;
-use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
-use Stripe\Stripe;
 
 class StripeController extends Controller
 {
-    public function connect()
-    {
-        Stripe::setApiKey(setting('payment_stripe_secret'));
-        Stripe::setClientId(setting('payment_stripe_client_id'));
-
-        /** @var Customer $customer */
-        $customer = auth('customer')->user();
-
-        /** @var VendorInfo $vendorInfo */
-        $vendorInfo = $customer->vendorInfo;
-
-        if (!$customer->is_vendor || empty($vendorInfo)) {
-            return response()->setStatusCode(403, 'You\'re not allowed to access this action');
-        }
-
-        if (empty($vendorInfo->stripe_connect_id)) {
-            $stripeAccount = StripeConnectService::createAccount($customer->email);
-
-            $vendorInfo->setAttribute('stripe_connect_id', $stripeAccount->id);
-            $vendorInfo->save();
-        }
-
-        if (!isset($stripeAccount)) {
-            $stripeAccount = StripeConnectService::getAccount($vendorInfo->stripe_connect_id);
-        }
-
-        if (!$stripeAccount->details_submitted) {
-            $link = StripeConnectService::getOnboardingLink($vendorInfo->stripe_connect_id);
-        } else {
-            $link = StripeConnectService::getLoginLink($vendorInfo->stripe_connect_id);
-        }
-
-        return response()->json(['link' => $link]);
-    }
-
     public function success(
         StripePaymentCallbackRequest $request,
         StripePaymentService $stripePaymentService,
         BaseHttpResponse $response
-    )
-    {
+    ) {
         try {
             $stripePaymentService->setClient();
 
@@ -74,7 +32,7 @@ class StripeController extends Controller
 
                 $charge = PaymentIntent::retrieve($session->payment_intent);
 
-                if (!$charge->latest_charge) {
+                if (! $charge->latest_charge) {
                     return $response
                         ->setError()
                         ->setNextUrl(PaymentHelper::getCancelURL())

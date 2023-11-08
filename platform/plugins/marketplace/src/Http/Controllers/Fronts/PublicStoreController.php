@@ -3,10 +3,8 @@
 namespace Botble\Marketplace\Http\Controllers\Fronts;
 
 use Botble\Base\Enums\BaseStatusEnum;
-use Botble\Base\Facades\Assets;
 use Botble\Base\Facades\BaseHelper;
 use Botble\Base\Http\Responses\BaseHttpResponse;
-use Botble\Ecommerce\Facades\Cart;
 use Botble\Ecommerce\Facades\EcommerceHelper;
 use Botble\Ecommerce\Services\Products\GetProductService;
 use Botble\Marketplace\Facades\MarketplaceHelper;
@@ -74,10 +72,6 @@ class PublicStoreController
         if (! $slug) {
             abort(404);
         }
-
-        Assets::addScriptsDirectly([
-            'vendor/core/plugins/marketplace/js/custom-order.js',
-        ]);
 
         $condition = [
             'mp_stores.id' => $slug->reference_id,

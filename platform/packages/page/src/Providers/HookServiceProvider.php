@@ -11,6 +11,9 @@ use Botble\Menu\Facades\Menu;
 use Botble\Page\Models\Page;
 use Botble\Page\Services\PageService;
 use Botble\Slug\Models\Slug;
+use Botble\Table\Columns\Column;
+use Botble\Table\Columns\NameColumn;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,6 +58,17 @@ class HookServiceProvider extends ServiceProvider
         }
 
         add_filter(PAGE_FILTER_FRONT_PAGE_CONTENT, fn (string|null $html) => (string) $html, 1, 2);
+
+        add_filter('table_name_column_data', [$this, 'appendPageName'], 2, 3);
+    }
+
+    public function appendPageName(string $value, Model $model, Column $column)
+    {
+        if ($column instanceof NameColumn && $model instanceof Page) {
+            $value = apply_filters(PAGE_FILTER_PAGE_NAME_IN_ADMIN_LIST, $value, $model);
+        }
+
+        return $value;
     }
 
     public function addThemeOptions(): void

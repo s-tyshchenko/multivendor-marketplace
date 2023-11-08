@@ -7,7 +7,6 @@ use Botble\Ecommerce\Cart\Contracts\Buyable;
 use Botble\Ecommerce\Cart\Exceptions\CartAlreadyStoredException;
 use Botble\Ecommerce\Cart\Exceptions\UnknownModelException;
 use Botble\Ecommerce\Facades\EcommerceHelper;
-use Botble\Ecommerce\Models\Product;
 use Botble\Ecommerce\Repositories\Interfaces\ProductInterface;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -56,10 +55,9 @@ class Cart
      * @param int|float $qty
      * @param float $price
      * @param array $options
-     * @param bool $isCustom
      * @return array|\Botble\Ecommerce\Cart\CartItem
      */
-    public function add($id, $name = null, $qty = null, $price = null, array $options = [], $isCustom = false)
+    public function add($id, $name = null, $qty = null, $price = null, array $options = [])
     {
         if ($this->isMulti($id)) {
             return array_map(function ($item) {
@@ -67,7 +65,7 @@ class Cart
             }, $id);
         }
 
-        $cartItem = $this->createCartItem($id, $name, $qty, $price, $options, $isCustom);
+        $cartItem = $this->createCartItem($id, $name, $qty, $price, $options);
 
         $content = $this->getContent();
 
@@ -109,10 +107,9 @@ class Cart
      * @param int|float $qty
      * @param float $price
      * @param array $options
-     * @param bool $isCustom
      * @return \Botble\Ecommerce\Cart\CartItem
      */
-    protected function createCartItem($id, $name, $qty, $price, array $options, $isCustom = false)
+    protected function createCartItem($id, $name, $qty, $price, array $options)
     {
         if (
             EcommerceHelper::isEnabledProductOptions() &&
@@ -130,7 +127,7 @@ class Cart
             $cartItem = CartItem::fromArray($id);
             $cartItem->setQuantity($id['qty']);
         } else {
-            $cartItem = CartItem::fromAttributes($id, $name, $price, $options, $isCustom);
+            $cartItem = CartItem::fromAttributes($id, $name, $price, $options);
             $cartItem->setQuantity($qty);
         }
 
@@ -685,29 +682,19 @@ class Cart
 
         $productsInCart = new EloquentCollection();
 
-//        if ($products->count()) {
+        if ($products->count()) {
             foreach ($cartContent as $cartItem) {
-                if ($cartItem->isCustom) {
-                    $productInCart = new Product([
-                        'id' => $cartItem->id,
-                        'title' => 'Custom product',
-                        'description' => $cartItem->options['note']
-                    ]);
+                $product = $products->firstWhere('id', $cartItem->id);
+                if (! $product || $product->original_product->status != BaseStatusEnum::PUBLISHED) {
+                    $this->remove($cartItem->rowId);
+                } else {
+                    $productInCart = clone $product;
                     $productInCart->cartItem = $cartItem;
                     $productsInCart->push($productInCart);
-                } else {
-                    $product = $products->firstWhere('id', $cartItem->id);
-                    if ($product->original_product->status != BaseStatusEnum::PUBLISHED) {
-                        $this->remove($cartItem->rowId);
-                    } else {
-                        $productInCart = clone $product;
-                        $productInCart->cartItem = $cartItem;
-                        $productsInCart->push($productInCart);
-                        $weight += $product->weight * $cartItem->qty;
-                    }
+                    $weight += $product->weight * $cartItem->qty;
                 }
             }
-//        }
+        }
 
         $weight = EcommerceHelper::validateOrderWeight($weight);
 

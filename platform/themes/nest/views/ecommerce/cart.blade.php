@@ -35,26 +35,9 @@
                                                 <img src="{{ RvMedia::getImageUrl($cartItem->options['image'], 'thumb', false, RvMedia::getDefaultImage()) }}" alt="{{ $product->original_product->name }}" />
                                             </td>
                                             <td class="product-des product-name">
-                                                @if (!$cartItem->isCustom)
-                                                    <p class="mb-5 font-heading h6">
-                                                        <a class="product-name mb-10 text-heading" href="{{ $product->original_product->url }}">{{ $product->original_product->name }}  @if ($product->isOutOfStock()) <span class="stock-status-label">({!! $product->stock_status_html !!})</span> @endif</a>
-                                                    </p>
-                                                @else
-                                                    <p class="mb-5 font-heading h6">
-                                                        <span class="product-name mb-10 text-heading">Custom product</span>
-                                                    </p>
-                                                    @if ($cartItem->options['note'])
-                                                        <small class="product-name mb-10 text-heading"><strong>Note: </strong> {{ $cartItem->options['note'] }}</small>
-                                                    @endif
-                                                @endif
-                                                @if ($cartItem->isCustom && $cartItem->options['store'])
-                                                    <p class="d-block mb-0 sold-by">
-                                                        <small>
-                                                            <span>{{ __('Sold by') }}: </span>
-                                                            <a href="{{ $cartItem->options['store']->url }}">{{ $cartItem->options['store']->name }}</a>
-                                                        </small>
-                                                    </p>
-                                                @endif
+                                                <p class="mb-5 font-heading h6">
+                                                    <a class="product-name mb-10 text-heading" href="{{ $product->original_product->url }}">{{ $product->original_product->name }}  @if ($product->isOutOfStock()) <span class="stock-status-label">({!! $product->stock_status_html !!})</span> @endif</a>
+                                                </p>
                                                 @if (is_plugin_active('marketplace') && $product->original_product->store->id)
                                                     <p class="d-block mb-0 sold-by">
                                                         <small>
@@ -97,12 +80,11 @@
                                             <td class="text-center detail-info" data-title="{{ __('Stock') }}">
                                                 <div class="detail-extralink mr-15">
                                                     <div class="detail-qty border radius m-auto">
-                                                        @if (!$cartItem->isCustom) <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a> @endif
+                                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
                                                         <input type="number" min="1" value="{{ $cartItem->qty }}" name="items[{{ $key }}][values][qty]" class="qty-val qty-input" />
-                                                        @if (!$cartItem->isCustom) <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a> @endif
+                                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                                     </div>
                                                 </div>
-
                                             </td>
                                             <td class="price" data-title="{{ __('Price') }}">
                                                 <h4 class="text-brand">{{ format_price($cartItem->price * $cartItem->qty) }} </h4>

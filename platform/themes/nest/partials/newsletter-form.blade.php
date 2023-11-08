@@ -7,7 +7,7 @@
         </div>
 
         @if (setting('enable_captcha') && is_plugin_active('captcha'))
-            <div class="col-auto">
+            <div class="form-subscribe d-flex bg-transparent mt-2">
                 {!! Captcha::display() !!}
             </div>
         @endif

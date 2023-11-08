@@ -3,12 +3,10 @@
 namespace Botble\Ecommerce\Http\Controllers\Fronts;
 
 use Botble\Base\Http\Responses\BaseHttpResponse;
-use Botble\Chart\Supports\Base;
 use Botble\Ecommerce\Facades\Cart;
 use Botble\Ecommerce\Facades\EcommerceHelper;
 use Botble\Ecommerce\Facades\OrderHelper;
 use Botble\Ecommerce\Http\Requests\CartRequest;
-use Botble\Ecommerce\Http\Requests\CustomCartRequest;
 use Botble\Ecommerce\Http\Requests\UpdateCartRequest;
 use Botble\Ecommerce\Models\Product;
 use Botble\Ecommerce\Services\HandleApplyCouponService;
@@ -25,7 +23,6 @@ class PublicCartController extends Controller
         protected HandleApplyPromotionsService $applyPromotionsService,
         protected HandleApplyCouponService $handleApplyCouponService
     ) {
-
     }
     public function index()
     {
@@ -63,7 +60,8 @@ class PublicCartController extends Controller
         )->render();
     }
 
-    protected function getCartData(): array {
+    protected function getCartData(): array
+    {
         $products = Cart::instance('cart')->products();
 
         $promotionDiscountAmount = $this->applyPromotionsService->execute();
@@ -85,23 +83,6 @@ class PublicCartController extends Controller
         }
 
         return [$products, $promotionDiscountAmount, $couponDiscountAmount];
-    }
-
-    public function storeCustom(CustomCartRequest $request, BaseHttpResponse $response)
-    {
-        if (! EcommerceHelper::isCartEnabled()) {
-            abort(404);
-        }
-
-        $cartItems = OrderHelper::handleAddCustomCart($request);
-
-        return $response
-            ->setData([
-                'status' => true,
-                'count' => Cart::instance('cart')->count(),
-                'total_price' => format_price(Cart::instance('cart')->rawSubTotal()),
-                'content' => $cartItems,
-            ]);
     }
 
     public function store(CartRequest $request, BaseHttpResponse $response)

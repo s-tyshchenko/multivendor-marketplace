@@ -25,10 +25,10 @@
                     @endif
                 </div>
                 <div class="col-xl-4 col-lg-6 col-md-6 text-end d-none d-md-block">
-                    @if (theme_option('social_links'))
+                    @if ($socialLinks = theme_option('social_links'))
                         <div class="mobile-social-icon">
-                            <p class="font-heading h6">{{ __('Follow Us') }}</p>
-                            @foreach(json_decode(theme_option('social_links'), true) as $socialLink)
+                            <p class="font-heading h6 me-2">{{ __('Follow Us') }}</p>
+                            @foreach(json_decode($socialLinks, true) as $socialLink)
                                 @if (count($socialLink) == 3)
                                     <a href="{{ $socialLink[2]['value'] }}"
                                        title="{{ $socialLink[0]['value'] }}">

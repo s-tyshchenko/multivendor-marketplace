@@ -65,22 +65,14 @@ class CartItem implements Arrayable, Jsonable
     protected $taxRate = 0;
 
     /**
-     * Whether the product is a custom request from customer, product not stored in the db.
-     *
-     * @var bool|mixed
-     */
-    protected $isCustom = false;
-
-    /**
      * CartItem constructor.
      *
      * @param int|string $id
      * @param string $name
      * @param float $price
      * @param array $options
-     * @param bool $type
      */
-    public function __construct($id, $name, $price, array $options = [], $isCustom = false)
+    public function __construct($id, $name, $price, array $options = [])
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Please supply a valid identifier.');
@@ -97,7 +89,6 @@ class CartItem implements Arrayable, Jsonable
         $this->price = $price;
         $this->options = new CartItemOptions($options);
         $this->rowId = $this->generateRowId($id, $options);
-        $this->isCustom = $isCustom;
         $this->created_at = Carbon::now();
         $this->updated_at = Carbon::now();
     }
@@ -325,12 +316,11 @@ class CartItem implements Arrayable, Jsonable
      * @param string $name
      * @param float $price
      * @param array $options
-     * @param string $type
      * @return \Botble\Ecommerce\Cart\CartItem
      */
-    public static function fromAttributes($id, $name, $price, array $options = [], $type = 'regular')
+    public static function fromAttributes($id, $name, $price, array $options = [])
     {
-        return new self($id, $name, $price, $options, $type);
+        return new self($id, $name, $price, $options);
     }
 
     /**

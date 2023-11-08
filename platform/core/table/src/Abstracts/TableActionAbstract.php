@@ -7,15 +7,19 @@ use Botble\Table\Abstracts\Concerns\HasConfirmation;
 use Botble\Table\Abstracts\Concerns\HasLabel;
 use Botble\Table\Abstracts\Concerns\HasPermissions;
 use Botble\Table\Abstracts\Concerns\HasPriority;
+use Botble\Table\Abstracts\Concerns\Renderable;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Traits\Conditionable;
 use Stringable;
 
 abstract class TableActionAbstract implements Htmlable, Stringable
 {
+    use Conditionable;
     use HasConfirmation;
     use HasLabel;
     use HasPermissions;
     use HasPriority;
+    use Renderable;
 
     protected BaseModel $model;
 
@@ -44,8 +48,6 @@ abstract class TableActionAbstract implements Htmlable, Stringable
     {
         return $this->model;
     }
-
-    abstract public function render();
 
     public function toHtml(): string
     {

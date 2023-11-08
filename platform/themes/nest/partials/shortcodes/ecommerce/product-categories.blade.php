@@ -16,7 +16,9 @@
                 @foreach($categories as $category)
                     <div class="card-1">
                         <figure class="img-hover-scale overflow-hidden">
-                            <a href="{{ $category->url }}"><img src="{{ RvMedia::getImageUrl($category->getMetaData('icon_image', true), null, false, RvMedia::getDefaultImage()) }}" alt="{{ $category->name }}" /></a>
+                            <a href="{{ $category->url }}">
+                                {{ RvMedia::image($category->icon_image, $category->name) }}
+                            </a>
                         </figure>
                         <p class="font-heading h6"><a href="{{ $category->url }}" title="{{ $category->name }}">{{ $category->name }}</a></p>
                     </div>

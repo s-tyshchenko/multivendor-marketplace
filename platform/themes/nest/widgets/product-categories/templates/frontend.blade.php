@@ -5,7 +5,11 @@
             @foreach($categories as $category)
                 <li>
                     <a href="{{ $category->url }}">
-                        <img src="{{ RvMedia::getImageUrl($category->getMetaData('icon_image', true), null, false, RvMedia::getDefaultImage()), }}" alt="{{ $category->name }}" />{{ $category->name }}
+                        @if ($categoryImage = $category->icon_image)
+                            {{ RvMedia::image($category->icon_image, $category->name) }}
+                        @elseif ($categoryIcon = $category->icon)
+                            <i class="{{ $categoryIcon }}"></i>
+                        @endif {{ $category->name }}
                     </a>
                     <span class="count">{{ $category->products_count }}</span>
                 </li>

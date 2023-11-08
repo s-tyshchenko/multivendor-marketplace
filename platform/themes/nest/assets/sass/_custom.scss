@@ -2117,3 +2117,15 @@ input.qty-input[type=number] {
 }
 
 @import 'select2';
+
+.product-list {
+    .product-cart-wrap {
+        .product-content-wrap {
+            max-width: 72%;
+
+            h2 {
+                line-height: 36px;
+            }
+        }
+    }
+}

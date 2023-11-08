@@ -20,8 +20,6 @@ class VendorInfo extends BaseModel
         'bank_info',
         'tax_info',
         'payout_payment_method',
-        'stripe_connect_id',
-        'country'
     ];
 
     protected $casts = [

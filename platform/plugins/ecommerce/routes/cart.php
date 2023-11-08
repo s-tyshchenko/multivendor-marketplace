@@ -14,11 +14,6 @@ Route::group(['namespace' => 'Botble\Ecommerce\Http\Controllers\Fronts', 'middle
             'uses' => 'PublicCartController@store',
         ]);
 
-        Route::post('cart/add-to-cart-custom', [
-            'as' => 'public.cart.add-to-cart-custom',
-            'uses' => 'PublicCartController@storeCustom',
-        ]);
-
         Route::post('cart/update', [
             'as' => 'public.cart.update',
             'uses' => 'PublicCartController@update',

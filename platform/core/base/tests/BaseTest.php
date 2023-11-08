@@ -13,7 +13,7 @@ class BaseTest extends TestCase
     {
         $this->withoutEvents();
 
-        $auth = User::first();
+        $auth = User::query()->first();
 
         if ($auth) {
             $this->be($auth);

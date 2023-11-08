@@ -101,22 +101,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4 price-recurring-interval">
-            <div class="form-group mb-3">
-                <label class="text-title-field">{{ trans('plugins/ecommerce::products.form.price_recurring_interval') }}</label>
-                <select
-                    class="next-input price-recurring-interval"
-                    name="price_recurring_interval"
-                >
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == null ? "selected=\"1\"" : "") }} value="">None</option>
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == "day" ? "selected=\"1\"" : "") }} value="day">Day</option>
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == "week" ? "selected=\"1\"" : "") }} value="week">Week</option>
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == "month" ? "selected=\"1\"" : "") }} value="month">Month</option>
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == "year" ? "selected=\"1\"" : "") }} value="year">Year</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="form-group mb-3">
                 <label class="text-title-field">{{ trans('plugins/ecommerce::products.form.cost_per_item') }}</label>
                 <div class="next-input--stylized">
@@ -139,7 +124,7 @@
             type="hidden"
             value="{{ $product->id ?? null }}"
         >
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="form-group mb-3">
                 <label class="text-title-field">{{ trans('plugins/ecommerce::products.form.barcode') }}</label>
                 <div class="next-input--stylized">

@@ -66,7 +66,7 @@ trait HasBulkActions
                     return $collection->merge([
                         -1 => view('core/table::bulk-changes', [
                             'bulk_changes' => $bulkChanges,
-                            'class' => get_class($this),
+                            'class' => $this::class,
                             'url' => $this->getBulkChangeUrl(),
                         ])->render(),
                     ]);
@@ -77,7 +77,7 @@ trait HasBulkActions
                 if (is_string($action) && class_exists($action) || $action instanceof TableBulkActionAbstract) {
                     $action = $action instanceof TableBulkActionAbstract ? $action : app($action);
                     $action->table($this);
-                    $key = get_class($action);
+                    $key = $action::class;
                 }
 
                 return [$key => $action];

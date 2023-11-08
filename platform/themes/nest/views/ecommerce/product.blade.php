@@ -64,12 +64,7 @@
                 </div>
                 <div class="clearfix product-price-cover">
                     <div class="product-price primary-color float-left">
-                        <span class="current-price text-brand">
-                            {{ format_price($product->front_sale_price_with_taxes) }}
-                            @if (!is_null($product->price_recurring_interval))
-                                <span class="font-weight-normal"> per {{ $product->price_recurring_interval }}</span>
-                            @endif
-                        </span>
+                        <span class="current-price text-brand">{{ format_price($product->front_sale_price_with_taxes) }}</span>
                             <span>
                                 <span class="save-price font-md color3 ml-15 @if ($product->front_sale_price == $product->price) d-none @endif">
                                     <span class="percentage-off">{{ get_sale_percentage($product->price, $product->front_sale_price) }} {{ __('Off') }}</span>

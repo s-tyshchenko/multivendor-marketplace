@@ -11,7 +11,6 @@ use Botble\Base\Facades\Html;
 use Botble\Base\Models\BaseModel;
 use Botble\Base\Supports\Enum;
 use Botble\Media\Facades\RvMedia;
-use Botble\Page\Models\Page;
 use Botble\Table\Abstracts\Concerns\HasActions;
 use Botble\Table\Abstracts\Concerns\HasBulkActions;
 use Botble\Table\Abstracts\Concerns\HasFilters;
@@ -24,7 +23,6 @@ use Botble\Table\Columns\EnumColumn;
 use Botble\Table\Columns\IdColumn;
 use Botble\Table\Columns\ImageColumn;
 use Botble\Table\Columns\LinkableColumn;
-use Botble\Table\Columns\NameColumn;
 use Botble\Table\Columns\RowActionsColumn;
 use Botble\Table\Columns\YesNoColumn;
 use Botble\Table\Supports\Builder as CustomTableBuilder;
@@ -111,14 +109,12 @@ abstract class TableAbstract extends DataTable
         $this->ajaxUrl = $urlGenerator->current();
 
         if (! $this->getOption('id')) {
-            $this->setOption('id', strtolower(Str::slug(Str::snake(get_class($this)))));
+            $this->setOption('id', strtolower(Str::slug(Str::snake($this::class))));
         }
 
         if (! $this->getOption('class')) {
             $this->setOption('class', 'table table-striped table-hover vertical-middle');
         }
-
-        $this->hasColumnVisibility = (bool) setting('datatables_default_show_column_visibility');
 
         $this->setup();
 
@@ -414,7 +410,7 @@ abstract class TableAbstract extends DataTable
 
     public function getButtons(): array
     {
-        $buttons = apply_filters(BASE_FILTER_TABLE_BUTTONS, $this->buttons(), get_class($this->getModel()));
+        $buttons = apply_filters(BASE_FILTER_TABLE_BUTTONS, $this->buttons(), $this->getModel()::class);
 
         if (! $buttons) {
             return [];
@@ -493,6 +489,8 @@ abstract class TableAbstract extends DataTable
         if (setting('datatables_default_show_export_button')) {
             $buttons[] = 'export';
         }
+
+        $this->hasColumnVisibility = (bool) setting('datatables_default_show_column_visibility');
 
         if ($this->hasColumnVisibility) {
             $buttons[] = [
@@ -775,11 +773,7 @@ abstract class TableAbstract extends DataTable
 
                                 $value = Html::link(route($route[0], $route[1] ?: $item->getKey(), $route[2]), $valueTruncated, ['title' => $value]);
 
-                                if ($column instanceof NameColumn && $item instanceof Page) {
-                                    $value = apply_filters(PAGE_FILTER_PAGE_NAME_IN_ADMIN_LIST, $value, $item);
-                                }
-
-                                return $value;
+                                return apply_filters('table_name_column_data', $value, $item, $column);
                             });
 
                         break;

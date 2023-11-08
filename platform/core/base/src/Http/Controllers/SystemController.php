@@ -91,7 +91,6 @@ class SystemController extends Controller
             case 'clear_cms_cache':
                 $clearCacheService->clearFrameworkCache();
                 $clearCacheService->clearGoogleFontsCache();
-                $clearCacheService->clearMenuCache();
                 $clearCacheService->clearPurifier();
                 $clearCacheService->clearDebugbar();
 
@@ -330,8 +329,6 @@ class SystemController extends Controller
                 SystemUpdaterStepEnum::UPDATE_DATABASE => $core->updateDatabase(),
                 SystemUpdaterStepEnum::PUBLISH_CORE_ASSETS => $core->publishCoreAssets(),
                 SystemUpdaterStepEnum::PUBLISH_PACKAGES_ASSETS => $core->publishPackagesAssets(),
-                SystemUpdaterStepEnum::PUBLISH_PLUGINS_ASSETS => $core->publishPluginsAssets(),
-                SystemUpdaterStepEnum::PUBLISH_THEMES_ASSETS => $core->publishThemesAssets(),
                 SystemUpdaterStepEnum::CLEAN_UP => $core->cleanUp(),
                 default => throw new Exception(__('Invalid step.')),
             };

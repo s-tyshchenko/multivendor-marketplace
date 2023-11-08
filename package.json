@@ -20,7 +20,7 @@
     },
     "devDependencies": {
         "@fullhuman/postcss-purgecss": "^5.0.0",
-        "@shufo/prettier-plugin-blade": "^1.13.3",
+        "@shufo/prettier-plugin-blade": "^1.13.4",
         "autoprefixer": "^10.4.16",
         "cross-env": "^7.0.3",
         "css-loader": "^6.8.1",

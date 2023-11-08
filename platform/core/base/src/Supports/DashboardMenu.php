@@ -8,10 +8,13 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Conditionable;
 use RuntimeException;
 
 class DashboardMenu
 {
+    use Conditionable;
+
     protected array $links = [];
 
     public function make(): self
@@ -179,17 +182,6 @@ class DashboardMenu
         }
 
         return collect($links)->sortBy('priority');
-    }
-
-    public function when($value = null, callable $callback = null, callable $default = null): self
-    {
-        if ($value) {
-            return $callback($this, $value) ?? $this;
-        } elseif ($default) {
-            return $default($this, $value) ?? $this;
-        }
-
-        return $this;
     }
 
     public function tap(callable $callback = null): self

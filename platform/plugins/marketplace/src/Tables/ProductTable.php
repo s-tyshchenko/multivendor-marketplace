@@ -48,9 +48,6 @@ class ProductTable extends TableAbstract
             ->editColumn('price', function ($item) {
                 return $item->price_in_table;
             })
-            ->editColumn('price_recurring_interval', function ($item) {
-                return $item->price_recurring_interval ?: 'None';
-            })
             ->editColumn('quantity', function ($item) {
                 return $item->with_storehouse_management ? $item->quantity : '&#8734;';
             })
@@ -76,7 +73,6 @@ class ProductTable extends TableAbstract
                 'sku',
                 'images',
                 'price',
-                'price_recurring_interval',
                 'sale_price',
                 'sale_type',
                 'start_date',
@@ -99,9 +95,6 @@ class ProductTable extends TableAbstract
             NameColumn::make()->route('marketplace.vendor.products.edit'),
             Column::make('price')
                 ->title(trans('plugins/ecommerce::products.price'))
-                ->alignLeft(),
-            Column::make('price_recurring_interval')
-                ->title(trans('plugins/ecommerce::products.price_recurring_interval'))
                 ->alignLeft(),
             Column::make('quantity')
                 ->title(trans('plugins/ecommerce::products.quantity'))

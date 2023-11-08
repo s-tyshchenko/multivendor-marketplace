@@ -11,8 +11,6 @@ class CartRequest extends Request
         return [
             'id' => 'required|min:1',
             'qty' => 'integer|min:1',
-            'is_custom' => 'nullable|boolean',
-            'note' => 'nullable|string'
         ];
     }
 
