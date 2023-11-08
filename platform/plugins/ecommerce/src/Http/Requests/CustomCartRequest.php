@@ -4,14 +4,13 @@ namespace Botble\Ecommerce\Http\Requests;
 
 use Botble\Support\Http\Requests\Request;
 
-class CartRequest extends Request
+class CustomCartRequest extends Request
 {
     public function rules(): array
     {
         return [
-            'id' => 'required|min:1',
-            'qty' => 'integer|min:1',
-            'is_custom' => 'nullable|boolean',
+            'vendor_id' => 'required|exists:Botble\Ecommerce\Models\Customer,id',
+            'price' => 'required|decimal:0,2',
             'note' => 'nullable|string'
         ];
     }
@@ -19,7 +18,7 @@ class CartRequest extends Request
     public function messages(): array
     {
         return [
-            'id.required' => __('Product ID is required'),
+            'id.price' => __('Product ID is required'),
         ];
     }
 }

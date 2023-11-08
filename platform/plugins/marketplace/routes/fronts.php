@@ -98,7 +98,7 @@ Route::group([
             Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
                 Route::resource('', 'ProductController')
                     ->parameters(['' => 'product']);
-
+                
                 Route::post('add-attribute-to-product/{id}', [
                     'as' => 'add-attribute-to-product',
                     'uses' => 'ProductController@postAddAttributeToProduct',

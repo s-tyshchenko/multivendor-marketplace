@@ -21,6 +21,7 @@ use Botble\Ecommerce\Facades\EcommerceHelper;
 use Botble\Ecommerce\Facades\EcommerceHelper as EcommerceHelperFacade;
 use Botble\Ecommerce\Facades\InvoiceHelper as InvoiceHelperFacade;
 use Botble\Ecommerce\Http\Requests\CheckoutRequest;
+use Botble\Ecommerce\Http\Requests\CustomCartRequest;
 use Botble\Ecommerce\Models\Address;
 use Botble\Ecommerce\Models\Option;
 use Botble\Ecommerce\Models\OptionValue;
@@ -32,6 +33,7 @@ use Botble\Ecommerce\Models\Product;
 use Botble\Ecommerce\Models\Shipment;
 use Botble\Ecommerce\Models\ShipmentHistory;
 use Botble\Ecommerce\Models\ShippingRule;
+use Botble\Marketplace\Models\Store;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Payment\Models\Payment;
@@ -471,6 +473,24 @@ class OrderHelper
         session()->forget('order_id');
         session()->forget(md5('checkout_address_information_' . $token));
         session()->forget('tracked_start_checkout');
+    }
+
+    public function handleAddCustomCart(CustomCartRequest $request): array
+    {
+        Cart::instance('cart')->add(
+            time(),
+            'Custom order',
+            $request->input('qty', 1),
+            $request->price,
+            [
+                'image' => null,
+                'store' => Store::query()->where('customer_id', '=', $request->vendor_id)->first(),
+                'note' => $request->input('note')
+            ],
+            true
+        );
+
+        return Cart::instance('cart')->content()->toArray();
     }
 
     public function handleAddCart(Product $product, Request $request): array

@@ -36,6 +36,7 @@ class Product extends BaseModel
     protected $table = 'ec_products';
 
     protected $fillable = [
+        'id',
         'name',
         'description',
         'content',
