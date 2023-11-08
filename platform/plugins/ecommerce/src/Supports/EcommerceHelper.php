@@ -181,9 +181,7 @@ class EcommerceHelper
                 ->wherePublished()
                 ->orderBy('order')
                 ->orderBy('name')
-                ->select('name', 'id')
-                ->get()
-                ->mapWithKeys(fn (Country $item) => [$item->getKey() => $item->name])
+                ->pluck('name', 'id')
                 ->all();
 
             if (! empty($selectedCountries)) {
@@ -226,9 +224,7 @@ class EcommerceHelper
             ->when($this->isUsingInMultipleCountries(), fn ($query) => $query->where('country_id', $countryId))
             ->orderBy('order')
             ->orderBy('name')
-            ->select('name', 'id')
-            ->get()
-            ->mapWithKeys(fn (State $item) => [$item->getKey() => $item->name])
+            ->pluck('name', 'id')
             ->all();
     }
 
@@ -244,9 +240,7 @@ class EcommerceHelper
             ->when(! $stateId && $countryId, fn ($query) => $query->where('country_id', $countryId))
             ->orderBy('order')
             ->orderBy('name')
-            ->select('name', 'id')
-            ->get()
-            ->mapWithKeys(fn (City $item) => [$item->getKey() => $item->name])
+            ->pluck('name', 'id')
             ->all();
     }
 
@@ -505,9 +499,7 @@ class EcommerceHelper
             ->wherePublished()
             ->orderBy('order')
             ->orderBy('name')
-            ->select('name', 'id')
-            ->get()
-            ->mapWithKeys(fn (State $item) => [$item->getKey() => $item->name])
+            ->pluck('name', 'id')
             ->all();
     }
 
@@ -517,14 +509,12 @@ class EcommerceHelper
             return [];
         }
 
-        return City::query()
+        return State::query()
             ->where('state_id', $stateId)
             ->wherePublished()
             ->orderBy('order')
             ->orderBy('name')
-            ->select('name', 'id')
-            ->get()
-            ->mapWithKeys(fn (City $item) => [$item->getKey() => $item->name])
+            ->pluck('name', 'id')
             ->all();
     }
 
@@ -668,7 +658,7 @@ class EcommerceHelper
                     $filtered = $viewedProducts;
                     if ($exists) {
                         $filtered = $filtered->filter(function ($item) use ($product) {
-                            return $item->id != $product->getKey();
+                            return $item->id != $product->id;
                         });
                     }
 
@@ -677,14 +667,14 @@ class EcommerceHelper
             }
 
             if ($exists) {
-                $removedIds[] = $product->getKey();
+                $removedIds[] = $product->id;
             }
 
             if ($removedIds) {
                 $customer->viewedProducts()->detach($removedIds);
             }
 
-            $customer->viewedProducts()->attach([$product->getKey()]);
+            $customer->viewedProducts()->attach([$product->id]);
         }
 
         return $this;

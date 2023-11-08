@@ -285,7 +285,7 @@ class SettingController extends BaseController
 
             $data = [
                 'activated_at' => $activatedAt->format('M d Y'),
-                'licensed_to' => Setting::get('licensed_to'),
+                'licensed_to' => setting('licensed_to'),
             ];
 
             return $response->setMessage('Your license is activated.')->setData($data);
@@ -335,7 +335,7 @@ class SettingController extends BaseController
         try {
             $core->deactivateLicense();
 
-            Setting::forceDelete(['licensed_to']);
+            Setting::delete(['licensed_to']);
 
             return $response->setMessage('Deactivated license successfully!');
         } catch (Throwable $exception) {
@@ -350,7 +350,7 @@ class SettingController extends BaseController
                 return $response->setError()->setMessage('Could not reset your license.');
             }
 
-            Setting::forceDelete(['licensed_to']);
+            Setting::delete(['licensed_to']);
 
             return $response->setMessage('Your license has been reset successfully.');
         } catch (Throwable $exception) {
@@ -475,7 +475,9 @@ class SettingController extends BaseController
 
     protected function saveActivatedLicense(Core $core, string $buyer): array
     {
-        Setting::forceSet(['licensed_to' => $buyer])->save();
+        setting()
+            ->set(['licensed_to' => $buyer])
+            ->save();
 
         $activatedAt = Carbon::createFromTimestamp(filectime($core->getLicenseFilePath()));
 

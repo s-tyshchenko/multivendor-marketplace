@@ -90,8 +90,10 @@ return [
         'auto_generate_sku' => 'Auto generate SKU?',
         'featured_image' => 'Featured image (optional)',
         'product_id' => 'Product ID',
+        'price_recurring_interval' => 'Recurring Interval'
     ],
     'price' => 'Price',
+    'price_recurring_interval' => 'Recurring Interval',
     'quantity' => 'Quantity',
     'type' => 'Type',
     'image' => 'Thumbnail',

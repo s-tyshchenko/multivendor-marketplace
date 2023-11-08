@@ -36,6 +36,7 @@ class Product extends BaseModel
     protected $table = 'ec_products';
 
     protected $fillable = [
+        'id',
         'name',
         'description',
         'content',
@@ -51,6 +52,7 @@ class Product extends BaseModel
         'is_variation',
         'sale_type',
         'price',
+        'price_recurring_interval',
         'sale_price',
         'start_date',
         'end_date',

@@ -10,6 +10,9 @@ class StoreCategoryService extends StoreCategoryServiceAbstract
 {
     public function execute(Request $request, Post $post): void
     {
-        $post->categories()->sync($request->input('categories', []));
+        $categories = $request->input('categories');
+        if (! empty($categories) && is_array($categories)) {
+            $post->categories()->sync($categories);
+        }
     }
 }

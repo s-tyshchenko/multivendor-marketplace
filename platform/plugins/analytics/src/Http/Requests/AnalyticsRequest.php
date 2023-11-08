@@ -2,9 +2,9 @@
 
 namespace Botble\Analytics\Http\Requests;
 
-use Botble\Support\Http\Requests\Request;
+use Illuminate\Foundation\Http\FormRequest;
 
-class AnalyticsRequest extends Request
+class AnalyticsRequest extends FormRequest
 {
     public function rules(): array
     {

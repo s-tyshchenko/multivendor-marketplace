@@ -19,8 +19,6 @@ class Ads extends BaseModel
         'expired_at',
         'location',
         'image',
-        'tablet_image',
-        'mobile_image',
         'url',
         'clicked',
         'order',

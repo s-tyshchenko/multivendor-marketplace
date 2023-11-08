@@ -10,7 +10,6 @@ use Botble\Base\Http\Controllers\BaseController;
 use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Ecommerce\Enums\ProductTypeEnum;
 use Botble\Ecommerce\Facades\EcommerceHelper;
-use Botble\Ecommerce\Http\Requests\DeleteProductVariationsRequest;
 use Botble\Ecommerce\Http\Requests\ProductRequest;
 use Botble\Ecommerce\Http\Requests\ProductVersionRequest;
 use Botble\Ecommerce\Models\Customer;
@@ -353,7 +352,7 @@ class ProductController extends BaseController
     }
 
     public function deleteVersions(
-        DeleteProductVariationsRequest $request,
+        Request $request,
         BaseHttpResponse $response
     ) {
         $ids = (array)$request->input('ids');

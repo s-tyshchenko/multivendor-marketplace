@@ -8,20 +8,29 @@ use Botble\Ecommerce\Facades\EcommerceHelper;
 use Botble\Ecommerce\Http\Requests\TaxRuleRequest;
 use Botble\Ecommerce\Models\Tax;
 use Botble\Ecommerce\Models\TaxRule;
+use Illuminate\Support\Facades\Request;
 
 class TaxRuleForm extends FormAbstract
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setFormOption('id', 'ecommerce-tax-rule-form');
+
+        if (Request::ajax()) {
+            $this->setFormOption('template', 'core/base::forms.form-content-only');
+        }
+    }
+
     public function buildForm(): void
     {
         $this
             ->setupModel(new TaxRule())
             ->setValidatorClass(TaxRuleRequest::class)
-            ->setFormOption('id', 'ecommerce-tax-rule-form')
-            ->withCustomFields()
-            ->when($this->request->ajax(), fn () => $this->contentOnly());
+            ->withCustomFields();
 
         if (! $this->getModel()->getKey()) {
-            if ($taxId = $this->request->input('tax_id')) {
+            if ($taxId = request()->input('tax_id')) {
                 $this
                     ->add('tax_id', 'hidden', [
                         'value' => $taxId,

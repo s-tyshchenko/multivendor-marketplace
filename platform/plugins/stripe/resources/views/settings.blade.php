@@ -139,6 +139,7 @@
                                 :options="[
                                     'stripe_api_charge' => 'Stripe API Charge',
                                     'stripe_checkout' => 'Stripe Checkout',
+                                    'stripe_connect' => 'Stripe Connect',
                                 ]"
                                 :value="get_payment_setting(
                                     'payment_type',

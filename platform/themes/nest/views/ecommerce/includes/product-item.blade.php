@@ -55,7 +55,7 @@
                 </div>
             @endif
             @if (is_plugin_active('marketplace') && $product->store->id)
-                <div class="text-truncate">
+                <div>
                     <span class="font-small text-muted">{{ __('Sold By') }} <a href="{{ $product->store->url }}">{!! BaseHelper::clean($product->store->name) !!}</a></span>
                 </div>
             @endif
@@ -65,6 +65,9 @@
 
                 <div class="product-price">
                     <span>{{ format_price($product->front_sale_price_with_taxes) }}</span>
+                    @if (!is_null($product->price_recurring_interval))
+                    <span class="font-weight-normal"> per {{ $product->price_recurring_interval }}</span>
+                    @endif
                     @if ($product->front_sale_price !== $product->price)
                         <span class="old-price">{{ format_price($product->price_with_taxes) }}</span>
                     @endif

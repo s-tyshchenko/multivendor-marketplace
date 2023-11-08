@@ -21,7 +21,7 @@
                 </div>
             @endif
             @if (is_plugin_active('marketplace') && $product->store->id)
-                <div class="text-truncate">
+                <div>
                     <span class="font-small text-muted">{{ __('Sold By') }} <a href="{{ $product->store->url }}">{!! BaseHelper::clean($product->store->name) !!}</a></span>
                 </div>
             @endif

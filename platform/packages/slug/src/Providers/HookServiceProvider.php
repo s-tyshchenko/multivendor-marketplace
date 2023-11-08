@@ -12,8 +12,6 @@ class HookServiceProvider extends ServiceProvider
     public function boot(): void
     {
         add_filter(BASE_FILTER_SLUG_AREA, [$this, 'addSlugBox'], 17, 2);
-
-        add_filter('core_slug_language', [$this, 'setSlugLanguageForGenerator'], 17);
     }
 
     public function addSlugBox(string|null $html = null, ?Model $object = null): string|null
@@ -28,10 +26,5 @@ class HookServiceProvider extends ServiceProvider
         }
 
         return $html;
-    }
-
-    public function setSlugLanguageForGenerator(): bool|string
-    {
-        return ! SlugHelper::turnOffAutomaticUrlTranslationIntoLatin() ? 'en' : false;
     }
 }

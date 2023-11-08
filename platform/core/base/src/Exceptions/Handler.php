@@ -7,6 +7,7 @@ use Botble\Base\Facades\BaseHelper;
 use Botble\Base\Facades\EmailHandler;
 use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Media\Facades\RvMedia;
+use Botble\Theme\Facades\Theme;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
@@ -20,7 +21,6 @@ use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Mailer\Exception\TransportException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -65,11 +65,6 @@ class Handler extends ExceptionHandler
                 }
 
                 break;
-            case $e instanceof TransportException:
-                return $this->baseHttpResponse
-                    ->setError()
-                    ->setCode($e->getCode())
-                    ->setMessage(trans('core/base::errors.error_when_sending_email'));
             case $e instanceof NotFoundHttpException:
                 if (setting('redirect_404_to_homepage', 0) == 1) {
                     return redirect(route('public.index'));
@@ -173,17 +168,31 @@ class Handler extends ExceptionHandler
 
     protected function getHttpExceptionView(HttpExceptionInterface $e)
     {
-        $defaultView = parent::getHttpExceptionView($e);
-
         if (app()->runningInConsole() || request()->wantsJson() || request()->expectsJson()) {
-            return $defaultView;
+            return parent::getHttpExceptionView($e);
         }
 
-        if (is_in_admin(true) && view()->exists($view = 'core/base::errors.' . $e->getStatusCode())) {
-            return $view;
+        $code = $e->getStatusCode();
+
+        if (request()->is(BaseHelper::getAdminPrefix() . '/*') || request()->is(BaseHelper::getAdminPrefix())) {
+            $view = 'core/base::errors.' . $code;
+
+            if (view()->exists($view)) {
+                return $view;
+            }
+
+            return parent::getHttpExceptionView($e);
         }
 
-        return apply_filters('get_http_exception_view', $defaultView, $e);
+        if (class_exists('Theme')) {
+            $view = 'theme.' . Theme::getThemeName() . '::views.' . $code;
+
+            if (view()->exists($view)) {
+                return $view;
+            }
+        }
+
+        return parent::getHttpExceptionView($e);
     }
 
     protected function unauthenticated($request, AuthenticationException $exception)

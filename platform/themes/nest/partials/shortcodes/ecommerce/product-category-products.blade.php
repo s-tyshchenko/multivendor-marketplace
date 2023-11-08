@@ -6,21 +6,14 @@
             </div>
             <div class="heading-tab-right wow fadeIn animated">
                 <ul class="nav nav-tabs right no-border" role="tablist">
-                    @if($category->activeChildren->isNotEmpty())
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" type="button" data-url="{{ route('public.ajax.products-by-category', $category->id) }}?limit={{ $limit }}" role="tab" aria-controls="product-collections-tab" aria-selected="true">{{ __('All') }}</button>
+                    </li>
+                    @foreach($category->activeChildren as $item)
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" type="button" data-url="{{ route('public.ajax.products-by-category', $category->id) }}?limit={{ $limit }}" role="tab" aria-controls="product-collections-tab" aria-selected="true">{{ __('All') }}</button>
+                            <button class="nav-link" type="button" data-url="{{ route('public.ajax.products-by-category', $item->id) }}?limit={{ $limit }}" role="tab" aria-controls="product-categories-product" aria-selected="true">{{ $item->name }}</button>
                         </li>
-
-                        @foreach($category->activeChildren as $item)
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" type="button" data-url="{{ route('public.ajax.products-by-category', $item->id) }}?limit={{ $limit }}" role="tab" aria-controls="product-categories-product" aria-selected="true">{{ $item->name }}</button>
-                            </li>
-                        @endforeach
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ $category->url }}">{{ __('View All') }}</a>
-                        </li>
-                    @endif
+                    @endforeach
                 </ul>
             </div>
         </div>

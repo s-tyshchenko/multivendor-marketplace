@@ -16,4 +16,11 @@ class Action extends TableActionAbstract
     use HasColor;
     use HasIcon;
     use HasUrl;
+
+    public function render(): string
+    {
+        return view('core/table::actions.action', [
+            'action' => $this,
+        ])->render();
+    }
 }

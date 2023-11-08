@@ -88,7 +88,9 @@ class BaseHelper
                 $data = $this->jsonEncodePrettify($data);
             }
 
-            File::ensureDirectoryExists(File::dirname($path));
+            if (! File::isDirectory(File::dirname($path))) {
+                File::makeDirectory(File::dirname($path), 493, true);
+            }
 
             File::put($path, $data);
 
@@ -107,10 +109,6 @@ class BaseHelper
 
     public function scanFolder(string $path, array $ignoreFiles = []): array
     {
-        if (! $path) {
-            return [];
-        }
-
         if (File::isDirectory($path)) {
             $data = array_diff(scandir($path), array_merge(['.', '..', '.DS_Store'], $ignoreFiles));
             natsort($data);

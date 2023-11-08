@@ -31,8 +31,8 @@ class ProductCategoryController extends BaseController
 
         $categories = ProductCategory::query()
             ->wherePublished()
-            ->orderBy('order')
             ->orderByDesc('created_at')
+            ->orderBy('order')
             ->with('slugable')
             ->withCount('products')
             ->get();

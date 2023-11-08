@@ -10,13 +10,25 @@
         </div>
     </div>
     <div class="col">
-        <p class="mb-0">{{ $product->original_product->name }} @if ($product->isOutOfStock())
-                <span class="stock-status-label">({!! $product->stock_status_html !!})</span>
+
+        @if (!$cartItem->isCustom)
+            <p class="mb-0">
+                {{ $product->original_product->name }}
+                @if ($product->isOutOfStock())
+                    <span class="stock-status-label">({!! $product->stock_status_html !!})</span>
+                @endif
+            </p>
+            <p class="mb-0">
+                <small>{{ $product->variation_attributes }}</small>
+            </p>
+        @else
+            <p class="mb-0">Custom order</p>
+            @if ($cartItem->options['note'])
+            <p class="mb-0">
+                <small>{{ $cartItem->options['note'] }}</small>
+            </p>
             @endif
-        </p>
-        <p class="mb-0">
-            <small>{{ $product->variation_attributes }}</small>
-        </p>
+        @endif
 
         @include('plugins/ecommerce::themes.includes.cart-item-options-extras', [
             'options' => $cartItem->options,

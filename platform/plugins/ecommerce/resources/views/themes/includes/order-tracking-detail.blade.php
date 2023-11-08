@@ -117,7 +117,8 @@
                                 @elseif ($product && $product->is_variation)
                                     <p>
                                         <small>
-                                            @if ($attributes = get_product_attributes($product->getKey()))
+                                            @php $attributes = get_product_attributes($product->id) @endphp
+                                            @if (!empty($attributes))
                                                 @foreach ($attributes as $attribute)
                                                     {{ $attribute->attribute_set_title }}: {{ $attribute->title }}@if (!$loop->last), @endif
                                                 @endforeach

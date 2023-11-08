@@ -5,7 +5,6 @@ namespace Botble\Base\Commands;
 use Botble\Base\Commands\Traits\ValidateCommandInput;
 use Botble\Base\Exceptions\LicenseIsAlreadyActivatedException;
 use Botble\Base\Supports\Core;
-use Botble\Setting\Facades\Setting;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -89,7 +88,7 @@ class ActivateLicenseCommand extends Command
             return self::FAILURE;
         }
 
-        Setting::forceSet('licensed_to', $buyer)->save();
+        setting()->set(['licensed_to' => $buyer])->save();
 
         $this->components->info('This license has been activated successfully.');
 

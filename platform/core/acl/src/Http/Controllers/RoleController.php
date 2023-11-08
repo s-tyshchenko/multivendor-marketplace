@@ -25,8 +25,10 @@ class RoleController extends BaseController
         return $dataTable->renderTable();
     }
 
-    public function destroy(Role $role, BaseHttpResponse $response)
+    public function destroy(int|string $id, BaseHttpResponse $response)
     {
+        $role = Role::query()->findOrFail($id);
+
         $role->delete();
 
         Helper::clearCache();
@@ -34,15 +36,19 @@ class RoleController extends BaseController
         return $response->setMessage(trans('core/acl::permissions.delete_success'));
     }
 
-    public function edit(Role $role, FormBuilder $formBuilder)
+    public function edit(int|string $id, FormBuilder $formBuilder)
     {
+        $role = Role::query()->findOrFail($id);
+
         PageTitle::setTitle(trans('core/acl::permissions.details', ['name' => $role->name]));
 
         return $formBuilder->create(RoleForm::class, ['model' => $role])->renderForm();
     }
 
-    public function update(Role $role, RoleCreateRequest $request, BaseHttpResponse $response)
+    public function update(int|string $id, RoleCreateRequest $request, BaseHttpResponse $response)
     {
+        $role = Role::query()->findOrFail($id);
+
         if ($request->input('is_default')) {
             Role::query()->where('id', '!=', $role->getKey())->update(['is_default' => 0]);
         }
@@ -106,20 +112,22 @@ class RoleController extends BaseController
             ->setMessage(trans('core/acl::permissions.create_success'));
     }
 
-    public function getDuplicate(Role $role, BaseHttpResponse $response)
+    public function getDuplicate(int|string $id, BaseHttpResponse $response)
     {
-        $duplicatedRole = Role::query()->create([
-            'name' => $role->name . ' (Duplicate)',
-            'slug' => $role->slug,
-            'permissions' => $role->permissions,
-            'description' => $role->description,
-            'created_by' => $role->created_by,
-            'updated_by' => $role->updated_by,
+        $baseRole = Role::query()->findOrFail($id);
+
+        $role = Role::query()->create([
+            'name' => $baseRole->name . ' (Duplicate)',
+            'slug' => $baseRole->slug,
+            'permissions' => $baseRole->permissions,
+            'description' => $baseRole->description,
+            'created_by' => $baseRole->created_by,
+            'updated_by' => $baseRole->updated_by,
         ]);
 
         return $response
-            ->setPreviousUrl(route('roles.edit', $role->getKey()))
-            ->setNextUrl(route('roles.edit', $duplicatedRole->getKey()))
+            ->setPreviousUrl(route('roles.edit', $baseRole->getKey()))
+            ->setNextUrl(route('roles.edit', $role->getKey()))
             ->setMessage(trans('core/acl::permissions.duplicated_success'));
     }
 

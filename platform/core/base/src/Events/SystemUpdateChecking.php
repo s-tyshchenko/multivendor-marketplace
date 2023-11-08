@@ -7,4 +7,8 @@ use Illuminate\Foundation\Events\Dispatchable;
 class SystemUpdateChecking
 {
     use Dispatchable;
+
+    public function __construct()
+    {
+    }
 }

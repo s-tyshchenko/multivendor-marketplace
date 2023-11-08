@@ -27,9 +27,9 @@ class CategoryController extends BaseController
 
         $categories = Category::query()
             ->wherePublished()
+            ->orderByDesc('created_at')
             ->orderByDesc('is_default')
             ->orderBy('order')
-            ->orderByDesc('created_at')
             ->with('slugable')
             ->withCount('posts')
             ->get();

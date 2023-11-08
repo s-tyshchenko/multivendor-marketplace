@@ -12,6 +12,8 @@ use Carbon\Carbon;
 
 class CustomerForm extends FormAbstract
 {
+    protected $template = 'plugins/ecommerce::customers.form';
+
     public function buildForm(): void
     {
         Assets::addScriptsDirectly('vendor/core/plugins/ecommerce/js/address.js')
@@ -23,7 +25,6 @@ class CustomerForm extends FormAbstract
             ->setupModel(new Customer())
             ->setValidatorClass(CustomerCreateRequest::class)
             ->withCustomFields()
-            ->template('plugins/ecommerce::customers.form')
             ->add('name', 'text', [
                 'label' => trans('core/base::forms.name'),
                 'required' => true,
@@ -96,17 +97,15 @@ class CustomerForm extends FormAbstract
                         'wrap' => true,
                     ],
                 ])
-                ->when(is_plugin_active('payment'), function () {
-                    $this->addMetaBoxes([
-                        'payments' => [
-                            'title' => trans('plugins/ecommerce::payment.name'),
-                            'content' => view('plugins/ecommerce::customers.payments.payments', [
-                                'payments' => $this->model->payments()->get(),
-                            ])->render(),
-                            'wrap' => true,
-                        ],
-                    ]);
-                });
+                ->addMetaBoxes([
+                    'payments' => [
+                        'title' => trans('plugins/ecommerce::payment.name'),
+                        'content' => view('plugins/ecommerce::customers.payments.payments', [
+                            'payments' => $this->model->payments()->get(),
+                        ])->render(),
+                        'wrap' => true,
+                    ],
+                ]);
         }
     }
 }

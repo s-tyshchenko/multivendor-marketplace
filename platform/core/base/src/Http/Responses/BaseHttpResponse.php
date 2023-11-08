@@ -30,11 +30,6 @@ class BaseHttpResponse extends Response implements Responsable
 
     public string $saveAction = 'save';
 
-    public static function make(): self
-    {
-        return new self();
-    }
-
     public function setData(mixed $data): self
     {
         $this->data = $data;

@@ -36,7 +36,14 @@ Route::group(['namespace' => 'Botble\ACL\Http\Controllers', 'middleware' => ['we
     Route::group(['prefix' => BaseHelper::getAdminPrefix(), 'middleware' => 'auth'], function () {
         Route::group(['prefix' => 'system'], function () {
             Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
-                Route::resource('', 'UserController')->except(['edit', 'update'])->parameters(['' => 'user']);
+                Route::resource('', 'UserController')->except(['edit', 'update'])->parameters(['' => 'users']);
+
+                Route::post('update-profile/{id}', [
+                    'as' => 'update-profile',
+                    'uses' => 'UserController@postUpdateProfile',
+                    'permission' => false,
+                    'middleware' => 'preventDemo',
+                ])->wherePrimaryKey();
 
                 Route::post('modify-profile-image/{id}', [
                     'as' => 'profile.image',
@@ -44,48 +51,41 @@ Route::group(['namespace' => 'Botble\ACL\Http\Controllers', 'middleware' => ['we
                     'permission' => false,
                 ])->wherePrimaryKey();
 
-                Route::put('password/{user}', [
+                Route::post('change-password/{id}', [
                     'as' => 'change-password',
                     'uses' => 'UserController@postChangePassword',
                     'permission' => false,
                     'middleware' => 'preventDemo',
-                ])->wherePrimaryKey('user');
+                ]);
 
-                Route::get('profile/{user}', [
+                Route::get('profile/{id}', [
                     'as' => 'profile.view',
                     'uses' => 'UserController@getUserProfile',
                     'permission' => false,
-                ])->wherePrimaryKey('user');
+                ])->wherePrimaryKey();
 
-                Route::put('profile/{user}', [
-                    'as' => 'update-profile',
-                    'uses' => 'UserController@postUpdateProfile',
-                    'permission' => false,
-                    'middleware' => 'preventDemo',
-                ])->wherePrimaryKey('user');
-
-                Route::get('make-super/{user}', [
+                Route::get('make-super/{id}', [
                     'as' => 'make-super',
                     'uses' => 'UserController@makeSuper',
                     'permission' => ACL_ROLE_SUPER_USER,
-                ])->wherePrimaryKey('user');
+                ])->wherePrimaryKey();
 
-                Route::get('remove-super/{user}', [
+                Route::get('remove-super/{id}', [
                     'as' => 'remove-super',
                     'uses' => 'UserController@removeSuper',
                     'permission' => ACL_ROLE_SUPER_USER,
                     'middleware' => 'preventDemo',
-                ])->wherePrimaryKey('user');
+                ])->wherePrimaryKey();
             });
 
             Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
-                Route::resource('', 'RoleController')->parameters(['' => 'role']);
+                Route::resource('', 'RoleController')->parameters(['' => 'roles']);
 
-                Route::get('duplicate/{role}', [
+                Route::get('duplicate/{id}', [
                     'as' => 'duplicate',
                     'uses' => 'RoleController@getDuplicate',
                     'permission' => 'roles.create',
-                ])->wherePrimaryKey('role');
+                ])->wherePrimaryKey();
 
                 Route::get('json', [
                     'as' => 'list.json',

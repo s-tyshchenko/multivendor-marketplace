@@ -51,7 +51,7 @@ class CleanDatabaseService
         Schema::enableForeignKeyConstraints();
 
         if (in_array('settings', $tables)) {
-            Setting::forceDelete(except: [
+            Setting::delete(except: [
                 'theme',
                 'activated_plugins',
                 'licensed_to',

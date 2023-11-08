@@ -9,7 +9,7 @@ class GetStartedRequest extends Request
     public function rules(): array
     {
         return [
-            'step' => 'required|numeric|min:1|max:4',
+            'step' => 'required|numeric',
             'username' => 'required_if:step,3|max:30|min:4',
             'email' => 'required_if:step,3|max:60|min:6|email',
             'password' => 'required_if:step,3|min:6|max:60',

@@ -97,7 +97,7 @@ textarea {
 .form-group {
     margin-bottom: 1rem;
 
-    input {
+    input, select.form-control {
         background: #fff;
         border: 1px solid $border-color;
         -webkit-box-shadow: none;
@@ -106,6 +106,7 @@ textarea {
         padding-left: 20px;
         font-size: $font-md;
         width: 100%;
+        appearance: none;
 
         &:focus {
             background: transparent;

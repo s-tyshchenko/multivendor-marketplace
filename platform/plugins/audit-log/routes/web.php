@@ -14,6 +14,12 @@ Route::group(['namespace' => 'Botble\AuditLog\Http\Controllers', 'middleware' =>
                 'permission' => 'audit-log.index',
             ]);
 
+            Route::delete('items/destroy', [
+                'as' => 'audit-log.deletes',
+                'uses' => 'AuditLogController@deletes',
+                'permission' => 'audit-log.destroy',
+            ]);
+
             Route::get('items/empty', [
                 'as' => 'audit-log.empty',
                 'uses' => 'AuditLogController@deleteAll',

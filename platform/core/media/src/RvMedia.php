@@ -676,7 +676,9 @@ class RvMedia
         }
 
         $path = '/tmp';
-        File::ensureDirectoryExists($path);
+        if (! File::isDirectory($path)) {
+            File::makeDirectory($path);
+        }
 
         $path = $path . '/' . $info['basename'];
         file_put_contents($path, $contents);

@@ -58,7 +58,6 @@ class SeoMeta implements SeoMetaContract
         $this->misc(new Entities\MiscTags());
         $this->webmasters(new Entities\Webmasters());
         $this->analytics(new Entities\Analytics());
-        $this->setGoogle(setting('google_analytics'));
     }
 
     /**

@@ -64,8 +64,10 @@ class UserController extends BaseController
             ->setMessage(trans('core/base::notices.create_success_message'));
     }
 
-    public function destroy(User $user, Request $request, BaseHttpResponse $response)
+    public function destroy(int|string $id, Request $request, BaseHttpResponse $response)
     {
+        $user = User::query()->findOrFail($id);
+
         if ($request->user()->is($user)) {
             return $response
                 ->setError()
@@ -91,8 +93,10 @@ class UserController extends BaseController
         }
     }
 
-    public function getUserProfile(User $user, Request $request, FormBuilder $formBuilder)
+    public function getUserProfile(int|string $id, Request $request, FormBuilder $formBuilder)
     {
+        $user = User::query()->findOrFail($id);
+
         Assets::addScripts(['bootstrap-pwstrength', 'cropper'])
             ->addScriptsDirectly('vendor/core/core/acl/js/profile.js');
 
@@ -130,8 +134,10 @@ class UserController extends BaseController
         return view('core/acl::users.profile.base', compact('user', 'form', 'passwordForm', 'canChangeProfile'));
     }
 
-    public function postUpdateProfile(User $user, UpdateProfileRequest $request, BaseHttpResponse $response)
+    public function postUpdateProfile(int|string $id, UpdateProfileRequest $request, BaseHttpResponse $response)
     {
+        $user = User::query()->findOrFail($id);
+
         $currentUser = $request->user();
 
         $hasRightToUpdate = $currentUser->hasPermission('users.edit') ||
@@ -184,11 +190,13 @@ class UserController extends BaseController
     }
 
     public function postChangePassword(
-        User $user,
+        int|string $id,
         UpdatePasswordRequest $request,
         ChangePasswordService $service,
         BaseHttpResponse $response
     ) {
+        $user = User::query()->findOrFail($id);
+
         $currentUser = $request->user();
 
         $hasRightToUpdate = $currentUser->hasPermission('users.edit') ||
@@ -287,11 +295,13 @@ class UserController extends BaseController
         }
     }
 
-    public function makeSuper(User $user, BaseHttpResponse $response)
+    public function makeSuper(int|string $id, BaseHttpResponse $response)
     {
         try {
-            $user->updatePermission(ACL_ROLE_SUPER_USER);
-            $user->updatePermission(ACL_ROLE_MANAGE_SUPERS);
+            $user = User::query()->findOrFail($id);
+
+            $user->updatePermission(ACL_ROLE_SUPER_USER, true);
+            $user->updatePermission(ACL_ROLE_MANAGE_SUPERS, true);
             $user->super_user = 1;
             $user->manage_supers = 1;
             $user->save();
@@ -307,8 +317,10 @@ class UserController extends BaseController
         }
     }
 
-    public function removeSuper(User $user, Request $request, BaseHttpResponse $response)
+    public function removeSuper(int|string $id, Request $request, BaseHttpResponse $response)
     {
+        $user = User::query()->findOrFail($id);
+
         if ($request->user()->is($user)) {
             return $response
                 ->setError()

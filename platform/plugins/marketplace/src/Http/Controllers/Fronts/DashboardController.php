@@ -21,6 +21,7 @@ use Botble\Media\Chunks\Receiver\FileReceiver;
 use Botble\Media\Facades\RvMedia;
 use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Slug\Facades\SlugHelper;
+use Botble\Stripe\Services\Gateways\StripeConnectService;
 use Botble\Theme\Facades\Theme;
 use Exception;
 use Illuminate\Auth\Events\Registered;
@@ -48,10 +49,11 @@ class DashboardController
         PageTitle::setTitle(__('Dashboard'));
 
         Assets::addScriptsDirectly([
-                'vendor/core/plugins/ecommerce/libraries/daterangepicker/daterangepicker.js',
-                'vendor/core/plugins/ecommerce/libraries/apexcharts-bundle/dist/apexcharts.min.js',
-                'vendor/core/plugins/ecommerce/js/report.js',
-            ])
+            'vendor/core/plugins/ecommerce/libraries/daterangepicker/daterangepicker.js',
+            'vendor/core/plugins/ecommerce/libraries/apexcharts-bundle/dist/apexcharts.min.js',
+            'vendor/core/plugins/ecommerce/js/report.js',
+            'vendor/core/plugins/marketplace/js/stripe-connect.js',
+        ])
             ->addStylesDirectly([
                 'vendor/core/plugins/ecommerce/libraries/daterangepicker/daterangepicker.css',
                 'vendor/core/plugins/ecommerce/libraries/apexcharts-bundle/dist/apexcharts.css',
@@ -64,6 +66,13 @@ class DashboardController
         [$startDate, $endDate, $predefinedRange] = EcommerceHelper::getDateRangeInReport($request);
 
         $user = auth('customer')->user();
+
+        if (empty($user->vendorInfo->stripe_connect_id)) {
+            $stripeConnectAccount = StripeConnectService::createAccount($user->email);
+        } else {
+            $stripeConnectAccount = StripeConnectService::getAccount($user->vendorInfo->stripe_connect_id);
+        }
+
         $store = $user->store;
         $data = compact('startDate', 'endDate', 'predefinedRange');
 
@@ -160,7 +169,7 @@ class DashboardController
 
         $totalProducts = $store->products()->count();
         $totalOrders = $store->orders()->count();
-        $compact = compact('user', 'store', 'data', 'totalProducts', 'totalOrders');
+        $compact = compact('user', 'stripeConnectAccount','store', 'data', 'totalProducts', 'totalOrders');
 
         if ($request->ajax()) {
             return $response
@@ -178,7 +187,7 @@ class DashboardController
 
         $uploadFolder = $customer->store?->upload_folder ?: $customer->upload_folder;
 
-        if (! RvMedia::isChunkUploadEnabled()) {
+        if (!RvMedia::isChunkUploadEnabled()) {
             $validator = Validator::make($request->all(), [
                 'file.0' => 'required|image|mimes:jpg,jpeg,png',
             ]);
@@ -209,7 +218,7 @@ class DashboardController
             if ($save->isFinished()) {
                 $result = RvMedia::handleUpload($save->getFile(), 0, $uploadFolder);
 
-                if (! $result['error']) {
+                if (!$result['error']) {
                     return $response->setData($result['data']);
                 }
 
@@ -236,7 +245,7 @@ class DashboardController
     {
         $customer = auth('customer')->user();
         if ($customer->is_vendor) {
-            if (MarketplaceHelper::getSetting('verify_vendor', 1) && ! $customer->vendor_verified_at) {
+            if (MarketplaceHelper::getSetting('verify_vendor', 1) && !$customer->vendor_verified_at) {
                 SeoHelper::setTitle(__('Become Vendor'));
 
                 Theme::breadcrumb()

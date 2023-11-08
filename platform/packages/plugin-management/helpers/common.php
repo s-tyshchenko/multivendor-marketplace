@@ -1,7 +1,6 @@
 <?php
 
 use Botble\Base\Facades\BaseHelper;
-use Botble\Setting\Facades\Setting;
 use Illuminate\Support\Facades\File;
 
 if (! function_exists('plugin_path')) {
@@ -21,19 +20,7 @@ if (! function_exists('is_plugin_active')) {
 if (! function_exists('get_active_plugins')) {
     function get_active_plugins(): array
     {
-        $activatedPlugins = Setting::get('activated_plugins');
-
-        if (! $activatedPlugins) {
-            return [];
-        }
-
-        $activatedPlugins = json_decode($activatedPlugins, true);
-
-        if (! $activatedPlugins) {
-            return [];
-        }
-
-        $plugins = array_unique($activatedPlugins);
+        $plugins = array_unique(json_decode(setting('activated_plugins', '[]'), true));
 
         $existingPlugins = BaseHelper::scanFolder(plugin_path());
 

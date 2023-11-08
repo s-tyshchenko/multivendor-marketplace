@@ -14,13 +14,10 @@ class PostRequest extends Request
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:400',
-            'content' => 'nullable|string|max:100000',
-            'tag' => 'nullable|string|max:255',
-            'categories' => 'sometimes|array',
-            'categories.*' => 'sometimes|exists:categories,id',
+            'content' => 'nullable|string',
+            'tag' => 'nullable|string',
+            'categories' => 'required|array',
             'status' => Rule::in(BaseStatusEnum::values()),
-            'is_featured' => 'sometimes|boolean',
-            'image' => ['nullable', 'string'],
         ];
 
         $postFormats = PostFormat::getPostFormats(true);

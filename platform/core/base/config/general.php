@@ -46,7 +46,6 @@ return [
     ],
     'google_fonts' => [
         'Aclonica',
-        'Almarai',
         'Allan',
         'Annie Use Your Telescope',
         'Anonymous Pro',

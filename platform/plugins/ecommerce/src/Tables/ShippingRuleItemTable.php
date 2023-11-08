@@ -22,6 +22,8 @@ class ShippingRuleItemTable extends TableAbstract
 {
     protected array $countries;
 
+    protected bool $isExporting;
+
     public function setup(): void
     {
         $this
@@ -44,25 +46,38 @@ class ShippingRuleItemTable extends TableAbstract
                     $this->countries,
                     $item->shippingRule->shipping->country
                 ) ?: $item->shippingRule->shipping->country;
-            })
-            ->editColumn('state', function (ShippingRule $item) {
-                return $item->state_name ?: '&mdash;';
-            })
-            ->editColumn('city', function (ShippingRule $item) {
-                return $item->city_name ?: '&mdash;';
-            })
-            ->editColumn('zip_code', function (ShippingRule $item) {
-                return $item->zip_code ?: '&mdash;';
-            })
-            ->editColumn('adjustment_price', function (ShippingRule $item) {
-                return ($item->adjustment_price < 0 ? '-' : '') .
-                    format_price($item->adjustment_price) .
-                    Html::tag(
-                        'small',
-                        '(' . format_price(max($item->adjustment_price + $item->shippingRule->price, 0)) . ')',
-                        ['class' => 'text-info ms-1']
-                    );
             });
+        if ($this->isExporting) {
+            $data = $data->editColumn('is_enabled', function (ShippingRule $item) {
+                if ($item->is_enabled) {
+                    return trans('core/base::base.yes');
+                }
+
+                return trans('core/base::base.no');
+            });
+        } else {
+            $data = $data->editColumn('country', function (ShippingRule $item) {
+                return Arr::get(
+                    $this->countries,
+                    $item->shippingRule->shipping->country
+                ) ?: $item->shippingRule->shipping->country;
+            })
+                ->editColumn('state', function (ShippingRule $item) {
+                    return $item->state_name;
+                })
+                ->editColumn('city', function (ShippingRule $item) {
+                    return $item->city_name;
+                })
+                ->editColumn('adjustment_price', function (ShippingRule $item) {
+                    return ($item->adjustment_price < 0 ? '-' : '') .
+                        format_price($item->adjustment_price) .
+                        Html::tag(
+                            'small',
+                            '(' . format_price(max($item->adjustment_price + $item->shippingRule->price, 0)) . ')',
+                            ['class' => 'text-info ms-1']
+                        );
+                });
+        }
 
         return $this->toJson($data);
     }

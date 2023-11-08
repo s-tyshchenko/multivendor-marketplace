@@ -17,6 +17,7 @@ class ProductRequest extends Request
         $rules = [
             'name' => 'required|string|max:250',
             'price' => 'numeric|nullable|min:0|max:100000000000',
+            'price_recurring_interval' => ['nullable', Rule::in(['day', 'week', 'month', 'year'])],
             'sale_price' => 'numeric|nullable|min:0|max:100000000000',
             'start_date' => 'date|nullable|required_if:sale_type,1',
             'end_date' => 'date|nullable|after:' . ($this->input('start_date') ?? Carbon::now()->toDateTimeString()),

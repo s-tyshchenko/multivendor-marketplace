@@ -23,7 +23,7 @@ class GetProductService
         array $withCount = [],
         array $conditions = []
     ): Collection|LengthAwarePaginator {
-        $num = $request->integer('num') ?: $request->integer('per-page');
+        $num = $request->integer('num');
         $shows = EcommerceHelper::getShowParams();
 
         if (! array_key_exists($num, $shows)) {

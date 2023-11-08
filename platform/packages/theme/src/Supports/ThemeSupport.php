@@ -11,16 +11,12 @@ class ThemeSupport
     {
         add_shortcode(
             'youtube-video',
-            __('YouTube video'),
-            __('Add YouTube video'),
+            __('Youtube video'),
+            __('Add youtube video'),
             function ($shortcode) use ($viewPath) {
                 $url = Youtube::getYoutubeVideoEmbedURL($shortcode->content);
 
-                $width = $shortcode->width;
-                $height = $shortcode->height;
-
-                return view(($viewPath ?: 'packages/theme::shortcodes') . '.youtube', compact('url', 'width', 'height'))
-                    ->render();
+                return view(($viewPath ?: 'packages/theme::shortcodes') . '.youtube', compact('url'))->render();
             }
         );
 
