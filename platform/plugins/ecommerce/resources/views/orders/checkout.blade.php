@@ -151,7 +151,7 @@
                                 >
                                 @include(
                                     'plugins/ecommerce::orders.partials.address-form',
-                                    compact('sessionCheckoutData'))
+                                    compact('sessionCheckoutData', 'registrationRequired'))
                             </div>
                             <br>
                             {!! apply_filters('ecommerce_checkout_form_after_shipping_address_form', null, $products) !!}

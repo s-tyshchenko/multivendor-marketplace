@@ -124,6 +124,13 @@ class PublicCheckoutController
             session()->put('selected_payment_method', $paymentMethod);
         }
 
+        $registrationRequired = false;
+        foreach ($products as $product) {
+            if (!is_null($product->price_recurring_interval)) {
+                $registrationRequired = true;
+            }
+        }
+
         if (is_plugin_active('marketplace')) {
             [
                 $sessionCheckoutData,
@@ -248,6 +255,7 @@ class PublicCheckoutController
             'sessionCheckoutData',
             'products',
             'isShowAddressForm',
+            'registrationRequired'
         );
 
         if (auth('customer')->check()) {
