@@ -10,6 +10,7 @@ use Botble\Ecommerce\Facades\EcommerceHelper;
 use Botble\Ecommerce\Http\Requests\RegisterRequest;
 use Botble\Ecommerce\Models\Customer;
 use Botble\JsValidation\Facades\JsValidator;
+use Botble\Marketplace\Facades\MarketplaceHelper;
 use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Theme\Facades\Theme;
 use Carbon\Carbon;

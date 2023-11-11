@@ -161,7 +161,8 @@ class OrderSupportServiceProvider extends ServiceProvider
         $shippingFeeService = $this->app->make(HandleShippingFeeService::class);
         $applyCouponService = $this->app->make(HandleApplyCouponService::class);
 
-        foreach ($groupedProducts as $storeId => $productsInStore) {
+        if ($storeId = $request->post('store_id')) {
+            $productsInStore = $groupedProducts[$storeId];
             $sessionStoreData = Arr::get($mpSessionData, $storeId, []);
 
             $order = $preOrders->firstWhere('store_id', $storeId);
@@ -183,15 +184,38 @@ class OrderSupportServiceProvider extends ServiceProvider
                 $shippingFeeService,
                 $applyCouponService
             );
-        }
+        } else {
+            foreach ($groupedProducts as $storeId => $productsInStore) {
+                $sessionStoreData = Arr::get($mpSessionData, $storeId, []);
 
-        // Remove orders not exists pre checkout
-        if ($preOrders) {
-            foreach ($preOrders as $order) {
-                if (! in_array($order->store_id, $foundOrderIds)) {
-                    $order->delete();
-                    if ($order->address && $order->address->id) {
-                        $order->address->delete();
+                $order = $preOrders->firstWhere('store_id', $storeId);
+                if ($order) {
+                    $foundOrderIds[] = $storeId;
+                }
+
+                $orders[$storeId] = $this->handleCheckoutOrderByStore(
+                    $sessionCheckoutData,
+                    $productsInStore,
+                    $token,
+                    $sessionStoreData,
+                    $request,
+                    $currentUserId,
+                    $order,
+                    $storeId,
+                    $discounts,
+                    $promotionService,
+                    $shippingFeeService,
+                    $applyCouponService
+                );
+            }
+
+            if ($preOrders) {
+                foreach ($preOrders as $order) {
+                    if (! in_array($order->store_id, $foundOrderIds)) {
+                        $order->delete();
+                        if ($order->address && $order->address->id) {
+                            $order->address->delete();
+                        }
                     }
                 }
             }

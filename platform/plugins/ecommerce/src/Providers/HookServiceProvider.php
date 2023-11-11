@@ -29,6 +29,7 @@ use Botble\Ecommerce\Models\Review;
 use Botble\Ecommerce\Repositories\Interfaces\ProductInterface;
 use Botble\Ecommerce\Supports\InvoiceHelper;
 use Botble\Ecommerce\Supports\TwigExtension;
+use Botble\Marketplace\Models\Store;
 use Botble\Media\Facades\RvMedia;
 use Botble\Menu\Facades\Menu;
 use Botble\Payment\Enums\PaymentMethodEnum;
@@ -201,7 +202,7 @@ class HookServiceProvider extends ServiceProvider
                         PaymentHelper::storeLocalPayment($data);
                     }
 
-                    OrderHelper::processOrder($orders->pluck('id')->all(), $data['charge_id']);
+                    OrderHelper::processOrder($orders->pluck('id')->all(), $data['charge_id'] ?? $data['invoice_id']);
                 }, 123);
             }
 
@@ -581,7 +582,7 @@ class HookServiceProvider extends ServiceProvider
 
                 foreach ($orders as $order) {
                     foreach ($order->products as $product) {
-                        $products[] = [
+                        $productDetails = [
                             'id' => $product->product_id,
                             'name' => $product->product_name,
                             'price' => $this->convertOrderAmount($product->price),
@@ -589,7 +590,9 @@ class HookServiceProvider extends ServiceProvider
                                 + ($order->tax_amount / $order->products->count())
                                 - ($order->discount_amount / $order->products->count())),
                             'qty' => $product->qty,
+                            'price_recurring_interval' => $product->price_recurring_interval,
                         ];
+                        $products[] = $productDetails;
                     }
                 }
 
@@ -597,7 +600,7 @@ class HookServiceProvider extends ServiceProvider
 
                 $address = $firstOrder->address;
 
-                return [
+                $result = [
                     'amount' => $this->convertOrderAmount((float)$orders->sum('amount')),
                     'shipping_amount' => $this->convertOrderAmount((float)$orders->sum('shipping_amount')),
                     'shipping_method' => $firstOrder->shipping_method->label(),
@@ -627,6 +630,14 @@ class HookServiceProvider extends ServiceProvider
                     ],
                     'checkout_token' => OrderHelper::getOrderSessionToken(),
                 ];
+
+                if (is_plugin_active('marketplace')) {
+                    $store = Store::query()->where('id', '=', $firstOrder->store_id)->with(['customer.vendorInfo'])->first();
+
+                    $result['store'] = $store;
+                }
+
+                return $result;
             }, 120, 2);
 
             if (! $this->app->runningInConsole()) {

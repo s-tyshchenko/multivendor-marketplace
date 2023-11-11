@@ -25,7 +25,12 @@
             type="hidden"
             value="{{ $token }}"
         >
-
+        <script>
+            function submitFormForStore(storeId) {
+                $('#checkout-form').append('<input name="store_id" value="' + storeId + '" type="hidden">');
+                $('#checkout-form').submit();
+            }
+        </script>
         <div
             class="container"
             id="main-checkout-product-info"
@@ -151,7 +156,7 @@
                                 >
                                 @include(
                                     'plugins/ecommerce::orders.partials.address-form',
-                                    compact('sessionCheckoutData', 'registrationRequired'))
+                                    compact('sessionCheckoutData'))
                             </div>
                             <br>
                             {!! apply_filters('ecommerce_checkout_form_after_shipping_address_form', null, $products) !!}

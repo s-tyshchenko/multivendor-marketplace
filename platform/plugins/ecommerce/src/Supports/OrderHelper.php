@@ -797,6 +797,7 @@ class OrderHelper
                     'qty' => $cartItem->qty,
                     'weight' => $productByCartItem->weight * $cartItem->qty,
                     'price' => $cartItem->price,
+                    'price_recurring_interval' => $productByCartItem->original_product->price_recurring_interval,
                     'tax_amount' => $cartItem->tax,
                     'options' => [],
                     'product_type' => $productByCartItem->product_type,
@@ -823,11 +824,11 @@ class OrderHelper
             }
 
             // Delete orderProducts not exists;
-            foreach ($orderProducts as $orderProduct) {
-                if (! in_array($orderProduct->product_id, $productIds)) {
-                    $orderProduct->delete();
-                }
-            }
+//            foreach ($orderProducts as $orderProduct) {
+//                if (! in_array($orderProduct->product_id, $productIds)) {
+//                    $orderProduct->delete();
+//                }
+//            }
 
             $sessionData['created_order_product'] = $lastUpdatedAt;
         }

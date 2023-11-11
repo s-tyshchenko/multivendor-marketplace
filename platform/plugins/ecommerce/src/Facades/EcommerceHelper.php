@@ -62,6 +62,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool isAvailableShipping(\Illuminate\Support\Collection $products)
  * @method static int countDigitalProducts(\Illuminate\Support\Collection $products)
  * @method static bool canCheckoutForDigitalProducts(\Illuminate\Support\Collection $products)
+ * @method static bool canCheckoutForSubscriptionProducts(\Illuminate\Support\Collection $products)
  * @method static bool isEnabledSupportDigitalProducts()
  * @method static bool allowGuestCheckoutForDigitalProducts()
  * @method static bool isSaveOrderShippingAddress(\Illuminate\Support\Collection $products)

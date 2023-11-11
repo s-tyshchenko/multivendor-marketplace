@@ -302,30 +302,20 @@
     </div>
 
     @if (!auth('customer')->check())
-        <div class="mb-3 form-group @if ($registrationRequired) d-none @endif">
+        <div class="mb-3 form-group">
             <input
                 id="create_account"
                 name="create_account"
                 type="checkbox"
                 value="1"
-                @if (old('create_account') == 1 )
-                    checked
-                @elseif($registrationRequired)
-                    checked
-                    disabled
-                @endif
+                @if (old('create_account') == 1) checked @endif
             >
             <label
                 class="control-label"
                 for="create_account"
             >{{ __('Register an account with above information?') }}</label>
         </div>
-        @if ($registrationRequired)
-        <p>
-            <span>{{ __('Set up a password for your account to manage your subscriptions') }}</span>
-        </p>
-        @endif
-        <div class="password-group @if (!$registrationRequired && !$errors->has('password') && !$errors->has('password_confirmation')) d-none @endif">
+        <div class="password-group @if (!$errors->has('password') && !$errors->has('password_confirmation')) d-none @endif">
             <div class="row">
                 <div class="col-md-6 col-12">
                     <div class="form-group  @error('password') has-error @enderror">

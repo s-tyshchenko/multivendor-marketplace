@@ -18,6 +18,7 @@ use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
+use Stripe\Subscription;
 
 class StripeController extends Controller
 {
@@ -65,35 +66,63 @@ class StripeController extends Controller
         try {
             $stripePaymentService->setClient();
 
-            $session = Session::retrieve($request->input('session_id'));
+            $options = [];
+            if (get_payment_setting('payment_type', STRIPE_PAYMENT_METHOD_NAME) == 'stripe_connect') {
+                $options['stripe_account'] = $request->input('account_id');
+            }
+
+            $session = Session::retrieve($request->input('session_id'), $options);
 
             if ($session->payment_status == 'paid') {
                 $metadata = $session->metadata->toArray();
 
                 $orderIds = json_decode($metadata['order_id'], true);
 
-                $charge = PaymentIntent::retrieve($session->payment_intent);
+                if ($session->mode == "payment") {
+                    $charge = PaymentIntent::retrieve($session->payment_intent, $options);
 
-                if (!$charge->latest_charge) {
-                    return $response
-                        ->setError()
-                        ->setNextUrl(PaymentHelper::getCancelURL())
-                        ->setMessage(__('No payment charge. Please try again!'));
+                    if (!$charge->latest_charge) {
+                        return $response
+                            ->setError()
+                            ->setNextUrl(PaymentHelper::getCancelURL())
+                            ->setMessage(__('No payment charge. Please try again!'));
+                    }
+
+                    $chargeId = $charge->latest_charge;
+
+                    do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
+                        'amount' => $metadata['amount'],
+                        'currency' => strtoupper($session->currency),
+                        'charge_id' => $chargeId,
+                        'order_id' => $orderIds,
+                        'customer_id' => Arr::get($metadata, 'customer_id'),
+                        'customer_type' => Arr::get($metadata, 'customer_type'),
+                        'payment_channel' => STRIPE_PAYMENT_METHOD_NAME,
+                        'status' => PaymentStatusEnum::COMPLETED,
+                    ]);
+                } else {
+                    $subscription = Subscription::retrieve($session->subscription, $options);
+
+                    if (!$subscription->latest_invoice) {
+                        return $response
+                            ->setError()
+                            ->setNextUrl(PaymentHelper::getCancelURL())
+                            ->setMessage(__('No payment invoice. Please try again!'));
+                    }
+
+                    $invoiceId = $subscription->latest_invoice;
+
+                    do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
+                        'amount' => $metadata['amount'],
+                        'currency' => strtoupper($session->currency),
+                        'charge_id' => $invoiceId,
+                        'order_id' => $orderIds,
+                        'customer_id' => Arr::get($metadata, 'customer_id'),
+                        'customer_type' => Arr::get($metadata, 'customer_type'),
+                        'payment_channel' => STRIPE_PAYMENT_METHOD_NAME,
+                        'status' => PaymentStatusEnum::COMPLETED,
+                    ]);
                 }
-
-                $chargeId = $charge->latest_charge;
-
-                do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
-                    'amount' => $metadata['amount'],
-                    'currency' => strtoupper($session->currency),
-                    'charge_id' => $chargeId,
-                    'order_id' => $orderIds,
-                    'customer_id' => Arr::get($metadata, 'customer_id'),
-                    'customer_type' => Arr::get($metadata, 'customer_type'),
-                    'payment_channel' => STRIPE_PAYMENT_METHOD_NAME,
-                    'status' => PaymentStatusEnum::COMPLETED,
-                ]);
-
                 return $response
                     ->setNextUrl(PaymentHelper::getRedirectURL() . '?charge_id=' . $chargeId)
                     ->setMessage(__('Checkout successfully!'));

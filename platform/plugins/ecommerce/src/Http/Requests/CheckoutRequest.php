@@ -15,7 +15,7 @@ class CheckoutRequest extends Request
     public function rules(): array
     {
         $rules = [
-            'amount' => 'required|min:0',
+            'amount' => 'required|min:0'
         ];
 
         if (is_plugin_active('payment') && Cart::instance('cart')->rawTotal()) {

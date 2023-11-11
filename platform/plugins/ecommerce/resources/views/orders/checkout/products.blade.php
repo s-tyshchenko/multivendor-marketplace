@@ -8,6 +8,7 @@
         @if (!empty($product))
             @include('plugins/ecommerce::orders.checkout.product')
         @endif
+
     @endforeach
 
     <hr>

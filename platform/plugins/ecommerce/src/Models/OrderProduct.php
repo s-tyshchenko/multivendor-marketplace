@@ -22,6 +22,7 @@ class OrderProduct extends BaseModel
         'qty',
         'weight',
         'price',
+        'price_recurring_interval',
         'tax_amount',
         'options',
         'product_options',

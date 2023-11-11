@@ -40,5 +40,8 @@
     </div>
     <div class="col-auto text-end">
         <p>{{ format_price($cartItem->price) }}</p>
+        @if (!is_null($product->price_recurring_interval))
+            <span>{{ __('per :interval', ['interval' => $product->price_recurring_interval]) }}</span>
+        @endif
     </div>
 </div>

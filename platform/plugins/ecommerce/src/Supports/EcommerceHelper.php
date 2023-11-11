@@ -819,6 +819,19 @@ class EcommerceHelper
         return ! $count || $products->count() != $count;
     }
 
+    public function canCheckoutForSubscriptionProducts(Collection $products): bool
+    {
+        if (auth('customer')->check()) return true;
+
+        foreach ($products as $product) {
+            if (!is_null($product->price_recurring_interval)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function countDigitalProducts(Collection $products): int
     {
         if (! $this->isEnabledSupportDigitalProducts()) {

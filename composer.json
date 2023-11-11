@@ -31,7 +31,6 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "predis/predis": "^2.2",
-        "stripe/stripe-php": "^13.0",
         "wikimedia/composer-merge-plugin": "^2.1"
     },
     "require-dev": {

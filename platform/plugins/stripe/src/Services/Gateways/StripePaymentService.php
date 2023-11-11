@@ -2,6 +2,8 @@
 
 namespace Botble\Stripe\Services\Gateways;
 
+use Botble\Marketplace\Facades\MarketplaceHelper;
+use Botble\Marketplace\Models\StoreCustomer;
 use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Payment\Supports\PaymentHelper;
 use Botble\Stripe\Services\Abstracts\StripePaymentAbstract;
@@ -11,6 +13,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Stripe\Charge;
 use Stripe\Checkout\Session as StripeCheckoutSession;
+use Stripe\Customer;
 
 class StripePaymentService extends StripePaymentAbstract
 {
@@ -68,8 +71,10 @@ class StripePaymentService extends StripePaymentAbstract
 
         $lineItems = [];
 
+        $subscriptionMode = false;
+
         foreach ($data['products'] as $product) {
-            $lineItems[] = [
+            $lineItem = [
                 'price_data' => [
                     'product_data' => [
                         'name' => $product['name'],
@@ -83,12 +88,22 @@ class StripePaymentService extends StripePaymentAbstract
                 ],
                 'quantity' => $product['qty'],
             ];
+
+            if (!is_null($product['price_recurring_interval'])) {
+                $subscriptionMode = true;
+                $lineItem['price_data']['recurring'] = [
+                    'interval' => $product['price_recurring_interval'],
+                    'interval_count' => 1
+                ];
+            }
+
+            $lineItems[] = $lineItem;
         }
 
         $requestData = [
             'line_items' => $lineItems,
-            'mode' => 'payment',
-            'success_url' => route('payments.stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'mode' => $subscriptionMode ? 'subscription' : 'payment',
+            'success_url' => route('payments.stripe.success') . '?' . ($this->isStripeApiConnect() ? "account_id={$data['store']['customer']['vendorInfo']['stripe_connect_id']}&" : '') . 'session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payments.stripe.error'),
             'metadata' => [
                 'order_id' => json_encode($data['order_id']),
@@ -101,7 +116,63 @@ class StripePaymentService extends StripePaymentAbstract
             ],
         ];
 
-        if (! empty($data['shipping_method'])) {
+        $requestOptions = [];
+        if ($this->isStripeApiConnect()) {
+            $requestOptions = [
+                'stripe_account' => $data['store']['customer']['vendorInfo']['stripe_connect_id']
+            ];
+        }
+
+        $customerId = null;
+        if (auth('customer')->check() && $customer = auth('customer')->user()) {
+            if ($this->isStripeApiConnect()) {
+                if (empty($storeCustomer = $customer->storeCustomers($data['store']['id'])->first())) {
+                    $stripeCustomer = Customer::create([
+                        'email' => $customer->email,
+                        'name' => $customer->name,
+                        'phone' => $customer->phone
+                    ], $requestOptions);
+
+                    $storeCustomer = StoreCustomer::query()->create([
+                        'customer_id' => $customer->id,
+                        'store_id' => $data['store']['id'],
+                        'stripe_customer_id' => $stripeCustomer->id
+                    ]);
+                }
+
+                $requestData['customer'] = $storeCustomer->stripe_customer_id;
+            } else {
+                if (empty($customer->stripe_customer_id)) {
+                    $stripeCustomer = Customer::create([
+                        'email' => $customer->email,
+                        'name' => $customer->name,
+                        'phone' => $customer->phone
+                    ], $requestOptions);
+
+                    $customer->fill(['stripe_customer_id' => $stripeCustomer->id]);
+                    $customer->save();
+                }
+
+                $requestData['customer'] = $customer->stripe_customer_id;
+            }
+        }
+
+        if ($this->isStripeApiConnect()) {
+            if (!$subscriptionMode) {
+                $requestData['payment_intent_data'] = [
+                    'application_fee_amount' => $this->amount * (int)MarketplaceHelper::getSettingKey('fee_per_order') / 100,
+//                    'transfer_data' => [
+//                        'destination' => $data['store']['customer']['vendorInfo']['stripe_connect_id']
+//                    ],
+                ];
+            } else {
+                $requestData['subscription_data'] = [
+                    'application_fee_percent' => (int)MarketplaceHelper::getSettingKey('fee_per_order') * 100
+                ];
+            }
+        }
+
+        if (!$subscriptionMode && !empty($data['shipping_method'])) {
             $requestData['shipping_options'] = [
                 [
                     'shipping_rate_data' => [
@@ -116,7 +187,7 @@ class StripePaymentService extends StripePaymentAbstract
             ];
         }
 
-        $checkoutSession = StripeCheckoutSession::create($requestData);
+        $checkoutSession = StripeCheckoutSession::create($requestData, $requestOptions);
 
         return $checkoutSession->url;
     }
@@ -162,6 +233,13 @@ class StripePaymentService extends StripePaymentAbstract
     public function isStripeApiCharge(): bool
     {
         $key = 'stripe_api_charge';
+
+        return get_payment_setting('payment_type', STRIPE_PAYMENT_METHOD_NAME, $key) == $key;
+    }
+
+    public function isStripeApiConnect(): bool
+    {
+        $key = 'stripe_connect';
 
         return get_payment_setting('payment_type', STRIPE_PAYMENT_METHOD_NAME, $key) == $key;
     }

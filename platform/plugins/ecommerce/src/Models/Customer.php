@@ -9,6 +9,7 @@ use Botble\Ecommerce\Enums\CustomerStatusEnum;
 use Botble\Ecommerce\Enums\DiscountTypeEnum;
 use Botble\Ecommerce\Notifications\ConfirmEmailNotification;
 use Botble\Ecommerce\Notifications\ResetPasswordNotification;
+use Botble\Marketplace\Models\StoreCustomer;
 use Botble\Media\Facades\RvMedia;
 use Botble\Payment\Models\Payment;
 use Carbon\Carbon;
@@ -22,6 +23,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\File;
@@ -51,6 +53,7 @@ class Customer extends BaseModel implements
         'phone',
         'dob',
         'status',
+        'stripe_customer_id'
     ];
 
     protected $hidden = [
@@ -190,5 +193,15 @@ class Customer extends BaseModel implements
                 return apply_filters('ecommerce_customer_upload_folder', $folder, $this);
             }
         );
+    }
+
+    public function storeCustomers($storeId = null): HasMany
+    {
+        if ($storeId) {
+            return $this->hasMany(StoreCustomer::class, 'customer_id', 'id')
+                ->where('store_id', '=', $storeId);
+        } else {
+            return $this->hasMany(StoreCustomer::class, 'customer_id', 'id');
+        }
     }
 }

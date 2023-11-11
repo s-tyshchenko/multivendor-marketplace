@@ -108,11 +108,11 @@
                     class="next-input price-recurring-interval"
                     name="price_recurring_interval"
                 >
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == null ? "selected=\"1\"" : "") }} value="">None</option>
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == "day" ? "selected=\"1\"" : "") }} value="day">Day</option>
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == "week" ? "selected=\"1\"" : "") }} value="week">Week</option>
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == "month" ? "selected=\"1\"" : "") }} value="month">Month</option>
-                    <option {{ old('recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval) == "year" ? "selected=\"1\"" : "") }} value="year">Year</option>
+                    <option {{ old('price_recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval ?? null) == null ? "selected=\"1\"" : "") }} value="">None</option>
+                    <option {{ old('price_recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval ?? null) == "day" ? "selected=\"1\"" : "") }} value="day">Day</option>
+                    <option {{ old('price_recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval ?? null) == "week" ? "selected=\"1\"" : "") }} value="week">Week</option>
+                    <option {{ old('price_recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval ?? null) == "month" ? "selected=\"1\"" : "") }} value="month">Month</option>
+                    <option {{ old('price_recurring_interval', ($product ? $product->price_recurring_interval : $originalProduct->price_recurring_interval ?? null) == "year" ? "selected=\"1\"" : "") }} value="year">Year</option>
                 </select>
             </div>
         </div>

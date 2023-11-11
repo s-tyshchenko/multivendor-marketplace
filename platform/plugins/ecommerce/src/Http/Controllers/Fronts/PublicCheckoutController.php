@@ -107,6 +107,13 @@ class PublicCheckoutController
                 ->setMessage(__('Your shopping cart has digital product(s), so you need to sign in to continue!'));
         }
 
+        if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
+            return $response
+                ->setError()
+                ->setNextUrl(route('customer.login'))
+                ->setMessage(__('Your shopping cart has subscription product(s), so you need to sign in to continue!'));
+        }
+
         $handleTaxService->execute($products, $sessionCheckoutData);
 
         $sessionCheckoutData = $this->processOrderData($token, $sessionCheckoutData, $request);
@@ -122,13 +129,6 @@ class PublicCheckoutController
 
         if ($paymentMethod) {
             session()->put('selected_payment_method', $paymentMethod);
-        }
-
-        $registrationRequired = false;
-        foreach ($products as $product) {
-            if (!is_null($product->price_recurring_interval)) {
-                $registrationRequired = true;
-            }
         }
 
         if (is_plugin_active('marketplace')) {
@@ -254,8 +254,7 @@ class PublicCheckoutController
             'couponDiscountAmount',
             'sessionCheckoutData',
             'products',
-            'isShowAddressForm',
-            'registrationRequired'
+            'isShowAddressForm'
         );
 
         if (auth('customer')->check()) {
@@ -294,6 +293,8 @@ class PublicCheckoutController
         Request $request,
         bool $finished = false
     ): array {
+        $products = Cart::instance('cart')->products();
+
         if ($request->has('billing_address_same_as_shipping_address')) {
             $sessionData['billing_address_same_as_shipping_address'] = $request->input(
                 'billing_address_same_as_shipping_address'
@@ -411,7 +412,6 @@ class PublicCheckoutController
 
         $sessionData = array_merge($sessionData, $addressData);
 
-        $products = Cart::instance('cart')->products();
         if (is_plugin_active('marketplace')) {
             $sessionData = apply_filters(
                 HANDLE_PROCESS_ORDER_DATA_ECOMMERCE,
@@ -449,6 +449,13 @@ class PublicCheckoutController
 
             $order = Order::query()->where(compact('token'))->first();
 
+            /*
+             * TODO:
+             *
+             * Order is created here. We should consider that order
+             * should be split by store_ids if marketplace module is enabled
+             * and stripe connect payment method is enabled.
+             */
             $order = $this->createOrderFromData($request->input(), $order);
 
             $sessionData['created_order'] = true;
@@ -496,6 +503,7 @@ class PublicCheckoutController
                     'qty' => $cartItem->qty,
                     'weight' => $weight,
                     'price' => $cartItem->price,
+                    'price_recurring_interval' => $product->original_product->price_recurring_interval,
                     'tax_amount' => $cartItem->tax,
                     'options' => $cartItem->options,
                     'product_type' => $product?->product_type,
@@ -597,6 +605,13 @@ class PublicCheckoutController
                 ->setError()
                 ->setNextUrl(route('customer.login'))
                 ->setMessage(__('Your shopping cart has digital product(s), so you need to sign in to continue!'));
+        }
+
+        if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
+            return $response
+                ->setError()
+                ->setNextUrl(route('customer.login'))
+                ->setMessage(__('Your shopping cart has subscription product(s), so you need to sign in to continue!'));
         }
 
         if (EcommerceHelper::getMinimumOrderAmount() > Cart::instance('cart')->rawSubTotal()) {
@@ -777,6 +792,7 @@ class PublicCheckoutController
                 'qty' => $cartItem->qty,
                 'weight' => Arr::get($cartItem->options, 'weight', 0),
                 'price' => $cartItem->price,
+                'price_recurring_interval' => $product->original_product->price_recurring_interval,
                 'tax_amount' => $cartItem->tax,
                 'options' => $cartItem->options,
                 'product_type' => $product?->product_type,

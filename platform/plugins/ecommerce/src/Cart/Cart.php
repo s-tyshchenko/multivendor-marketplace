@@ -7,6 +7,7 @@ use Botble\Ecommerce\Cart\Contracts\Buyable;
 use Botble\Ecommerce\Cart\Exceptions\CartAlreadyStoredException;
 use Botble\Ecommerce\Cart\Exceptions\UnknownModelException;
 use Botble\Ecommerce\Facades\EcommerceHelper;
+use Botble\Ecommerce\Models\Custom\Product as CustomProduct;
 use Botble\Ecommerce\Models\Product;
 use Botble\Ecommerce\Repositories\Interfaces\ProductInterface;
 use Carbon\Carbon;
@@ -683,16 +684,20 @@ class Cart
             ]);
         }
 
+
         $productsInCart = new EloquentCollection();
 
 //        if ($products->count()) {
             foreach ($cartContent as $cartItem) {
                 if ($cartItem->isCustom) {
-                    $productInCart = new Product([
+                    $productInCart = new CustomProduct([
                         'id' => $cartItem->id,
                         'title' => 'Custom product',
-                        'description' => $cartItem->options['note']
+                        'description' => $cartItem->options['note'],
+                        'price_recurring_interval' => null,
+                        'store_id' => $cartItem->options['store']->id
                     ]);
+
                     $productInCart->cartItem = $cartItem;
                     $productsInCart->push($productInCart);
                 } else {

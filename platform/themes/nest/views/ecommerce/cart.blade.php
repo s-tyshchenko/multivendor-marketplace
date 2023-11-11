@@ -47,14 +47,6 @@
                                                         <small class="product-name mb-10 text-heading"><strong>Note: </strong> {{ $cartItem->options['note'] }}</small>
                                                     @endif
                                                 @endif
-                                                @if ($cartItem->isCustom && $cartItem->options['store'])
-                                                    <p class="d-block mb-0 sold-by">
-                                                        <small>
-                                                            <span>{{ __('Sold by') }}: </span>
-                                                            <a href="{{ $cartItem->options['store']->url }}">{{ $cartItem->options['store']->name }}</a>
-                                                        </small>
-                                                    </p>
-                                                @endif
                                                 @if (is_plugin_active('marketplace') && $product->original_product->store->id)
                                                     <p class="d-block mb-0 sold-by">
                                                         <small>

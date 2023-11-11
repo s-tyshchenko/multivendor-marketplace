@@ -66,6 +66,7 @@ class Product extends BaseModel
         'barcode',
         'cost_per_item',
         'generate_license_code',
+        'store_id'
     ];
 
     protected $appends = [

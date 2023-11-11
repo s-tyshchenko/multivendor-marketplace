@@ -26,7 +26,7 @@
             $rawTotal = Cart::rawTotalByItems($cartItems);
             $shippingCurrent = Arr::get($shipping, $defaultShippingMethod . '.' . $defaultShippingOption, []);
             $isAvailableShipping = Arr::get($sessionData, 'is_available_shipping', true);
-            
+
             $orderAmount = max($rawTotal - $promotionDiscountAmount - $couponDiscountAmount, 0);
             $orderAmount += (float) $shippingAmount;
         @endphp
@@ -180,6 +180,25 @@
                             >
                                 {{ format_price($orderAmount) }}
                             </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                        @if (EcommerceHelper::isValidToProcessCheckout())
+                            <button
+                                type="button"
+                                class="btn payment-checkout-btn payment-checkout-btn-step float-end"
+                                onclick="submitFormForStore({{ $storeId }})"
+                                data-processing-text="{{ __('Processing. Please wait...') }}"
+                                data-error-header="{{ __('Error') }}"
+                            >
+                                {{ __('Checkout') }}
+                            </button>
+                        @else
+                            <span class="btn payment-checkout-btn-step float-end disabled">
+                                {{ __('Checkout') }}
+                            </span>
+                        @endif
                         </div>
                     </div>
                 </div>
