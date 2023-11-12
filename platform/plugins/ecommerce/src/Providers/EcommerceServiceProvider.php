@@ -363,6 +363,7 @@ class EcommerceServiceProvider extends ServiceProvider
                 'review',
                 'shipping',
                 'order',
+                'subscription',
                 'discount',
                 'customer',
                 'cart',
@@ -654,6 +655,15 @@ class EcommerceServiceProvider extends ServiceProvider
                     'name' => 'plugins/ecommerce::order.menu',
                     'icon' => 'fa fa-shopping-bag',
                     'url' => route('orders.index'),
+                    'permissions' => ['orders.index'],
+                ])
+                ->registerItem([
+                    'id' => 'cms-plugins-ecommerce-subscription',
+                    'priority' => 1,
+                    'parent_id' => 'cms-plugins-ecommerce',
+                    'name' => 'plugins/ecommerce::subscription.menu',
+                    'icon' => 'fa fa-credit-cart',
+                    'url' => route('subscriptions.index'),
                     'permissions' => ['orders.index'],
                 ])
                 ->registerItem([
