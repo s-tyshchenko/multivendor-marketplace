@@ -98,7 +98,7 @@ Route::group([
             Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
                 Route::resource('', 'ProductController')
                     ->parameters(['' => 'product']);
-                
+
                 Route::post('add-attribute-to-product/{id}', [
                     'as' => 'add-attribute-to-product',
                     'uses' => 'ProductController@postAddAttributeToProduct',
@@ -222,6 +222,20 @@ Route::group([
                     'as' => 'update-shipping-status',
                     'uses' => 'ShipmentController@postUpdateStatus',
                 ])->wherePrimaryKey();
+            });
+
+            Route::group(['prefix' => 'subscriptions', 'as' => 'subscriptions.'], function () {
+                Route::resource('', 'SubscriptionController')->parameters(['' => 'subscription'])->except(['create', 'store']);
+
+                Route::get('view/{id}', [
+                    'as' => 'view',
+                    'uses' => 'SubscriptionController@getViewSubscription',
+                ]);
+
+                Route::get('cancel-subscriptions/{id}', [
+                    'as' => 'cancel',
+                    'uses' => 'SubscriptionController@getCancelSubscription',
+                ]);
             });
 
             Route::group(['prefix' => 'order-returns', 'as' => 'order-returns.'], function () {

@@ -18,10 +18,16 @@
                     <span class="d-inline-block me-1">{{ __('Status') }}: </span>
                     <strong class="text-info">{{ $subscription->status }}</strong>
                 </p>
-                @if ($store)
+                @if (isset($store) && !empty($store))
                 <p>
                     <span class="d-inline-block me-1">{{ __('Store') }}: </span>
                     <strong class="text-info">{{ $store->name }}</strong>
+                </p>
+                @endif
+                @if (isset($customer) && !empty($customer))
+                <p>
+                    <span class="d-inline-block me-1">{{ __('Customer') }}: </span>
+                    <strong class="text-info">{{ $customer->name }}</strong>
                 </p>
                 @endif
                 <p>

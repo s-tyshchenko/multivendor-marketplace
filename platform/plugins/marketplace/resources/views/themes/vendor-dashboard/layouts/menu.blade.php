@@ -21,6 +21,13 @@
             'order' => 3,
         ],
         [
+            'key' => 'marketplace.vendor.subscriptions.index',
+            'icon' => 'icon-credit-card',
+            'name' => __('Subscriptions'),
+            'routes' => ['marketplace.vendor.subscriptions.edit'],
+            'order' => 3,
+        ],
+        [
             'key' => 'marketplace.vendor.discounts.index',
             'icon' => 'icon-gift',
             'name' => __('Coupons'),
@@ -54,7 +61,7 @@
             'order' => 7,
         ],
     ]);
-    
+
     if (EcommerceHelper::isReviewEnabled()) {
         $menus->push([
             'key' => 'marketplace.vendor.reviews.index',
@@ -63,7 +70,7 @@
             'order' => 5,
         ]);
     }
-    
+
     if (EcommerceHelper::isOrderReturnEnabled()) {
         $menus->push([
             'key' => 'marketplace.vendor.order-returns.index',
@@ -73,7 +80,7 @@
             'order' => 3,
         ]);
     }
-    
+
     if (MarketplaceHelper::allowVendorManageShipping()) {
         $menus->push([
             'key' => 'marketplace.vendor.shipments.index',
@@ -83,7 +90,7 @@
             'order' => 3,
         ]);
     }
-    
+
     $currentRouteName = Route::currentRouteName();
 @endphp
 
