@@ -208,6 +208,11 @@ Route::group([
                     'uses' => 'OrderController@postResendOrderConfirmationEmail',
                 ])->wherePrimaryKey();
 
+                Route::post('send-message-to-customer/{id}', [
+                    'as' => 'send-message-to-customer',
+                    'uses' => 'OrderController@postSendEmailToCustomer',
+                ])->wherePrimaryKey();
+
                 Route::post('update-shipping-address/{id}', [
                     'as' => 'update-shipping-address',
                     'uses' => 'OrderController@postUpdateShippingAddress',

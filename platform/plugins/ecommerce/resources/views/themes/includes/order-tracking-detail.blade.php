@@ -142,6 +142,10 @@
                                         </small>
                                     </p>
                                 @endif
+
+                                <small class="d-block">
+                                    {{ $orderProduct->product_description }}
+                                </small>
                             </td>
                             <td class="text-center">{{ $orderProduct->amount_format }}</td>
                             <td class="text-center">{{ $orderProduct->qty }}</td>

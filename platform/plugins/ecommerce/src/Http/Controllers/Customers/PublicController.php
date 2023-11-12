@@ -22,6 +22,7 @@ use Botble\Ecommerce\Models\OrderProduct;
 use Botble\Ecommerce\Models\OrderReturn;
 use Botble\Ecommerce\Models\Review;
 use Botble\Ecommerce\Repositories\Interfaces\ProductInterface;
+use Botble\Marketplace\Facades\MarketplaceHelper;
 use Botble\Marketplace\Models\Store;
 use Botble\Marketplace\Models\StoreCustomer;
 use Botble\Marketplace\Models\VendorInfo;
@@ -196,6 +197,27 @@ class PublicController extends Controller
             compact('order'),
             'plugins/ecommerce::themes.customers.orders.view'
         )->render();
+    }
+
+    public function postSendEmailToVendor(int|string $id, Request $request, BaseHttpResponse $response)
+    {
+        if (!is_plugin_active('marketplace')) {
+            return;
+        }
+
+        $message = $request->input('message');
+
+        $order = Order::query()
+            ->where([
+                'id' => $id,
+                'user_id' => auth('customer')->id(),
+            ])
+            ->with(['address', 'products'])
+            ->firstOrFail();
+
+        MarketplaceHelper::sendEmailToVendor($order, $message);
+
+        return $response->setNextUrl(route('customer.orders.view', $order->id))->setMessage('Message has been sent successfully!');
     }
 
     public function getCancelOrder(int|string $id, BaseHttpResponse $response)

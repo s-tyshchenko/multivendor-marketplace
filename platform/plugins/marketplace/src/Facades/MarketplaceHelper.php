@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool hideStoreSocialLinks()
  * @method static bool allowVendorManageShipping()
  * @method static mixed sendMailToVendorAfterProcessingOrder($orders)
+ * @method static mixed sendEmailToVendor($order, $message)
+ * @method static mixed sendEmailToCustomer($orders, $message)
  * @method static \Botble\Base\Supports\EmailHandler setEmailVendorVariables(\Botble\Ecommerce\Models\Order $order)
  * @method static bool isCommissionCategoryFeeBasedEnabled()
  * @method static float maxFilesizeUploadByVendor()

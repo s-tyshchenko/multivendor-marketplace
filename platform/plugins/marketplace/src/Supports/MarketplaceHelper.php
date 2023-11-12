@@ -91,6 +91,32 @@ class MarketplaceHelper
         return $orders;
     }
 
+    public function sendEmailToCustomer($order, $message)
+    {
+        if (! $order->store || ! $order->address->email) {
+            return;
+        }
+
+        $mailer = EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME)
+            ->setVariableValues(['message' => $message]);
+
+        $this->setEmailVendorVariables($order);
+        $mailer->sendUsingTemplate('email_to_customer', $order->address->email);
+    }
+
+    public function sendEmailToVendor($order, $message)
+    {
+        if (! $order->store || ! $order->store->email) {
+            return;
+        }
+
+        $mailer = EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME)
+            ->setVariableValues(['message' => $message]);
+
+        $this->setEmailVendorVariables($order);
+        $mailer->sendUsingTemplate('email_to_vendor', $order->store->email);
+    }
+
     public function setEmailVendorVariables(OrderModel $order): BaseEmailHandler
     {
         return EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME)

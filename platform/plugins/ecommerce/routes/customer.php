@@ -151,6 +151,11 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 'uses' => 'PublicController@getCancelOrder',
             ])->wherePrimaryKey();
 
+            Route::post('order/send-email-to-vendor/{id}', [
+                'as' => 'orders.send-email-to-vendor',
+                'uses' => 'PublicController@postSendEmailToVendor',
+            ]);
+
             Route::get('subscriptions', [
                 'as' => 'subscriptions',
                 'uses' => 'PublicController@getListSubscriptions',

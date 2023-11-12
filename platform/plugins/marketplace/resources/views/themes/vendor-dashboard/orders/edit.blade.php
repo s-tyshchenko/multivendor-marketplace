@@ -110,6 +110,9 @@
                                                 >
                                                     {{ $orderProduct->product_name }}
                                                 </a>
+                                                <small class="d-block">
+                                                    {{ $orderProduct->product_description }}
+                                                </small>
                                                 &nbsp;
                                                 @if ($sku = Arr::get($orderProduct->options, 'sku'))
                                                     ({{ trans('plugins/ecommerce::order.sku') }}:
@@ -731,6 +734,22 @@
                         </div>
                     </div>
                 @endif
+
+                <div class="wrapper-content bg-gray-white mb20">
+                    <div class="pd-all-20">
+                        <h5>Send message to a customer</h5>
+                        {!! Form::open(['method' => 'POST', 'route' => ['marketplace.vendor.orders.send-message-to-customer', $order->id]]) !!}
+                        @csrf
+
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Send</button>
+                        {!! Form::close() !!}
+                    </div>
+                </div>
             </div>
         </div>
 

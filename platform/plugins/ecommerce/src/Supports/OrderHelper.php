@@ -809,6 +809,7 @@ class OrderHelper
                     'order_id' => $sessionData['created_order_id'],
                     'product_id' => $cartItem->id,
                     'product_name' => $cartItem->name,
+                    'product_description' => $cartItem->isCustom ? $cartItem->options['note'] : $productByCartItem->description,
                     'product_image' => $productByCartItem->original_product->image,
                     'qty' => $cartItem->qty,
                     'weight' => $productByCartItem->weight * $cartItem->qty,

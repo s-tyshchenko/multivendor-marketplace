@@ -18,6 +18,7 @@ class OrderProduct extends BaseModel
         'order_id',
         'product_id',
         'product_name',
+        'product_description',
         'product_image',
         'qty',
         'weight',

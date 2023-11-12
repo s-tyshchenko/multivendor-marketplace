@@ -210,6 +210,18 @@ class OrderController extends BaseController
         return $response->setMessage(trans('plugins/ecommerce::order.customer.messages.cancel_success'));
     }
 
+    public function postSendEmailToCustomer(int|string $id, Request $request, BaseHttpResponse $response)
+    {
+        $message = $request->input('message');
+
+        $order = $this->findOrFail($id);
+
+        MarketplaceHelper::sendEmailToCustomer($order, $message);
+
+        return $response->setNextUrl(route('marketplace.vendor.orders.edit', $order->id))
+            ->setMessage('Message has been sent successfully!');
+    }
+
     protected function findOrFail(int|string $id): Order|Model|null
     {
         return Order::query()
