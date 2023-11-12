@@ -51,6 +51,7 @@ return [
     'secret' => 'Secret',
     'stripe_key' => 'Stripe Public Key',
     'stripe_secret' => 'Stripe Private Key',
+    'stripe_webhook_secret' => 'Stripe Webhook Key',
     'stripe_after_service_registration_msg' => 'After registration at :name, you will have Public, Secret keys',
     'stripe_enter_client_id_and_secret' => 'Enter Public, Secret keys into the box in right hand',
     'pay_online_via' => 'Pay online via :name',

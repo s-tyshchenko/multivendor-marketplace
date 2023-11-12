@@ -211,7 +211,7 @@ class OrderSupportServiceProvider extends ServiceProvider
 
             if ($preOrders) {
                 foreach ($preOrders as $order) {
-                    if (! in_array($order->store_id, $foundOrderIds)) {
+                    if (! in_array($order->store_id, $foundOrderIds) && !$order->is_finished) {
                         $order->delete();
                         if ($order->address && $order->address->id) {
                             $order->address->delete();
@@ -540,16 +540,21 @@ class OrderSupportServiceProvider extends ServiceProvider
     public function processGetCheckoutSuccess(string $token)
     {
         $orders = Order::query()
-            ->where('token', $token)
-            ->with(['address', 'products'])
-            ->get();
+            ->where('token', '=', $token)
+            ->with(['address', 'products']);
+
+        if ($orderId = OrderHelper::getOrderSessionId()) {
+            $orders->where('id', '=', $orderId);
+        }
+
+        $orders = $orders->get();
 
         if (! $orders->count()) {
             abort(404);
         }
 
-        if ($orders->where('is_finished', false)->count()) {
-            foreach ($orders->where('is_finished', false) as $order) {
+        if ($orders->where('is_finished', '=', false)->count()) {
+            foreach ($orders->where('is_finished', '=', false) as $order) {
                 if ((float)$order->amount && ! $order->payment_id) {
                     continue;
                 }
@@ -561,7 +566,9 @@ class OrderSupportServiceProvider extends ServiceProvider
             }
         }
 
-        OrderHelper::clearSessions($token);
+        if (!Cart::instance('cart')->count()) {
+            OrderHelper::clearSessions($token);
+        }
 
         return view('plugins/marketplace::orders.thank-you', compact('orders'));
     }
@@ -965,9 +972,11 @@ class OrderSupportServiceProvider extends ServiceProvider
                 ->get();
 
             foreach ($trashOrders as $trashOrder) {
-                $trashOrder->delete();
-                if ($trashOrder->address && $trashOrder->address->id) {
-                    $trashOrder->address->delete();
+                if (!$trashOrder->is_finished) {
+                    $trashOrder->delete();
+                    if ($trashOrder->address && $trashOrder->address->id) {
+                        $trashOrder->address->delete();
+                    }
                 }
             }
 
@@ -1081,7 +1090,7 @@ class OrderSupportServiceProvider extends ServiceProvider
         // Remove orders not exists pre checkout
         if ($preOrders) {
             foreach ($preOrders as $order) {
-                if (! in_array($order->store_id, $foundOrderIds)) {
+                if (! in_array($order->store_id, $foundOrderIds) && !$order->is_finished) {
                     $order->delete();
                 }
             }

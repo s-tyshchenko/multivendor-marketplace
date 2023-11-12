@@ -133,6 +133,16 @@
                                 placeholder="sk_*************"
                             />
 
+                            <x-core-setting::text-input
+                                name="payment_stripe_webhook_secret"
+                                type="password"
+                                :label="trans('plugins/payment::payment.stripe_webhook_secret')"
+                                :value="BaseHelper::hasDemoModeEnabled()
+                                    ? '*******************************'
+                                    : setting('payment_stripe_webhook_secret')"
+                                placeholder="whsec_*************"
+                            />
+
                             <x-core-setting::select
                                 :name="'payment_' . STRIPE_PAYMENT_METHOD_NAME . '_payment_type'"
                                 :label="__('Payment Type')"

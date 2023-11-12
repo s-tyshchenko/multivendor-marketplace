@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array|string|null getShippingMethod(string $method, array|string|null $option = null)
  * @method static string|null processHistoryVariables(\Botble\Ecommerce\Models\OrderHistory|\Botble\Ecommerce\Models\ShipmentHistory $history)
  * @method static array setOrderSessionData(string|null $token, array|string $data)
+ * @method static string|null getOrderSessionId()
  * @method static string getOrderSessionToken()
  * @method static array getOrderSessionData(string|null $token = null)
  * @method static array cleanData(array $data)

@@ -2,10 +2,13 @@
 
 namespace Botble\Marketplace\Http\Controllers\Fronts;
 
+use Botble\Base\Events\UpdatedContentEvent;
 use Botble\Base\Facades\Assets;
+use Botble\Base\Facades\EmailHandler;
 use Botble\Base\Facades\PageTitle;
 use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Ecommerce\Facades\EcommerceHelper;
+use Botble\Ecommerce\Models\Customer;
 use Botble\Ecommerce\Models\Order;
 use Botble\Ecommerce\Models\Product;
 use Botble\Marketplace\Enums\RevenueTypeEnum;
@@ -23,6 +26,7 @@ use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Slug\Facades\SlugHelper;
 use Botble\Stripe\Services\Gateways\StripeConnectService;
 use Botble\Theme\Facades\Theme;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -71,6 +75,10 @@ class DashboardController
             $stripeConnectAccount = StripeConnectService::createAccount($user->email);
         } else {
             $stripeConnectAccount = StripeConnectService::getAccount($user->vendorInfo->stripe_connect_id);
+        }
+
+        if ($stripeConnectAccount->charges_enabled && $user->vendor_verified_at == null) {
+            $this->approveVendor($user, $request);
         }
 
         $store = $user->store;
@@ -245,7 +253,7 @@ class DashboardController
     {
         $customer = auth('customer')->user();
         if ($customer->is_vendor) {
-            if (MarketplaceHelper::getSetting('verify_vendor', 1) && !$customer->vendor_verified_at) {
+            /*if (MarketplaceHelper::getSetting('verify_vendor', 1) && !$customer->vendor_verified_at) {
                 SeoHelper::setTitle(__('Become Vendor'));
 
                 Theme::breadcrumb()
@@ -254,7 +262,7 @@ class DashboardController
 
                 return Theme::scope('marketplace.approving-vendor', [], MarketplaceHelper::viewPath('approving-vendor', false))
                     ->render();
-            }
+            }*/
 
             return redirect()->route('marketplace.vendor.dashboard');
         }
@@ -287,5 +295,21 @@ class DashboardController
         return $response
             ->setNextUrl(route('marketplace.vendor.dashboard'))
             ->setMessage(__('Registered successfully!'));
+    }
+
+    protected function approveVendor(Customer $vendor, Request $request)
+    {
+        $vendor->vendor_verified_at = Carbon::now();
+        $vendor->save();
+
+        event(new UpdatedContentEvent(CUSTOMER_MODULE_SCREEN_NAME, $request, $vendor));
+
+        if (MarketplaceHelper::getSetting('verify_vendor', 1) && ($vendor->store->email || $vendor->email)) {
+            EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME)
+                ->setVariableValues([
+                    'store_name' => $vendor->store->name,
+                ])
+                ->sendUsingTemplate('vendor-account-approved', $vendor->store->email ?: $vendor->email);
+        }
     }
 }

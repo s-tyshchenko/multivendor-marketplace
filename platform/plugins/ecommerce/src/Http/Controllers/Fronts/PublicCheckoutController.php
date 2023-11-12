@@ -449,13 +449,6 @@ class PublicCheckoutController
 
             $order = Order::query()->where(compact('token'))->first();
 
-            /*
-             * TODO:
-             *
-             * Order is created here. We should consider that order
-             * should be split by store_ids if marketplace module is enabled
-             * and stripe connect payment method is enabled.
-             */
             $order = $this->createOrderFromData($request->input(), $order);
 
             $sessionData['created_order'] = true;
@@ -856,21 +849,30 @@ class PublicCheckoutController
             abort(404);
         }
 
-        $order = Order::query()
-            ->where('token', $token)
-            ->with(['address', 'products', 'taxInformation'])
-            ->orderByDesc('id')
-            ->first();
+        if (is_plugin_active('marketplace') && $orderId = OrderHelper::getOrderSessionId()) {
+            $order = Order::query()
+                ->where('token', '=', $token)
+                ->where('id', '=', $orderId)
+                ->with(['address', 'products', 'taxInformation'])
+                ->orderByDesc('id')
+                ->first();
+        } else {
+            $order = Order::query()
+                ->where('token', '=', $token)
+                ->with(['address', 'products', 'taxInformation'])
+                ->orderByDesc('id')
+                ->first();
+        }
 
         if (! $order) {
             abort(404);
         }
 
-        if (is_plugin_active('payment') && (float)$order->amount && ! $order->payment_id) {
+        if (is_plugin_active('payment') && (float)$order->amount && !$order->payment_id) {
             return $response
-                ->setError()
-                ->setNextUrl(PaymentHelper::getCancelURL())
-                ->setMessage(__('Payment failed!'));
+                    ->setError()
+                    ->setNextUrl(PaymentHelper::getCancelURL())
+                    ->setMessage(__('Payment failed!'));
         }
 
         if (is_plugin_active('marketplace')) {

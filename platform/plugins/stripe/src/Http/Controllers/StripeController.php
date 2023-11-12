@@ -110,12 +110,12 @@ class StripeController extends Controller
                             ->setMessage(__('No payment invoice. Please try again!'));
                     }
 
-                    $invoiceId = $subscription->latest_invoice;
+                    $chargeId = $subscription->latest_invoice;
 
                     do_action(PAYMENT_ACTION_PAYMENT_PROCESSED, [
                         'amount' => $metadata['amount'],
                         'currency' => strtoupper($session->currency),
-                        'charge_id' => $invoiceId,
+                        'charge_id' => $chargeId,
                         'order_id' => $orderIds,
                         'customer_id' => Arr::get($metadata, 'customer_id'),
                         'customer_type' => Arr::get($metadata, 'customer_type'),
@@ -123,6 +123,7 @@ class StripeController extends Controller
                         'status' => PaymentStatusEnum::COMPLETED,
                     ]);
                 }
+
                 return $response
                     ->setNextUrl(PaymentHelper::getRedirectURL() . '?charge_id=' . $chargeId)
                     ->setMessage(__('Checkout successfully!'));

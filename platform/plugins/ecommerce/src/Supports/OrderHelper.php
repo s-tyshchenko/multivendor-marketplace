@@ -108,10 +108,20 @@ class OrderHelper
                     'user_id' => 0,
                 ]);
             }
+
+            $productIds = $order->products->pluck('product_id')->toArray();
+
+            foreach (Cart::instance('cart')->content() as $key => $cartItem) {
+                if (in_array($cartItem->id, $productIds)) {
+                    Cart::instance('cart')->remove($key);
+                }
+            }
         }
 
-        Cart::instance('cart')->destroy();
-        session()->forget('applied_coupon_code');
+        if (!Cart::instance('cart')->count()) {
+            Cart::instance('cart')->destroy();
+            session()->forget('applied_coupon_code');
+        }
 
         session(['order_id' => Arr::first($orderIds)]);
 
@@ -413,6 +423,11 @@ class OrderHelper
         return $data;
     }
 
+    public function getOrderSessionId(): string | null
+    {
+        return session('order_id');
+    }
+
     public function getOrderSessionToken(): string
     {
         if (session()->has('tracked_start_checkout')) {
@@ -473,6 +488,7 @@ class OrderHelper
         session()->forget('order_id');
         session()->forget(md5('checkout_address_information_' . $token));
         session()->forget('tracked_start_checkout');
+        session()->forget('tracked_start_checkout_store_id');
     }
 
     public function handleAddCustomCart(CustomCartRequest $request): array
