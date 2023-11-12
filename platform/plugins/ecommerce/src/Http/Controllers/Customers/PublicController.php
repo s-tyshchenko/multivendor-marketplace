@@ -22,6 +22,9 @@ use Botble\Ecommerce\Models\OrderProduct;
 use Botble\Ecommerce\Models\OrderReturn;
 use Botble\Ecommerce\Models\Review;
 use Botble\Ecommerce\Repositories\Interfaces\ProductInterface;
+use Botble\Marketplace\Models\Store;
+use Botble\Marketplace\Models\StoreCustomer;
+use Botble\Marketplace\Models\VendorInfo;
 use Botble\Media\Facades\RvMedia;
 use Botble\Media\Services\ThumbnailService;
 use Botble\Media\Supports\Zipper;
@@ -34,10 +37,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Stripe\Invoice;
+use Stripe\Product;
+use Stripe\Stripe;
+use Stripe\Subscription;
 
 class PublicController extends Controller
 {
@@ -215,6 +223,115 @@ class PublicController extends Controller
 
         return $response->setMessage(trans('plugins/ecommerce::order.cancel_success'));
     }
+
+    public function getListSubscriptions()
+    {
+        Stripe::setApiKey(setting('payment_stripe_secret'));
+        Stripe::setClientId(setting('payment_stripe_client_id'));
+
+        SeoHelper::setTitle(__('Subscriptions'));
+
+        $customer = auth('customer')->user();
+
+        $stripeCustomerIds = [];
+
+        if ($customer->stripe_customer_id) {
+            $stripeCustomerIds[$customer->stripe_customer_id] = null;
+        }
+
+        foreach (StoreCustomer::query()->where('customer_id', '=', $customer->id)->get() as $storeCustomer) {
+            $stripeCustomerIds[$storeCustomer->stripe_customer_id] = $storeCustomer->store;
+        }
+
+        $subscriptionsData = [];
+
+        foreach ($stripeCustomerIds as $stripeCustomerId => $store) {
+            $options = [];
+
+            if ($store) {
+                $options = ['stripe_account' => $store->customer->vendorInfo->stripe_connect_id];
+            }
+
+            $subscriptions = Subscription::all(['customer' => $stripeCustomerId, 'status' => 'all'], $options);
+
+            foreach ($subscriptions as $subscription) {
+                $productId = $subscription->items->data[0]->price->product;
+                $product = Product::retrieve($productId, $options);
+
+                $subscriptionsData[] = [
+                    'id' => $subscription->id,
+                    'next_payment' => date('Y-m-d H:i:s', $subscription->current_period_end),
+                    'vendor_id' => $store ? $store->customer_id : null,
+                    'vendor_name' => $store ? $store->name : 'Marketplace',
+                    'stripe_customer_id' => $stripeCustomerId,
+                    'price' => strtoupper($subscription->currency) . ' ' . $subscription->items->data[0]->price->unit_amount / 100,
+                    'period' => $subscription->items->data[0]->price->recurring->interval,
+                    'status' => $subscription->status,
+                    'product_name' => $product->name,
+                    'product_description' => $product->description,
+                ];
+            }
+        }
+
+        Theme::breadcrumb()
+            ->add(__('Home'), route('public.index'))
+            ->add(__('Subscriptions'), route('customer.subscriptions'));
+
+        return Theme::scope(
+            'ecommerce.customers.subscriptions.list',
+            compact('subscriptionsData'),
+            'plugins/ecommerce::themes.customers.subscriptions.list'
+        )->render();
+    }
+
+    public function getViewSubscription(string $id, string|null $vendor_id = null)
+    {
+        Stripe::setApiKey(setting('payment_stripe_secret'));
+        Stripe::setClientId(setting('payment_stripe_client_id'));
+
+        $store = null;
+        $options = [];
+        if ($vendor_id) {
+            $store = Store::query()->where('customer_id', '=', $vendor_id)->first();
+            $options = ['stripe_account' => $store->customer->vendorInfo->stripe_connect_id];
+        }
+
+        $subscription = Subscription::retrieve($id, $options);
+        $product = Product::retrieve($subscription->items->data[0]->price->product, $options);
+        $invoices = Invoice::all(['subscription' => $subscription->id], $options);
+
+        SeoHelper::setTitle(__('Subscription details - :name', ['name' => $product->name]));
+
+        Theme::breadcrumb()->add(__('Home'), route('public.index'))
+            ->add(
+                __('Subscription details - :name', ['name' => $product->name]),
+                route('customer.subscriptions.view', ['id' => $id, 'vendor_id' => $vendor_id])
+            );
+
+        return Theme::scope(
+            'ecommerce.customers.subscriptions.view',
+            compact('subscription', 'product', 'invoices', 'store'),
+            'plugins/ecommerce::themes.customers.subscriptions.view'
+        )->render();
+
+    }
+
+    public function getCancelSubscription(int|string $id, BaseHttpResponse $response, string | null $vendor_id = null)
+    {
+        Stripe::setApiKey(setting('payment_stripe_secret'));
+        Stripe::setClientId(setting('payment_stripe_client_id'));
+
+        $options = [];
+        if ($vendor_id) {
+            $store = Store::query()->where('customer_id', '=', $vendor_id)->first();
+            $options = ['stripe_account' => $store->customer->vendorInfo->stripe_connect_id];
+        }
+
+        Subscription::retrieve($id, $options)->cancel();
+
+        return $response->setNextUrl(route('customer.subscriptions.view', ['id' => $id, 'vendor_id' => $vendor_id]));
+    }
+
 
     public function getListAddresses()
     {

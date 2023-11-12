@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -37,8 +38,8 @@ class StoreCustomer extends BaseModel
         return $this->belongsTo(Customer::class)->withDefault();
     }
 
-    public function store(): HasMany
+    public function store(): HasOne
     {
-        return $this->hasMany(Store::class);
+        return $this->hasOne(Store::class, 'id', 'store_id');
     }
 }

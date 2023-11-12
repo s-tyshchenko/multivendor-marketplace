@@ -19,6 +19,12 @@
             'routes' => ['customer.orders.view']
         ],
         [
+            'key'    => 'customer.subscriptions',
+            'label'  => __('Subscriptions'),
+            'icon'   => 'fi-rs-credit-card',
+            'routes' => ['customer.subscriptions.view']
+        ],
+        [
             'key'    => 'customer.downloads',
             'label'  => __('Downloads'),
             'icon'   => 'fi-rs-shopping-bag',

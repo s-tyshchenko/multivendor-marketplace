@@ -151,6 +151,21 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 'uses' => 'PublicController@getCancelOrder',
             ])->wherePrimaryKey();
 
+            Route::get('subscriptions', [
+                'as' => 'subscriptions',
+                'uses' => 'PublicController@getListSubscriptions',
+            ]);
+
+            Route::get('subscriptions/view/{id}/{vendor_id}', [
+                'as' => 'subscriptions.view',
+                'uses' => 'PublicController@getViewSubscription',
+            ]);
+
+            Route::get('subscriptions/cancel/{id}/{vendor_id}', [
+                'as' => 'subscriptions.cancel',
+                'uses' => 'PublicController@getCancelSubscription',
+            ]);
+
             Route::get('address', [
                 'as' => 'address',
                 'uses' => 'PublicController@getListAddresses',
