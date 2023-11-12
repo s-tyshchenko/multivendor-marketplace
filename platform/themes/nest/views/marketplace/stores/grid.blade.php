@@ -1,4 +1,9 @@
-<div class="archive-header-2 text-center pt-80 pb-50">
+<div class="archive-header-2 text-center pt-80 pb-50 mb-10"
+     style="background-image: url('{{ \Illuminate\Support\Facades\Storage::url($store->getMetaData('cover_image', true)) }}');
+         background-size: cover;
+         background-position: center;
+         background-repeat: no-repeat;
+         border-radius: 0 0 20px 20px">
     <h1 class="display-2 mb-20">{{ $store->name }}</h1>
     <div class="row">
         <div class="col-12 mb-50">
