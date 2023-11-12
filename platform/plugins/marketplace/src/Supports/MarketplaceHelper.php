@@ -117,4 +117,17 @@ class MarketplaceHelper
     {
         return (int)$this->getSetting('max_product_images_upload_by_vendor', 20);
     }
+
+    public function isSingleVendorProducts($products): bool
+    {
+        $vendorId = null;
+        foreach ($products as $product) {
+            if ($vendorId == null) {
+                $vendorId = $product->store_id;
+            } else if ($vendorId !== $product->store_id) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

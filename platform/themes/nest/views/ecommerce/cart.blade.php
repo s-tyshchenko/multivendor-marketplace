@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    <form method="post" action="{{ route('public.ajax.cart.update') }}">
+    <form method="POST" action="{{ route('public.ajax.cart.update') }}">
         @csrf
         @method('PUT')
         <div class="row">

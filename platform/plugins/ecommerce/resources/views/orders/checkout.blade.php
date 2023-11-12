@@ -330,22 +330,24 @@
                                     ><i class="fas fa-long-arrow-alt-left"></i> <span
                                             class="d-inline-block back-to-cart">{{ __('Back to cart') }}</span></a>
                                 </div>
-                                <div class="col-md-6 checkout-button-group">
-                                    @if (EcommerceHelper::isValidToProcessCheckout())
-                                        <button
-                                            class="btn payment-checkout-btn payment-checkout-btn-step float-end"
-                                            data-processing-text="{{ __('Processing. Please wait...') }}"
-                                            data-error-header="{{ __('Error') }}"
-                                            type="submit"
-                                        >
-                                            {{ __('Checkout') }}
-                                        </button>
-                                    @else
-                                        <span class="btn payment-checkout-btn-step float-end disabled">
+                                @if ($isSingleVendorCheckout)
+                                    <div class="col-md-6 checkout-button-group">
+                                        @if (EcommerceHelper::isValidToProcessCheckout())
+                                            <button
+                                                class="btn payment-checkout-btn payment-checkout-btn-step float-end"
+                                                data-processing-text="{{ __('Processing. Please wait...') }}"
+                                                data-error-header="{{ __('Error') }}"
+                                                type="submit"
+                                            >
+                                                {{ __('Checkout') }}
+                                            </button>
+                                        @else
+                                            <span class="btn payment-checkout-btn-step float-end disabled">
                                             {{ __('Checkout') }}
                                         </span>
-                                    @endif
-                                </div>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                             <div class="d-block d-md-none back-to-cart-button-group">
                                 <a

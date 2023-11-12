@@ -28,6 +28,7 @@ use Botble\Ecommerce\Services\HandleApplyPromotionsService;
 use Botble\Ecommerce\Services\HandleRemoveCouponService;
 use Botble\Ecommerce\Services\HandleShippingFeeService;
 use Botble\Ecommerce\Services\HandleTaxService;
+use Botble\Marketplace\Facades\MarketplaceHelper;
 use Botble\Optimize\Facades\OptimizerHelper;
 use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Payment\Supports\PaymentHelper;
@@ -243,6 +244,7 @@ class PublicCheckoutController
         }
 
         $isShowAddressForm = EcommerceHelper::isSaveOrderShippingAddress($products);
+        $isSingleVendorCheckout = MarketplaceHelper::isSingleVendorProducts($products);
 
         $data = compact(
             'token',
@@ -254,7 +256,8 @@ class PublicCheckoutController
             'couponDiscountAmount',
             'sessionCheckoutData',
             'products',
-            'isShowAddressForm'
+            'isShowAddressForm',
+            'isSingleVendorCheckout'
         );
 
         if (auth('customer')->check()) {

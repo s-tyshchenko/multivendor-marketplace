@@ -120,11 +120,18 @@
                             @if (EcommerceHelper::isCartEnabled())
                                 <button type="submit"
                                     class="button button-add-to-cart @if ($product->isOutOfStock()) btn-disabled @endif"
-                                    @if ($product->isOutOfStock()) disabled @endif><i class="fi-rs-shopping-cart"></i>{{ __('Add to cart') }}</button>
+                                    @if ($product->isOutOfStock()) disabled @endif><i class="fi-rs-shopping-cart"></i>{{ __('Add to cart') }}
+                                </button>
                                 @if (EcommerceHelper::isQuickBuyButtonEnabled())
                                     <button class="button button-buy-now ms-2 @if ($product->isOutOfStock()) btn-disabled @endif"
                                         type="submit" name="checkout"
-                                        @if ($product->isOutOfStock()) disabled @endif>{{ __('Buy Now') }}</button>
+                                        @if ($product->isOutOfStock()) disabled @endif>
+                                        @if (is_null($product->price_recurring_interval))
+                                            {{ __('Buy Now') }}
+                                        @else
+                                            {{ __('Subscribe') }}
+                                        @endif
+                                    </button>
                                 @endif
                             @endif
 

@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool isCommissionCategoryFeeBasedEnabled()
  * @method static float maxFilesizeUploadByVendor()
  * @method static int maxProductImagesUploadByVendor()
+ * @method static bool isSingleVendorProducts($products)
  *
  * @see \Botble\Marketplace\Supports\MarketplaceHelper
  */

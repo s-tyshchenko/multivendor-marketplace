@@ -8,8 +8,8 @@ use Theme\Nest\Http\Controllers\NestController;
 
 Route::group(['middleware' => ['web', 'core']], function () {
     Route::group(apply_filters(BASE_FILTER_GROUP_PUBLIC_ROUTE, []), function () {
-        Route::group(['prefix' => 'ajax', 'as' => 'public.ajax.', 'middleware' => [RequiresJsonRequestMiddleware::class]], function () {
-            Route::group(['controller' => NestController::class], function () {
+        Route::group(['prefix' => 'ajax', 'as' => 'public.ajax.'], function () {
+            Route::group(['controller' => NestController::class, 'middleware' => [RequiresJsonRequestMiddleware::class]], function () {
                 Route::get('product-reviews/{id}', 'ajaxGetProductReviews')
                     ->name('product-reviews');
 
