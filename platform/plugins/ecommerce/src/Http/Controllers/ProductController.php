@@ -79,9 +79,7 @@ class ProductController extends BaseController
         $product = new Product();
 
         $product->status = $request->input('status');
-        if (EcommerceHelper::isEnabledSupportDigitalProducts() && $productType = $request->input('product_type')) {
-            $product->product_type = $productType;
-        }
+        $product->product_type = ProductTypeEnum::DIGITAL;
 
         $product = $service->execute($request, $product);
         $storeProductTagService->execute($request, $product);

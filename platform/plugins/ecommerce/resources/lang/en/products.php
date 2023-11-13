@@ -3,6 +3,7 @@
 return [
     'name' => 'Products',
     'create' => 'New product',
+    'pricing' => 'Pricing',
     'create_product_type' => [
         'physical' => 'New physical product',
         'digital' => 'New digital product',
