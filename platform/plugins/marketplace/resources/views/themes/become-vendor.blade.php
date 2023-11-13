@@ -52,7 +52,7 @@
             <span class="d-inline-block"><small
                     data-base-url="{{ route('public.store', '') }}">{{ route('public.store', (string) old('shop_url', '')) }}</small></span>
         </div>
-        
+
         <div class="form-group text-center">
             <div class="form-group submit">
                 <button class="submit submit-auto-width">{{ __('Register') }}</button>

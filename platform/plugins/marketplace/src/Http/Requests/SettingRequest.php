@@ -24,16 +24,15 @@ class SettingRequest extends Request
         return array_merge([
             'name' => 'required|max:120|min:2',
             'email' => 'required|max:60|min:6|email|unique:ec_customers,email,' . $this->user('customer')->id,
-            'phone' => 'required|' . BaseHelper::getPhoneValidationRule(),
             'slug' => 'max:255',
-        ], PayoutPaymentMethodsEnum::getRules('bank_info'));
+        ]);
     }
 
     public function attributes(): array
     {
         return array_merge([
             'bank_info' => __('Payout info'),
-        ], PayoutPaymentMethodsEnum::getAttributes('bank_info'));
+        ]);
     }
 
     /**

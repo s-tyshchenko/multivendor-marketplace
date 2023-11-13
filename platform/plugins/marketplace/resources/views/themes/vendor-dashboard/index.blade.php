@@ -25,6 +25,8 @@
     >
         @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.dashboard-content'))
     </section>
+
+    @include('plugins/marketplace::themes.vendor-dashboard.settings')
 @stop
 
 @push('footer')
