@@ -40,7 +40,7 @@
                                         @endif
                                     </div>
                                     <div class="login_footer form-group mb-50">
-                                        <div class="chek-form">
+                                        <div class="chek-form d-none">
                                             <div class="custome-checkbox">
                                                 <input class="form-check-input" type="checkbox" name="remember" id="remember-checkbox" value="" />
                                                 <label class="form-check-label" for="remember-checkbox"><span>{{ __('Remember me') }}</span></label>

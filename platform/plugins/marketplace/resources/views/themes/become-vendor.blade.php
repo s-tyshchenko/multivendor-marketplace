@@ -52,24 +52,7 @@
             <span class="d-inline-block"><small
                     data-base-url="{{ route('public.store', '') }}">{{ route('public.store', (string) old('shop_url', '')) }}</small></span>
         </div>
-        <div class="form-group">
-            <label
-                class="required"
-                for="shop-phone"
-            >{{ __('Phone Number') }}</label>
-            <input
-                class="form-control"
-                id="shop-phone"
-                name="shop_phone"
-                type="text"
-                value="{{ old('shop_phone') }}"
-                placeholder="{{ __('Shop phone') }}"
-            >
-            @if ($errors->has('shop_phone'))
-                <span class="text-danger">{{ $errors->first('shop_phone') }}</span>
-            @endif
-        </div>
-
+        
         <div class="form-group text-center">
             <div class="form-group submit">
                 <button class="submit submit-auto-width">{{ __('Register') }}</button>
