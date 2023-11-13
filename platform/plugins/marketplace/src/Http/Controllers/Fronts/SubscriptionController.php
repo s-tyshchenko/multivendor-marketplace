@@ -45,7 +45,7 @@ class SubscriptionController extends BaseController
 
         $vendor = auth('customer')->user();
 
-        $options = ['stripe_account' => $vendor->vendorInfo->stripe_account_id];
+        $options = ['stripe_account' => $vendor->vendorInfo->stripe_connect_id];
         $subscriptions = Subscription::all(['status' => 'all'], $options);
 
         foreach ($subscriptions as $subscription) {
@@ -72,7 +72,7 @@ class SubscriptionController extends BaseController
     {
         $vendor = auth('customer')->user();
 
-        $options = ['stripe_account' => $vendor->vendorInfo->stripe_account_id];
+        $options = ['stripe_account' => $vendor->vendorInfo->stripe_connect_id];
 
         $subscription = Subscription::retrieve($id, $options);
         $product = Product::retrieve($subscription->items->data[0]->price->product, $options);
@@ -88,7 +88,7 @@ class SubscriptionController extends BaseController
     public function getCancelSubscription(string $id, BaseHttpResponse $response)
     {
         $vendor = auth('customer')->user();
-        $options = ['stripe_account' => $vendor->vendorInfo->stripe_account_id];
+        $options = ['stripe_account' => $vendor->vendorInfo->stripe_connect_id];
 
         Subscription::retrieve($id, $options)->cancel();
 
