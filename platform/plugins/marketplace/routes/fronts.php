@@ -16,7 +16,7 @@ Route::group([
             'uses' => 'PublicStoreController@getStores',
         ]);
 
-        Route::get(SlugHelper::getPrefix(Store::class, 'stores') . '/{slug}', [
+        Route::get((SlugHelper::getPrefix(Store::class, null) ? SlugHelper::getPrefix(Store::class) . '/'  : '') . '{slug}', [
             'uses' => 'PublicStoreController@getStore',
             'as' => 'public.store',
         ]);

@@ -87,10 +87,15 @@ class RegisterController extends Controller
         return Validator::make($data, (new RegisterRequest())->rules());
     }
 
+    protected function registered(Request $request, $customer)
+    {
+        $customer->sendEmailVerificationNotification();
+    }
+
     protected function create(array $data)
     {
         return Customer::query()->create([
-            'name' => BaseHelper::clean($data['name']),
+            'name' => (isset($data['name']) && !empty($data['name'])) ? BaseHelper::clean($data['name']) : null,
             'email' => BaseHelper::clean($data['email']),
             'password' => Hash::make($data['password']),
         ]);

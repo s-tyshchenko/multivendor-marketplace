@@ -10,10 +10,8 @@ class RegisterRequest extends Request
     public function rules(): array
     {
         $rules = [
-            'name' => 'required|max:120|min:2',
             'email' => 'required|max:120|min:6|email|unique:ec_customers',
-            'password' => 'required|min:6|confirmed',
-            'agree_terms_and_policy' => 'sometimes|accepted:1',
+            'password' => 'required|min:6',
         ];
 
         if (is_plugin_active('captcha')) {

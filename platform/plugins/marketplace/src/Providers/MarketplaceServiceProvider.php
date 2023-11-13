@@ -181,7 +181,7 @@ class MarketplaceServiceProvider extends ServiceProvider
         });
 
         SlugHelper::registerModule(Store::class, 'Stores');
-        SlugHelper::setPrefix(Store::class, 'stores');
+        SlugHelper::setPrefix(Store::class, '', true);
 
         SeoHelper::registerModule([Store::class]);
         SiteMapManager::registerKey('stores');

@@ -20,12 +20,6 @@
                                     @csrf
                                     <div class="form__content">
                                         <div class="form-group">
-                                            <input class="form-control" name="name" id="txt-name" type="text" value="{{ old('name') }}" placeholder="{{ __('Your name') }}">
-                                            @if ($errors->has('name'))
-                                                <span class="text-danger">{{ $errors->first('name') }}</span>
-                                            @endif
-                                        </div>
-                                        <div class="form-group">
                                             <input class="form-control" name="email" id="txt-email" type="email" value="{{ old('email') }}" placeholder="{{ __('Your email address') }}">
                                             @if ($errors->has('email'))
                                                 <span class="text-danger">{{ $errors->first('email') }}</span>
@@ -38,65 +32,6 @@
                                             @endif
                                         </div>
 
-                                        <div class="form-group">
-                                            <input class="form-control" type="password" name="password_confirmation" id="txt-password-confirmation" placeholder="{{ __('Password confirmation') }}">
-                                            @if ($errors->has('password_confirmation'))
-                                                <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
-                                            @endif
-                                        </div>
-
-                                        @if (is_plugin_active('marketplace') && apply_filters('marketplace_enabled_register_form', true))
-                                            <div class="show-if-vendor" @if (old('is_vendor') == 0) style="display: none" @endif>
-                                                <div class="form-group">
-                                                    <input class="form-control" name="shop_name" id="shop-name" type="text" value="{{ old('shop_name') }}" placeholder="{{ __('Shop Name') }}">
-                                                    @if ($errors->has('shop_name'))
-                                                        <span class="text-danger">{{ $errors->first('shop_name') }}</span>
-                                                    @endif
-                                                </div>
-                                                <div class="form-group shop-url-wrapper">
-                                                    <span class="d-inline-block float-right shop-url-status"></span>
-                                                    <input class="form-control" name="shop_url" id="shop-url" type="text" value="{{ old('shop_url') }}" placeholder="{{ __('Shop URL') }}" data-url="{{ route('public.ajax.check-store-url') }}">
-                                                    @if ($errors->has('shop_url'))
-                                                        <span class="text-danger">{{ $errors->first('shop_url') }}</span>
-                                                    @endif
-                                                    <span class="d-inline-block"><small data-base-url="{{ route('public.store', '') }}">{{ route('public.store', (string)old('shop_url')) }}</small></span>
-                                                </div>
-                                                <div class="form-group country-wrapper">
-                                                    <select class="form-control" name="country" id="country" placeholder="{{ __('Country') }}">
-                                                        @foreach(\Botble\Stripe\Services\Gateways\StripeConnectService::getAllowedCountriesList() as $code => $name)
-                                                            <option value="{{ $code }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @if ($errors->has('shop_url'))
-                                                        <span class="text-danger">{{ $errors->first('country') }}</span>
-                                                    @endif
-                                                </div>
-                                                <div class="form-group">
-                                                    <input class="form-control" name="shop_phone" id="shop-phone" type="text" value="{{ old('shop_phone') }}" placeholder="{{ __('Shop phone') }}">
-                                                    @if ($errors->has('shop_phone'))
-                                                        <span class="text-danger">{{ $errors->first('shop_phone') }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group user-role">
-                                                <p class="tags-radio d-inline-block me-3">
-                                                    <label>
-                                                        <input type="radio" name="is_vendor" value="0" @if (old('is_vendor') == 0) checked="checked" @endif>
-                                                        <span class="d-inline-block">
-                                                            {{ __('I am a customer') }}
-                                                        </span>
-                                                    </label>
-                                                </p>
-                                                <p class="tags-radio d-inline-block">
-                                                    <label>
-                                                        <input type="radio" name="is_vendor" value="1" @if (old('is_vendor') == 1) checked="checked" @endif>
-                                                        <span class="d-inline-block">
-                                                            {{ __('I am a vendor') }}
-                                                        </span>
-                                                    </label>
-                                                </p>
-                                            </div>
-                                        @endif
                                         <div class="form-group">
                                             <p>{{ __('Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy.') }}</p>
                                         </div>
@@ -118,11 +53,11 @@
 
                                         <div class="login_footer form-group">
                                             <div class="chek-form">
-                                                <div class="custome-checkbox">
-                                                    <input type="hidden" name="agree_terms_and_policy" value="0">
-                                                    <input class="form-check-input" type="checkbox" name="agree_terms_and_policy" id="agree-terms-and-policy" value="1" @if (old('agree_terms_and_policy') == 1) checked @endif>
-                                                    <label class="form-check-label" for="agree-terms-and-policy"><span>{!! BaseHelper::clean(__('I agree to terms & Policy.')) !!}</span></label>
+                                                <div class="d-none">
+                                                    <input type="hidden" name="agree_terms_and_policy" value="1">
+                                                    <input class="d-none" type="checkbox" name="agree_terms_and_policy" id="agree-terms-and-policy" value="1" @if (old('agree_terms_and_policy') == 1) checked @endif>
                                                 </div>
+                                                <div class="form-check-label"><span>{!! BaseHelper::clean(__('By registeing you agree to terms & policy.')) !!}</span></div>
                                             </div>
                                         </div>
 
