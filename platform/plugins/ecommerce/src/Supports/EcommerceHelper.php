@@ -365,7 +365,7 @@ class EcommerceHelper
             return 'nullable|' . $rule;
         }
 
-        return 'required|' . $rule;
+        return 'nullable|' . $rule;
     }
 
     public function getProductReviews(Product $product, int $star = 0, int $perPage = 10): LengthAwarePaginator
@@ -531,16 +531,16 @@ class EcommerceHelper
     public function getCustomerAddressValidationRules(string|null $prefix = ''): array
     {
         $rules = [
-            $prefix . 'name' => 'required|min:3|max:120',
-            $prefix . 'email' => 'email|nullable|max:60|min:6',
-            $prefix . 'state' => 'required|max:120',
-            $prefix . 'city' => 'required|max:120',
-            $prefix . 'address' => 'required|max:120',
+            $prefix . 'name' => 'nullable|max:120',
+            $prefix . 'email' => 'required|email|max:60|min:6',
+            $prefix . 'state' => 'nullable|max:120',
+            $prefix . 'city' => 'nullable|max:120',
+            $prefix . 'address' => 'nullable|max:120',
             $prefix . 'phone' => $this->getPhoneValidationRule(),
         ];
 
         if ($this->isUsingInMultipleCountries()) {
-            $rules[$prefix . 'country'] = 'required|' . Rule::in(array_keys($this->getAvailableCountries()));
+            $rules[$prefix . 'country'] = 'nullable|' . Rule::in(array_keys($this->getAvailableCountries()));
         }
 
         if ($this->loadCountriesStatesCitiesFromPluginLocation()) {

@@ -160,14 +160,11 @@ class StripePaymentService extends StripePaymentAbstract
         if ($this->isStripeApiConnect()) {
             if (!$subscriptionMode) {
                 $requestData['payment_intent_data'] = [
-                    'application_fee_amount' => $this->amount * (int)MarketplaceHelper::getSettingKey('fee_per_order') / 100,
-//                    'transfer_data' => [
-//                        'destination' => $data['store']['customer']['vendorInfo']['stripe_connect_id']
-//                    ],
+                    'application_fee_amount' => ($this->amount * intval(MarketplaceHelper::getSetting('fee_per_order')) / 100) * 100,
                 ];
             } else {
                 $requestData['subscription_data'] = [
-                    'application_fee_percent' => (int)MarketplaceHelper::getSettingKey('fee_per_order') * 100
+                    'application_fee_percent' => intval(MarketplaceHelper::getSetting('fee_per_order'))
                 ];
             }
         }

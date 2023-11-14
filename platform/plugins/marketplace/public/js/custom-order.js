@@ -1,0 +1,1 @@
+$((function(){$(document).on("click",'button[data-toggle="modal"][data-target="#create-custom-order-modal"]',(function(t){t.preventDefault(),$("#create-custom-order-modal").modal("toggle")})),$(document).on("click",'#create-custom-order-modal button[data-dismiss="modal"]',(function(t){t.preventDefault(),$("#create-custom-order-modal").modal("hide")}))}));
