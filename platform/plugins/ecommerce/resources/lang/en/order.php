@@ -37,6 +37,7 @@ return [
     'invoice_for_order' => 'Invoice for order',
     'created' => 'Created',
     'invoice' => 'Invoice',
+    'charge_id' => 'Charge Id',
     'return' => 'Order Return Request',
     'is_return' => 'Return checkbox',
     'total_refund_amount' => 'Total refund amount',

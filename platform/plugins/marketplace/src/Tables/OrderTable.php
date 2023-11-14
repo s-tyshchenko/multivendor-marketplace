@@ -37,6 +37,9 @@ class OrderTable extends TableAbstract
     {
         $data = $this->table
             ->eloquent($this->query())
+            ->editColumn('charge_id', function ($item) {
+                return $item->payment->charge_id;
+            })
             ->editColumn('payment_status', function (Order $item) {
                 if (! is_plugin_active('payment')) {
                     return '&mdash;';
@@ -54,9 +57,8 @@ class OrderTable extends TableAbstract
                 return BaseHelper::clean($item->payment->payment_channel->label() ?: '&mdash;');
             })
             ->formatColumn('amount', PriceFormatter::class)
-            ->formatColumn('shipping_amount', PriceFormatter::class)
             ->editColumn('user_id', function ($item) {
-                return BaseHelper::clean($item->user->name ?: $item->address->name);
+                return BaseHelper::clean($item->user ? $item->user->email : $item->address->email);
             });
 
         if (EcommerceHelper::isTaxEnabled()) {
@@ -105,17 +107,14 @@ class OrderTable extends TableAbstract
                 ->alignLeft(),
             Column::make('amount')
                 ->title(trans('plugins/ecommerce::order.amount')),
+            Column::make('charge_id')
+                ->title(trans('plugins/ecommerce::order.charge_id')),
         ];
 
         if (EcommerceHelper::isTaxEnabled()) {
             $columns[] = Column::make('tax_amount')
                 ->title(trans('plugins/ecommerce::order.tax_amount'));
         }
-
-        $columns = array_merge($columns, [
-            Column::formatted('shipping_amount')
-                ->title(trans('plugins/ecommerce::order.shipping_amount')),
-        ]);
 
         if (is_plugin_active('payment')) {
             $columns = array_merge($columns, [
