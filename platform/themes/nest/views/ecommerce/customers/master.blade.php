@@ -31,26 +31,6 @@
             'routes' => ['customer.downloads']
         ],
         [
-            'key'    => 'customer.order_returns',
-            'label'  => __('Order return requests'),
-            'icon'   => 'fi-rs-arrow-small-down',
-            'routes' => ['customer.order_returns.view']
-        ],
-        [
-            'key'    => 'customer.address',
-            'label'  => __('Address books'),
-            'icon'   => 'fi-rs-marker',
-            'routes' => [
-                'customer.address.create',
-                'customer.address.edit'
-            ],
-        ],
-        [
-            'key'   => 'public.wishlist',
-            'label' => __('Wishlist'),
-            'icon'  => 'fi-rs-heart',
-        ],
-        [
             'key'   => 'customer.change-password',
             'label' => __('Change password'),
             'icon'  => 'fi-rs-key'
