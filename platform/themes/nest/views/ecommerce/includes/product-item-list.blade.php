@@ -54,7 +54,7 @@
                 <span class="font-small ml-5 text-muted">({{ $product->reviews_count }})</span>
             </div>
         @endif
-        @if (is_plugin_active('marketplace') && $product->store->id)
+        @if (0 && is_plugin_active('marketplace') && $product->store->id)
             <div>
                 <span class="font-small text-muted">{{ __('Sold By') }} <a href="{{ $product->store->url }}">{!! BaseHelper::clean($product->store->name) !!}</a></span>
             </div>

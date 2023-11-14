@@ -54,7 +54,7 @@
                     <span class="font-small ml-5 text-muted">({{ $product->reviews_count }})</span>
                 </div>
             @endif
-            @if (is_plugin_active('marketplace') && $product->store->id)
+            @if (0 && is_plugin_active('marketplace') && $product->store->id)
                 <div>
                     <span class="font-small text-muted">{{ __('Sold By') }} <a href="{{ $product->store->url }}">{!! BaseHelper::clean($product->store->name) !!}</a></span>
                 </div>
@@ -64,13 +64,20 @@
                 {!! apply_filters('ecommerce_before_product_price_in_listing', null, $product) !!}
 
                 <div class="product-price">
-                    <span>{{ format_price($product->front_sale_price_with_taxes) }}</span>
-                    @if (!is_null($product->price_recurring_interval))
-                    <span class="font-weight-normal"> per {{ $product->price_recurring_interval }}</span>
-                    @endif
-                    @if ($product->front_sale_price !== $product->price)
-                        <span class="old-price">{{ format_price($product->price_with_taxes) }}</span>
-                    @endif
+                    <div class="d-flex flex-column">
+                        @if (!is_null($product->price_recurring_interval))
+                            <small class="">{{ __('Subscription') }}</small>
+                        @endif
+                        <div>
+                            <span>{{ format_price($product->front_sale_price_with_taxes) }}</span>
+                            @if (!is_null($product->price_recurring_interval))
+                                <span class="font-weight-normal"> per {{ $product->price_recurring_interval }}</span>
+                            @endif
+                            @if ($product->front_sale_price !== $product->price)
+                                <span class="old-price">{{ format_price($product->price_with_taxes) }}</span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
 
                 {!! apply_filters('ecommerce_after_product_price_in_listing', null, $product) !!}

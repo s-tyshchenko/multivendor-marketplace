@@ -14,9 +14,7 @@
                             <span class="text-muted">{{ __('Since :year', ['year' => $store->created_at->year]) }}</span>
                         </div>
                         <h3 class="mb-5 text-white"><a href="{{ $store->url }}" class="text-white">{!! BaseHelper::clean($store->name) !!}</a></h3>
-                        <div class="mb-15">
-                            @include(Theme::getThemeNamespace('views.marketplace.stores.partials.rating'))
-                        </div>
+
                         <div class="mb-15 text-white">
                             @include(Theme::getThemeNamespace('views.marketplace.stores.partials.info'))
                         </div>

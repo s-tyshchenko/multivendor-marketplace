@@ -31,7 +31,7 @@
                                         <p class="mb-5 font-heading h6">
                                             <a class="product-name mb-10 text-heading" href="{{ $product->original_product->url }}">{{ $product->original_product->name }}  @if ($product->isOutOfStock()) <span class="stock-status-label">({!! $product->stock_status_html !!})</span> @endif</a>
                                         </p>
-                                        @if (is_plugin_active('marketplace') && $product->original_product->store->id)
+                                        @if (0 && is_plugin_active('marketplace') && $product->original_product->store->id)
                                             <p class="d-block mb-0 sold-by">
                                                 <small>
                                                     <span>{{ __('Sold by') }}: </span>

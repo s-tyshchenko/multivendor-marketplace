@@ -4,7 +4,8 @@
          background-position: center;
          background-repeat: no-repeat;
          border-radius: 0 0 20px 20px">
-    <h1 class="display-2 mb-20">{{ $store->name }}</h1>
+    <h1 class="display-2 mb-10">{{ $store->name }}</h1>
+    <p class="mb-20">{{ $store->url }}</p>
     <div class="row">
         <div class="col-12 mb-50">
             @php
@@ -44,9 +45,6 @@
                 </div>
                 <h4 class="mb-5"><a href="{{ $store->url }}"
                                     class="text-heading">{!! BaseHelper::clean($store->name) !!}</a></h4>
-                <div class="mb-15">
-                    @include(Theme::getThemeNamespace('views.marketplace.stores.partials.rating'))
-                </div>
 
                 <div class="vendor-des">
                     <button type="button" data-toggle="modal" data-target="#create-custom-order-modal"

@@ -17,7 +17,6 @@
                 </div>
                 <h4 class="mb-5"><a href="{{ $store->url }}">{{ $store->name }}</a></h4>
 
-                @include(Theme::getThemeNamespace('views.marketplace.stores.partials.rating'))
                 <div class="vendor-info d-flex justify-content-between align-items-end mt-10">
                     @include(Theme::getThemeNamespace('views.marketplace.stores.partials.info'))
                     <a href="{{ $store->url }}" class="btn btn-xs">{{ __('Visit Store') }} <i class="fi-rs-arrow-small-right"></i></a>

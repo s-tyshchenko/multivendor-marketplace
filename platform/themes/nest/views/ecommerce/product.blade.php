@@ -50,18 +50,9 @@
                 @endforeach
 
                 <h2 class="title-detail">{!! BaseHelper::clean($product->name) !!}</h2>
-                <div class="product-detail-rating">
-                    @if (EcommerceHelper::isReviewEnabled())
-                        <a href="#Reviews">
-                            <div class="product-rate-cover text-end">
-                                <div class="product-rate d-inline-block">
-                                    <div class="product-rating" style="width: {{ $product->reviews_avg * 20 }}%"></div>
-                                </div>
-                                <span class="font-small ml-5 text-muted">({{ __(':count reviews', ['count' => $product->reviews_count]) }})</span>
-                            </div>
-                        </a>
+                    @if (!is_null($product->price_recurring_interval))
+                        <p class="">{{ __('Subscription') }}</p>
                     @endif
-                </div>
                 <div class="clearfix product-price-cover">
                     <div class="product-price primary-color float-left">
                         <span class="current-price text-brand">
@@ -80,7 +71,7 @@
                 </div>
 
                 <div class="short-desc mb-30">
-                    @if (is_plugin_active('marketplace') && $product->store_id)
+                    @if (0 && is_plugin_active('marketplace') && $product->store_id)
                         <p><span class="d-inline-block me-1">{{ __('Sold By') }}:</span> <a href="{{ $product->store->url }}"><strong>{!! BaseHelper::clean($product->store->name) !!}</strong></a></p>
                     @endif
 
@@ -148,7 +139,7 @@
 
                     <ul class="mr-50 float-start">
 
-                        <li class="mb-5 @if (! $product->sku) d-none @endif" id="product-sku">
+                        <li class="mb-5 @if (1 || !$product->sku) d-none @endif" id="product-sku">
                             <span class="d-inline-block me-1">{{ __('SKU') }}:</span> <span class="sku-text">{{ $product->sku }}</span>
                         </li>
 
