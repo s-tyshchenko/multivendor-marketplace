@@ -22,6 +22,7 @@ use Botble\Marketplace\Facades\MarketplaceHelper;
 use Botble\Marketplace\Forms\Fields\CustomEditorField;
 use Botble\Marketplace\Forms\Fields\CustomImagesField;
 use Botble\Marketplace\Http\Requests\ProductRequest;
+use Botble\Marketplace\Models\Store;
 use Botble\Marketplace\Tables\ProductVariationTable;
 
 class ProductForm extends BaseProductForm
@@ -31,6 +32,8 @@ class ProductForm extends BaseProductForm
         $this->addAssets();
 
         $productId = null;
+        $store = Store::query()->where('customer_id', '=', auth('customer')->id())->first();
+        $isFirstProduct = !Product::query()->where('store_id', '=', $store->id)->exists();
         $tags = null;
 
         if ($this->getModel()) {
@@ -94,6 +97,14 @@ class ProductForm extends BaseProductForm
                     'priority' => 2,
                 ],
             ]);
+
+        if ($isFirstProduct) {
+            $this->addMetaBoxes([
+                'terms-and-conditions' => [
+                    'content' => view('plugins/ecommerce::products.partials.terms-and-conditions')
+                ]
+            ]);
+        }
 
     }
 }

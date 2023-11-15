@@ -48,15 +48,7 @@ class ProductController extends BaseController
 
     public function create(FormBuilder $formBuilder, Request $request)
     {
-        if (EcommerceHelper::isEnabledSupportDigitalProducts()) {
-            if ($request->input('product_type') == ProductTypeEnum::DIGITAL) {
-                PageTitle::setTitle(trans('plugins/ecommerce::products.create_product_type.digital'));
-            } else {
-                PageTitle::setTitle(trans('plugins/ecommerce::products.create_product_type.physical'));
-            }
-        } else {
-            PageTitle::setTitle(trans('plugins/ecommerce::products.create'));
-        }
+        PageTitle::setTitle(trans('plugins/ecommerce::products.create_product_type.digital'));
 
         return $formBuilder->create(ProductForm::class)->renderForm();
     }
