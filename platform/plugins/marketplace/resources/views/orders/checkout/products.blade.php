@@ -63,8 +63,8 @@
                 @endforeach
             </div>
 
-            @if (0 && $isAvailableShipping)
-                <div class="shipping-method-wrapper p-3">
+            @if ($isAvailableShipping)
+                <div class="shipping-method-wrapper p-3 d-none">
                     @if (!empty($shipping))
                         <div class="payment-checkout-form">
                             <div class="mx-0">

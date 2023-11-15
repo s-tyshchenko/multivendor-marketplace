@@ -125,12 +125,13 @@ class StripePaymentService extends StripePaymentAbstract
 
         $customerId = null;
         if (auth('customer')->check() && $customer = auth('customer')->user()) {
+
             if ($this->isStripeApiConnect()) {
                 if (empty($storeCustomer = $customer->storeCustomers($data['store']['id'])->first())) {
                     $stripeCustomer = Customer::create([
                         'email' => $customer->email,
-                        'name' => $customer->name,
-                        'phone' => $customer->phone
+                        'name' => $customer->name ?: 'Anonymous',
+                        'phone' => $customer->phone ?: null
                     ], $requestOptions);
 
                     $storeCustomer = StoreCustomer::query()->create([

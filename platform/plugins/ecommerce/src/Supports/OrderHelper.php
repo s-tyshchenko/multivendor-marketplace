@@ -668,7 +668,7 @@ class OrderHelper
                 Arr::forget($sessionData, 'created_order_address');
                 Arr::forget($sessionData, 'created_order_address_id');
             }
-        } elseif ($addressData && ! empty($addressData['name'])) {
+        } elseif ($addressData && ! empty($addressData['email'])) {
             if (! isset($sessionData['created_order_address'])) {
                 $createdOrderAddress = $this->createOrderAddress($addressData, $sessionData);
                 if ($createdOrderAddress) {

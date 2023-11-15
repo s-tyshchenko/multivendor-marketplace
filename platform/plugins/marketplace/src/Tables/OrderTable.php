@@ -58,7 +58,7 @@ class OrderTable extends TableAbstract
             })
             ->formatColumn('amount', PriceFormatter::class)
             ->editColumn('user_id', function ($item) {
-                return BaseHelper::clean($item->user ? $item->user->email : $item->address->email);
+                return BaseHelper::clean($item->user->name ? $item->user->name : 'Anonymous');
             });
 
         if (EcommerceHelper::isTaxEnabled()) {

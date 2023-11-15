@@ -810,6 +810,8 @@ class EcommerceHelper
 
     public function isAvailableShipping(Collection $products): bool
     {
+        return true;
+
         if (! $this->isEnabledSupportDigitalProducts()) {
             return true;
         }

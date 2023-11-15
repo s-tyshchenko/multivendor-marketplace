@@ -316,16 +316,15 @@ class PublicCheckoutController
             if (! isset($sessionData['created_account']) && $request->input('create_account') == 1) {
                 $validator = Validator::make($request->input(), [
                     'password' => 'required|min:6',
-                    'password_confirmation' => 'required|same:password',
                     'address.email' => 'required|max:60|min:6|email|unique:ec_customers,email',
-                    'address.name' => 'required|min:3|max:120',
+                    'address.name' => 'nullable|max:120',
                 ]);
 
                 if (! $validator->fails()) {
                     $customer = Customer::query()->create([
-                        'name' => BaseHelper::clean($request->input('address.name')),
+                        'name' => BaseHelper::clean($request->input('address.name', 'Anonymous')),
                         'email' => BaseHelper::clean($request->input('address.email')),
-                        'phone' => BaseHelper::clean($request->input('address.phone')),
+                        'phone' => BaseHelper::clean($request->input('address.phone', null)),
                         'password' => Hash::make($request->input('password')),
                     ]);
 
@@ -594,6 +593,13 @@ class PublicCheckoutController
 
         $products = Cart::instance('cart')->products();
 
+        if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
+            return $response
+                ->setError()
+                ->setNextUrl(route('customer.login'))
+                ->setMessage(__('Your shopping cart has subscription product(s), so you need to sign in to continue!'));
+        }
+
         if (
             EcommerceHelper::isEnabledSupportDigitalProducts() &&
             ! EcommerceHelper::canCheckoutForDigitalProducts($products)
@@ -602,13 +608,6 @@ class PublicCheckoutController
                 ->setError()
                 ->setNextUrl(route('customer.login'))
                 ->setMessage(__('Your shopping cart has digital product(s), so you need to sign in to continue!'));
-        }
-
-        if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
-            return $response
-                ->setError()
-                ->setNextUrl(route('customer.login'))
-                ->setMessage(__('Your shopping cart has subscription product(s), so you need to sign in to continue!'));
         }
 
         if (EcommerceHelper::getMinimumOrderAmount() > Cart::instance('cart')->rawSubTotal()) {

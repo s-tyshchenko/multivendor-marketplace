@@ -625,8 +625,7 @@
                             <li class="overflow-ellipsis">
                                 <a
                                     class="hover-underline"
-                                    href="mailto:{{ $order->user->email ?: $order->address->email }}"
-                                >{{ $order->user->email ?: $order->address->email }}</a>
+                                >{{ $order->user->name ?: 'Anonymous' }}</a>
                             </li>
                             @if ($order->user->id)
                                 <li>

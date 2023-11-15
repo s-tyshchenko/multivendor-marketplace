@@ -132,7 +132,7 @@
         </div>
         <div class="password-group @if (!$errors->has('password') && !$errors->has('password_confirmation')) d-none @endif">
             <div class="row">
-                <div class="col-md-6 col-12">
+                <div class="col-12">
                     <div class="form-group  @error('password') has-error @enderror">
                         <div class="form-input-wrapper">
                             <input
@@ -145,22 +145,6 @@
                             <label for="password">{{ __('Password') }}</label>
                         </div>
                         {!! Form::error('password', $errors) !!}
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-12">
-                    <div class="form-group @error('password_confirmation') has-error @enderror">
-                        <div class="form-input-wrapper">
-                            <input
-                                class="form-control"
-                                id="password-confirm"
-                                name="password_confirmation"
-                                type="password"
-                                autocomplete="password-confirmation"
-                            >
-                            <label for="password-confirm">{{ __('Password confirmation') }}</label>
-                        </div>
-                        {!! Form::error('password_confirmation', $errors) !!}
                     </div>
                 </div>
             </div>
