@@ -26,8 +26,7 @@ class PublicStoreController
 {
     public function getStores(Request $request)
     {
-        Theme::breadcrumb()->add(__('Home'), route('public.index'))
-            ->add(__('Stores'), route('public.stores'));
+        Theme::breadcrumb()->add(__('Home'), route('public.index'));
 
         SeoHelper::setTitle(__('Stores'))->setDescription(__('Stores'));
 
@@ -108,7 +107,6 @@ class PublicStoreController
 
         Theme::breadcrumb()
             ->add(__('Home'), route('public.index'))
-            ->add(__('Stores'), route('public.stores'))
             ->add($store->name, $store->url);
 
         $with = EcommerceHelper::withProductEagerLoadingRelations();
