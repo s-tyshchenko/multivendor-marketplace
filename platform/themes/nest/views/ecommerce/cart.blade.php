@@ -81,10 +81,18 @@
                                                 @endif
                                             </td>
                                             <td class="price" data-title="{{ __('Price') }}">
-                                                <h4 class="text-body">{{ format_price($cartItem->price) }} </h4>
+                                                @if (!is_null($product->price_recurring_interval))
+                                                    <small>Subscription</small>
+                                                @endif
+                                                <h4 class="text-body">{{ format_price($cartItem->price) }}
+                                                    @if (!is_null($product->price_recurring_interval))
+                                                        <small>{{ __('per :interval', ['interval' => $product->price_recurring_interval]) }}</small>
+                                                    @endif
+                                                </h4>
                                                 @if ($product->front_sale_price != $product->price)
                                                     <small><del>{{ format_price($product->price) }}</del></small>
                                                 @endif
+
                                             </td>
                                             <td class="text-center detail-info" data-title="{{ __('Stock') }}">
                                                 <div class="detail-extralink mr-15">
