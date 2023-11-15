@@ -93,7 +93,7 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
             'middleware' => [
                 'web',
                 'core',
-                EcommerceHelper::isEnableEmailVerification() ? 'customer' : 'customer.guest',
+                !EcommerceHelper::isEnableEmailVerification() ? 'customer' : 'customer.guest',
             ],
             'as' => 'customer.',
         ], function () {
