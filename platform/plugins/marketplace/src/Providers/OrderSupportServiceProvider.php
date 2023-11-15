@@ -622,9 +622,9 @@ class OrderSupportServiceProvider extends ServiceProvider
                 'store_phone' => get_ecommerce_setting('store_phone'),
                 'order_id' => $theFirst->code,
                 'order_token' => $theFirst->token,
-                'customer_name' => $theFirst->user->name ?: $theFirst->address->name,
+                'customer_name' => $theFirst->user->name ?: ($theFirst->address->name ?: 'Anonymous'),
                 'customer_email' => $theFirst->user->email ?: $theFirst->address->email,
-                'customer_phone' => $theFirst->user->phone ?: $theFirst->address->phone,
+                'customer_phone' => $theFirst->user->phone ?: ($theFirst->address->phone ?: '-'),
                 'customer_address' => $customerAddress,
                 'product_list' => view('plugins/marketplace::emails.partials.order-detail', compact('orders'))
                     ->render(),
