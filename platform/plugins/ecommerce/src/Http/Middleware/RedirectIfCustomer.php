@@ -11,7 +11,7 @@ class RedirectIfCustomer
     public function handle(Request $request, Closure $next, string $guard = 'customer')
     {
         if (Auth::guard($guard)->check()) {
-            return redirect(route('customer.overview'));
+            return redirect(route('customer.edit-account'));
         }
 
         return $next($request);

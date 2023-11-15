@@ -120,7 +120,7 @@ class RegisterController extends Controller
         $this->guard()->login($customer);
 
         return $response
-            ->setNextUrl(route('customer.overview'))
+            ->setNextUrl(route('customer.edit-account'))
             ->setMessage(__('You successfully confirmed your email address.'));
     }
 

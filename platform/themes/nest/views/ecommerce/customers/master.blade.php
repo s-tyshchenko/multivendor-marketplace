@@ -3,11 +3,6 @@
 
     $menus = [
         [
-            'key'   => 'customer.overview',
-            'label' => __('Overview'),
-            'icon'  => 'fi-rs-settings-sliders'
-        ],
-        [
             'key'   => 'customer.edit-account',
             'label' => __('Profile'),
             'icon'  => 'fi-rs-edit-alt'

@@ -74,7 +74,7 @@ class PublicController extends Controller
 
         Theme::breadcrumb()
             ->add(__('Home'), route('public.index'))
-            ->add(__('Account information'), route('customer.overview'));
+            ->add(__('Account information'), route('customer.edit-account'));
 
         $customer = auth('customer')->user();
 
@@ -104,7 +104,9 @@ class PublicController extends Controller
             ->add(__('Home'), route('public.index'))
             ->add(__('Profile'), route('customer.edit-account'));
 
-        return Theme::scope('ecommerce.customers.edit-account', [], 'plugins/ecommerce::themes.customers.edit-account')
+        $customer = auth('customer')->user();
+
+        return Theme::scope('ecommerce.customers.edit-account', compact('customer'), 'plugins/ecommerce::themes.customers.edit-account')
             ->render();
     }
 

@@ -28,7 +28,7 @@
             'order' => 3,
         ],
         [
-            'key' => 'customer.overview',
+            'key' => 'customer.edit-account',
             'icon' => 'icon-user',
             'name' => __('Customer dashboard'),
             'order' => 7,

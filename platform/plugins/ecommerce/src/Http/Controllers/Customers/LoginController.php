@@ -37,7 +37,7 @@ class LoginController extends Controller
         if (! session()->has('url.intended') &&
             ! in_array(url()->previous(), [route('customer.login'), route('customer.register')])
         ) {
-            session(['url.intended' => url()->previous()]);
+            session(['url.intended' => route('customer.edit-account')]);
         }
 
         Theme::asset()
