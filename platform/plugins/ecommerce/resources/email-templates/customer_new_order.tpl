@@ -11,13 +11,6 @@
 <p>Note: {{ order_note }}</p>
 {% endif %}
 
-<h3>Customer information</h3>
-
-<p>{{ customer_name }} - {{ customer_phone }}, {{ customer_address }}</p>
-
-<h3>Shipping method</h3>
-<p>{{ shipping_method }}</p>
-
 <h3>Payment method</h3>
 <p>{{ payment_method }}</p>
 
