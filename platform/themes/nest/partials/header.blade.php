@@ -198,7 +198,7 @@
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                     <ul>
                                         @if (auth('customer')->check())
-                                            <li><a href="{{ route('customer.overview') }}"><i class="fi fi-rs-user mr-10"></i>{{ __('My Account') }}</a></li>
+                                            <li><a href="{{ route('customer.edit-account') }}"><i class="fi fi-rs-user mr-10"></i>{{ __('My Account') }}</a></li>
                                             @if (EcommerceHelper::isOrderTrackingEnabled())
                                                 <li><a href="{{ route('public.orders.tracking') }}"><i class="fi fi-rs-location-alt mr-10"></i>{{ __('Order Tracking') }}</a></li>
                                             @endif

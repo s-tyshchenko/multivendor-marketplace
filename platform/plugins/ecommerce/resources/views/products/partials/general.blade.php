@@ -57,6 +57,17 @@
 
     <div class="col-md-6 price-recurring-interval">
         <div class="form-group mb-3">
+            <label class="text-title-field">
+                Price type
+            </label>
+            <input type="radio" id="priceType1" name="price_type" value="one-time" checked />
+            <label for="priceType1">One-time</label>
+
+            <input type="radio" id="priceType2" name="price_type" value="subscription" />
+            <label for="priceType2">Subscription</label>
+        </div>
+
+        <div id="subscription-form-group" class="form-group mb-3 @if(!$product || is_null($product->price_recurring_interval)) d-none @endif">
             <label class="text-title-field">{{ trans('plugins/ecommerce::products.form.price_recurring_interval') }}</label>
             <select
                 class="next-input price-recurring-interval"
@@ -75,3 +86,22 @@
 {!! apply_filters('ecommerce_product_variation_form_middle', null, $product) !!}
 
 {!! apply_filters('ecommerce_product_variation_form_end', null, $product) !!}
+
+<script>
+    $(document).ready(function () {
+        $('input[name="price_type"]').change((e) => {
+            console.log()
+            if (e.target.value == 'one-time') {
+                if(!$('#subscription-form-group').hasClass('d-none')) {
+                    $('#subscription-form-group').addClass('d-none');
+                }
+            } else if (e.target.value == 'subscription') {
+                if ($('#subscription-form-group').hasClass('d-none')) {
+                    $('#subscription-form-group').removeClass('d-none');
+                }
+            }
+        })
+    });
+
+    console.log(23232)
+</script>

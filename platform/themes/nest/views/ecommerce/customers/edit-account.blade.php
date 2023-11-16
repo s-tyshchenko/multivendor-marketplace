@@ -3,6 +3,10 @@
 
     @if (!$customer->is_vendor)
         @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.become-vendor-form'))
+    @else
+        @if (!is_null($customer->vendor_verified_at))
+            @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.stripe-banner'))
+        @endif
     @endif
 
     <div class="card">

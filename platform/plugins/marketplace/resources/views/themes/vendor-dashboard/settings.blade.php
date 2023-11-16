@@ -1,6 +1,8 @@
 @extends(MarketplaceHelper::viewPath('vendor-dashboard.layouts.master'))
 
 @section('content')
+    @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.stripe-banner'))
+
     <div class="ps-card__content">
         {!! Form::open([
             'route' => 'marketplace.vendor.settings',
@@ -76,7 +78,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">

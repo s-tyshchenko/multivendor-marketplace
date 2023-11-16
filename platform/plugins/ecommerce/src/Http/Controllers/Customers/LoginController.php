@@ -87,6 +87,12 @@ class LoginController extends Controller
         $this->sendFailedLoginResponse();
     }
 
+
+    public function redirectPath(): string
+    {
+        return route('customer.edit-account');
+    }
+
     public function logout(Request $request)
     {
         $this->guard()->logout();

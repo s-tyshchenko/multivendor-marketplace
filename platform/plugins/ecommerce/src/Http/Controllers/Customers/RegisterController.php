@@ -15,7 +15,9 @@ use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Theme\Facades\Theme;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -69,9 +71,8 @@ class RegisterController extends Controller
         if (EcommerceHelper::isEnableEmailVerification()) {
             $this->registered($request, $customer);
 
-            return $response
-                    ->setNextUrl(route('customer.login'))
-                    ->setMessage(__('We have sent you an email to verify your email. Please check and confirm your email address!'));
+            return Theme::scope('ecommerce.customers.confirm-email', ['email' => $customer->email], 'plugins/ecommerce::themes.customers.register')
+                ->render();
         }
 
         $customer->confirmed_at = Carbon::now();
