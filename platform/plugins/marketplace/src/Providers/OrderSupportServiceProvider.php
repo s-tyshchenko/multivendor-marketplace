@@ -249,7 +249,6 @@ class OrderSupportServiceProvider extends ServiceProvider
         }
 
         if ($paymentData['error'] || ! $paymentData['charge_id']) {
-            die(var_dump($paymentData));
             return $response
                 ->setError()
                 ->setNextUrl(PaymentHelper::getCancelURL($token))
