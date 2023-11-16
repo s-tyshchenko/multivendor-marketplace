@@ -118,9 +118,9 @@ class StripePaymentService extends StripePaymentAbstract
 
         $requestOptions = [];
         if ($this->isStripeApiConnect()) {
-//            $requestOptions = [
-//                'stripe_account' => $data['store']['customer']['vendorInfo']['stripe_connect_id']
-//            ];
+            $requestOptions = [
+                'stripe_account' => $data['store']['customer']['vendorInfo']['stripe_connect_id']
+            ];
         }
 
         $customerId = null;
@@ -165,10 +165,7 @@ class StripePaymentService extends StripePaymentAbstract
                 ];
             } else {
                 $requestData['subscription_data'] = [
-                    'application_fee_percent' => intval(MarketplaceHelper::getSetting('fee_per_order')),
-                    'transfer_data' => [
-                        'destination' => $data['store']['customer']['vendorInfo']['stripe_connect_id']
-                    ]
+                    'application_fee_percent' => intval(MarketplaceHelper::getSetting('fee_per_order'))
                 ];
             }
         }
