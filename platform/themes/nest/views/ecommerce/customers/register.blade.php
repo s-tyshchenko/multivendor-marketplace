@@ -53,11 +53,11 @@
 
                                         <div class="login_footer form-group">
                                             <div class="chek-form">
-                                                <div class="d-none">
-                                                    <input type="hidden" name="agree_terms_and_policy" value="1">
-                                                    <input class="d-none" type="checkbox" name="agree_terms_and_policy" id="agree-terms-and-policy" value="1" @if (old('agree_terms_and_policy') == 1) checked @endif>
+                                                <div class="custome-checkbox">
+                                                    <input type="hidden" name="agree_terms_and_policy" value="0">
+                                                    <input class="form-check-input" type="checkbox" name="agree_terms_and_policy" id="agree-terms-and-policy" value="1" @if (old('agree_terms_and_policy') == 1) checked @endif>
+                                                    <label class="form-check-label" for="agree-terms-and-policy"><span>{!! BaseHelper::clean(__('I agree to terms & Policy.')) !!}</span></label>
                                                 </div>
-                                                <div class="form-check-label"><span>{!! BaseHelper::clean(__('By registeing you agree to terms & policy.')) !!}</span></div>
                                             </div>
                                         </div>
 
