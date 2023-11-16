@@ -117,20 +117,23 @@
     </div>
 
     @if (!auth('customer')->check())
-        <div class="mb-3 form-group">
+        <div class="mb-3 form-group @if(!$canCheckoutForSubscriptionProducts) d-none @endif">
             <input
                 id="create_account"
                 name="create_account"
                 type="checkbox"
                 value="1"
-                @if (old('create_account') == 1) checked @endif
+                @if (old('create_account') == 1 || !$canCheckoutForSubscriptionProducts) checked @endif
             >
             <label
                 class="control-label"
                 for="create_account"
             >{{ __('Register an account with above information?') }}</label>
         </div>
-        <div class="password-group @if (!$errors->has('password') && !$errors->has('password_confirmation')) d-none @endif">
+        @if (!$canCheckoutForSubscriptionProducts)
+            <p>Your cart contains subscription products, you must create an account.</p>
+        @endif
+        <div class="password-group @if ($canCheckoutForSubscriptionProducts && !$errors->has('password') && !$errors->has('password_confirmation')) d-none @endif">
             <div class="row">
                 <div class="col-12">
                     <div class="form-group  @error('password') has-error @enderror">

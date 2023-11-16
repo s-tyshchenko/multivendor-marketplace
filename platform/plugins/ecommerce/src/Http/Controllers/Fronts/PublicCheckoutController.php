@@ -108,12 +108,12 @@ class PublicCheckoutController
                 ->setMessage(__('Your shopping cart has digital product(s), so you need to sign in to continue!'));
         }
 
-        if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
+        /*if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
             return $response
                 ->setError()
                 ->setNextUrl(route('customer.login'))
                 ->setMessage(__('Your shopping cart has subscription product(s), so you need to sign in to continue!'));
-        }
+        }*/
 
         $handleTaxService->execute($products, $sessionCheckoutData);
 
@@ -245,6 +245,7 @@ class PublicCheckoutController
 
         $isShowAddressForm = EcommerceHelper::isSaveOrderShippingAddress($products);
         $isSingleVendorCheckout = MarketplaceHelper::isSingleVendorProducts($products);
+        $canCheckoutForSubscriptionProducts = EcommerceHelper::canCheckoutForSubscriptionProducts($products);
 
         $data = compact(
             'token',
@@ -257,7 +258,8 @@ class PublicCheckoutController
             'sessionCheckoutData',
             'products',
             'isShowAddressForm',
-            'isSingleVendorCheckout'
+            'isSingleVendorCheckout',
+            'canCheckoutForSubscriptionProducts'
         );
 
         if (auth('customer')->check()) {
@@ -313,7 +315,7 @@ class PublicCheckoutController
         }
 
         if ($request->input('address', [])) {
-            if (! isset($sessionData['created_account']) && $request->input('create_account') == 1) {
+            if (!EcommerceHelper::canCheckoutForSubscriptionProducts($products) || (!isset($sessionData['created_account']) && $request->input('create_account') == 1)) {
                 $validator = Validator::make($request->input(), [
                     'password' => 'required|min:6',
                     'address.email' => 'required|max:60|min:6|email|unique:ec_customers,email',
@@ -593,12 +595,6 @@ class PublicCheckoutController
 
         $products = Cart::instance('cart')->products();
 
-        if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
-            return $response
-                ->setError()
-                ->setNextUrl(route('customer.login'))
-                ->setMessage(__('Your shopping cart has subscription product(s), so you need to sign in to continue!'));
-        }
 
         if (
             EcommerceHelper::isEnabledSupportDigitalProducts() &&
