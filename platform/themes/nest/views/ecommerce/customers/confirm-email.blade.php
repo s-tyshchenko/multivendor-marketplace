@@ -12,7 +12,7 @@
                     {{ $email }}
                         Check your email, click the confirmation, and follow instructions to continue.</p>
 
-                    <a href="{{ route('customer.resend_confirmation') }}">Resend email</a>
+                    <a href="{{ route('customer.resend_confirmation', $email) }}">Resend email</a>
 
                 </div>
             </div>
