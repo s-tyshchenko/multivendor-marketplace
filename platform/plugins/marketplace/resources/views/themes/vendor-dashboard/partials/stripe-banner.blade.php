@@ -7,12 +7,11 @@
             {{ __('Get started with Stripe Connect on our platform!') }}
         </h4>
         <p>{{ __('Connect Stripe Connect: Onboard to sell and receive payments') }}</p>
-        <button
-            id="vendor-retrieve-stripe-connect-link"
+        <a
             class="btn btn-primary"
-            data-action="{{ route('payments.stripe.connect-link') }}"
+            href="{{ route('marketplace.vendor.connect-stripe') }}"
         >Create Stripe Connect Account
-        </button>
+        </a>
     @else
         <h4 class="alert-heading">
             {{ __('Manage your Stripe Connect account') }}

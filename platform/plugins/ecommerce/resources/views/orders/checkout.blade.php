@@ -63,8 +63,7 @@
                                     <p>{{ __('Fee') }}:</p>
                                 </div>
                                 <div class="col-6">
-                                    <p class="price-text sub-total-text text-end">
-                                        {{ MarketplaceHelper::getSetting('fee_per_order') }}% </p>
+                                    <p class="price-text sub-total-text text-end">{{ MarketplaceHelper::getSetting('fee_per_order') }}% </p>
                                 </div>
                             </div>
 

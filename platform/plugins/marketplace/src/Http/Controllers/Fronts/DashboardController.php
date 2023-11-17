@@ -17,6 +17,7 @@ use Botble\Marketplace\Facades\MarketplaceHelper;
 use Botble\Marketplace\Http\Requests\BecomeVendorRequest;
 use Botble\Marketplace\Models\Revenue;
 use Botble\Marketplace\Models\Store;
+use Botble\Marketplace\Models\VendorInfo;
 use Botble\Marketplace\Models\Withdrawal;
 use Botble\Media\Chunks\Exceptions\UploadMissingFileException;
 use Botble\Media\Chunks\Handler\DropZoneUploadHandler;
@@ -33,6 +34,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Stripe\Stripe;
 
 class DashboardController
 {
@@ -77,7 +80,7 @@ class DashboardController
             $stripeConnectAccount = StripeConnectService::getAccount($user->vendorInfo->stripe_connect_id);
         }
 
-        if ($stripeConnectAccount->charges_enabled && $user->vendor_verified_at == null) {
+        if ($stripeConnectAccount->charges_enabled) {
             $this->approveVendor($user, $request);
         }
 
@@ -253,17 +256,6 @@ class DashboardController
     {
         $customer = auth('customer')->user();
         if ($customer->is_vendor) {
-            /*if (MarketplaceHelper::getSetting('verify_vendor', 1) && !$customer->vendor_verified_at) {
-                SeoHelper::setTitle(__('Become Vendor'));
-
-                Theme::breadcrumb()
-                    ->add(__('Home'), route('public.index'))
-                    ->add(__('Approving'));
-
-                return Theme::scope('marketplace.approving-vendor', [], MarketplaceHelper::viewPath('approving-vendor', false))
-                    ->render();
-            }*/
-
             return redirect()->route('marketplace.vendor.dashboard');
         }
 
@@ -295,6 +287,67 @@ class DashboardController
         return $response
             ->setNextUrl(route('marketplace.vendor.dashboard'))
             ->setMessage(__('Registered successfully!'));
+    }
+
+    public function getConnectStripe()
+    {
+        $customer = auth('customer')->user();
+
+        if (!$customer->is_vendor) {
+            return redirect()->route('marketplace.vendor.dashboard');
+        }
+
+        $countries = StripeConnectService::getAllowedCountriesList();
+
+        SeoHelper::setTitle(__('Connect Stripe'));
+
+        Theme::breadcrumb()
+            ->add(__('Home'), route('public.index'))
+            ->add(__('Connect Stripe'), route('marketplace.vendor.connect-stripe'));
+
+        return Theme::scope('marketplace.connect-stripe', compact('countries'), MarketplaceHelper::viewPath('connect-stripe', false))
+            ->render();
+    }
+
+    public function postConnectStripe(Request $request, BaseHttpResponse $response)
+    {
+        $customer = auth('customer')->user();
+
+        $vendorInfo = $customer->vendorInfo;
+
+        if (!$customer->is_vendor) {
+            return redirect()->route('marketplace.vendor.dashboard');
+        }
+
+        $request->validate([
+            'country' => [Rule::in(array_keys(StripeConnectService::getAllowedCountriesList()))],
+            'terms_and_conditions' => 'accepted'
+        ]);
+
+        Stripe::setApiKey(setting('payment_stripe_secret'));
+        Stripe::setClientId(setting('payment_stripe_client_id'));
+
+        if (empty($vendorInfo->stripe_connect_id)) {
+            $stripeAccount = StripeConnectService::createAccount($customer->email);
+
+            $vendorInfo->setAttribute('stripe_connect_id', $stripeAccount->id);
+            $vendorInfo->save();
+        }
+
+        if (!isset($stripeAccount)) {
+            $stripeAccount = StripeConnectService::getAccount($vendorInfo->stripe_connect_id);
+        }
+
+        $vendorInfo->setAttribute('stripe_connect_id', $stripeAccount->id);
+        $vendorInfo->save();
+
+        if (!$stripeAccount->details_submitted) {
+            $link = StripeConnectService::getOnboardingLink($vendorInfo->stripe_connect_id);
+        } else {
+            $link = StripeConnectService::getLoginLink($vendorInfo->stripe_connect_id);
+        }
+
+        return $response->setNextUrl($link);
     }
 
     protected function approveVendor(Customer $vendor, Request $request)

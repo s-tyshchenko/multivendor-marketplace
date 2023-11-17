@@ -287,6 +287,16 @@ Route::group([
                 'as' => 'become-vendor.post',
                 'uses' => 'DashboardController@postBecomeVendor',
             ]);
+
+            Route::get('connect-stripe', [
+                'as' => 'connect-stripe',
+                'uses' => 'DashboardController@getConnectStripe',
+            ]);
+
+            Route::post('connect-stripe', [
+                'as' => 'connect-stripe.post',
+                'uses' => 'DashboardController@postConnectStripe',
+            ]);
         });
     });
 });
