@@ -80,7 +80,6 @@ class ProductForm extends BaseProductForm
             ->add('product_type', 'hidden', [
                 'value' => ProductTypeEnum::DIGITAL,
             ])
-            ->removeMetaBox('variations')
             ->addMetaBoxes([
                 'general' => [
                     'title' => trans('plugins/ecommerce::products.pricing'),

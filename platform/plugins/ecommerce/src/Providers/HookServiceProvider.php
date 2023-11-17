@@ -284,21 +284,6 @@ class HookServiceProvider extends ServiceProvider
                     Assets::addStylesDirectly(['vendor/core/plugins/faq/css/faq.css'])
                         ->addScriptsDirectly(['vendor/core/plugins/faq/js/faq.js']);
 
-                    MetaBox::addMetaBox('faq_schema_config_wrapper', __('Product FAQs'), function () {
-                        $value = [];
-
-                        $args = func_get_args();
-                        if ($args[0] && $args[0]->id) {
-                            $value = MetaBox::getMetaData($args[0], 'faq_schema_config', true);
-                        }
-
-                        $hasValue = ! empty($value);
-
-                        $value = json_encode((array)$value);
-
-                        return view('plugins/faq::schema-config-box', compact('value', 'hasValue'))->render();
-                    }, get_class($object), $context);
-
                     return true;
                 }, 139, 2);
             }

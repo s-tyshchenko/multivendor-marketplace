@@ -20,12 +20,6 @@
             'routes' => ['customer.subscriptions.view']
         ],
         [
-            'key'    => 'customer.downloads',
-            'label'  => __('Downloads'),
-            'icon'   => 'fi-rs-shopping-bag',
-            'routes' => ['customer.downloads']
-        ],
-        [
             'key'   => 'customer.change-password',
             'label' => __('Change password'),
             'icon'  => 'fi-rs-key'

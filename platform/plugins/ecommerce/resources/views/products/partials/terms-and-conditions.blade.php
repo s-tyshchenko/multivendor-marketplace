@@ -12,7 +12,7 @@
                 ...
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="document.getElementById('terms-and-conditions-modal').remove()">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="document.getElementById('terms-and-conditions-modal').parentElement.parentElement.remove()">Close</button>
             </div>
         </div>
     </div>

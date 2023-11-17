@@ -33,7 +33,6 @@
             {!! $form->getMetaBox($key) !!}
         @endforeach
 
-        @php do_action(BASE_ACTION_META_BOXES, 'advanced', $form->getModel()) @endphp
     </div>
     <div class="col-md-3 right-sidebar">
         {!! $form->getActionButtons() !!}
