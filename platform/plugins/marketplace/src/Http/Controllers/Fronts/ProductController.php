@@ -20,6 +20,7 @@ use Botble\Ecommerce\Models\ProductAttribute;
 use Botble\Ecommerce\Models\ProductAttributeSet;
 use Botble\Ecommerce\Models\ProductVariation;
 use Botble\Ecommerce\Models\ProductVariationItem;
+use Botble\Ecommerce\Models\Tax;
 use Botble\Ecommerce\Services\Products\StoreAttributesOfProductService;
 use Botble\Ecommerce\Services\Products\StoreProductService;
 use Botble\Ecommerce\Services\StoreProductTagService;
@@ -79,6 +80,8 @@ class ProductController extends BaseController
         $product->created_by_id = auth('customer')->id();
         $product->created_by_type = Customer::class;
         $product->save();
+
+        $product->taxes()->sync([get_ecommerce_setting('default_tax_rate')]);
 
         $storeProductTagService->execute($request, $product);
 
