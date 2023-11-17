@@ -57,6 +57,17 @@
                         {!! apply_filters(RENDER_PRODUCTS_IN_CHECKOUT_PAGE, $products) !!}
 
                         <div class="mt-2 p-2">
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <p>{{ __('Fee') }}:</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="price-text sub-total-text text-end">
+                                        {{ MarketplaceHelper::getSettingKey('fee_per_order') }} </p>
+                                </div>
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-6">
                                     <p>{{ __('Subtotal') }}:</p>
