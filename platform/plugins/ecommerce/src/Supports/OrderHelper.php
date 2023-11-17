@@ -636,7 +636,7 @@ class OrderHelper
             );
         } else {
             $addressData = [
-                'name' => Arr::get($sessionData, 'name'),
+                'name' => Arr::get($sessionData, 'name') ?? 'Anonymous',
                 'phone' => Arr::get($sessionData, 'phone'),
                 'email' => Arr::get($sessionData, 'email'),
                 'country' => Arr::get($sessionData, 'country'),

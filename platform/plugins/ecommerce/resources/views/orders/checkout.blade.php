@@ -98,16 +98,6 @@
                                     </div>
                                 </div>
                             @endif
-                            @if ($promotionDiscountAmount > 0)
-                                <div class="row">
-                                    <div class="col-6">
-                                        <p>{{ __('Promotion discount amount') }}:</p>
-                                    </div>
-                                    <div class="col-6">
-                                        <p class="price-text"> {{ format_price($promotionDiscountAmount) }} </p>
-                                    </div>
-                                </div>
-                            @endif
                             @if (!empty($shipping) && Arr::get($sessionCheckoutData, 'is_available_shipping', true))
                                 <div class="row">
                                     <div class="col-6">
@@ -131,12 +121,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="mt-3 mb-5">
-                        @include('plugins/ecommerce::themes.discounts.partials.form')
                     </div>
                 </div>
                 <div class="col-lg-7 col-md-6 left">

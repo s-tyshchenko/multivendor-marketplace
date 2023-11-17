@@ -342,6 +342,7 @@ class PublicCheckoutController
                     $address = Address::query()
                         ->create(
                             array_merge($request->input('address'), [
+                                'name' => BaseHelper::clean($request->input('address.name', 'Anonymous')),
                                 'customer_id' => $customer->id,
                                 'is_default' => true,
                             ])
@@ -358,6 +359,7 @@ class PublicCheckoutController
                     $address = Address::query()
                         ->create(
                             array_merge($request->input('address', []), [
+                                'name' => BaseHelper::clean($request->input('address.name', 'Anonymous')),
                                 'customer_id' => auth('customer')->id(),
                                 'is_default' => $customer->addresses->count() == 0,
                             ])
@@ -398,7 +400,7 @@ class PublicCheckoutController
 
         if (! empty($address)) {
             $addressData = [
-                'name' => $address->name,
+                'name' => $address->name ?? 'Anonymous',
                 'phone' => $address->phone,
                 'email' => $address->email,
                 'country' => $address->country,
@@ -1006,7 +1008,7 @@ class PublicCheckoutController
         } else {
             session(['tracked_start_checkout' => $token]);
             $sessionCheckoutData = [
-                'name' => $order->address->name,
+                'name' => $order->address->name ?? 'Anonymous',
                 'email' => $order->address->email,
                 'phone' => $order->address->phone,
                 'address' => $order->address->address,
