@@ -120,20 +120,6 @@
                     <div class="cart-action d-flex justify-content-between">
                         <a class="btn " href="{{ route('public.products') }}"><i class="fi-rs-arrow-left mr-10"></i>{{ __('Continue Shopping') }}</a>
                     </div>
-                    <div class="row mt-50">
-                        @if (Cart::instance('cart')->count() > 0)
-                            <div class="col-lg-7">
-                                <div class="p-40">
-                                    <h4 class="mb-10">{{ __('Apply Coupon') }}</h4>
-                                    <p class="mb-30"><span class="font-lg text-muted">{{ __('Using A Promo Code?') }}</p>
-                                    <div class="d-flex justify-content-between form-coupon-wrapper">
-                                        <input class="font-medium mr-15 coupon coupon-code" type="text" name="coupon_code" value="{{ old('coupon_code') }}" placeholder="{{ __('Enter Your Coupon') }}">
-                                        <button class="btn btn-apply-coupon-code" type="button" data-url="{{ route('public.coupon.apply') }}"><i class="fi-rs-label mr-10"></i>{{ __('Apply') }}</button>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
                 @else
                     <p class="text-center">{{ __('Your cart is empty!') }}</p>
                 @endif
