@@ -59,7 +59,7 @@ class ProductForm extends BaseProductForm
                     'data-counter' => 150,
                 ],
             ])
-            ->add('description', 'customEditor', [
+            ->add('description', 'textarea', [
                 'label' => trans('core/base::forms.description'),
                 'attr' => [
                     'rows' => 2,
@@ -67,7 +67,7 @@ class ProductForm extends BaseProductForm
                     'data-counter' => 1000,
                 ],
             ])
-            ->add('content', 'customEditor', [
+            ->add('content', 'textarea', [
                 'label' => trans('core/base::forms.content'),
                 'attr' => [
                     'rows' => 4,
