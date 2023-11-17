@@ -86,7 +86,7 @@
                         @if (EcommerceHelper::isTaxEnabled())
                             <div class="row total-price">
                                 <div class="col-6">
-                                    <p>{{ __('Tax') }}:</p>
+                                    <p>{{ __('Fee') }}:</p>
                                 </div>
                                 <div class="col-6">
                                     <p class="text-end">{{ format_price($orders->sum('tax_amount')) }}</p>

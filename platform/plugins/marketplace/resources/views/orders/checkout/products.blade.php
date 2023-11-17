@@ -128,7 +128,7 @@
                     @if (EcommerceHelper::isTaxEnabled())
                         <div class="row">
                             <div class="col-6">
-                                <p>{{ __('Tax') }}:</p>
+                                <p>{{ __('Fee') }}:</p>
                             </div>
                             <div class="col-6 text-end">
                                 <p class="price-text tax-price-text">
