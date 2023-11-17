@@ -292,13 +292,18 @@
                             </div>
                         @endif
 
-                        @if (EcommerceHelper::isDisplayTaxFieldsAtCheckoutPage())
-                            @include(
-                                'plugins/ecommerce::orders.partials.tax-information',
-                                compact('sessionCheckoutData'))
-
-                            {!! apply_filters('ecommerce_checkout_form_after_tax_information_form', null, $products) !!}
-                        @endif
+                        <div class="form-group mb-3">
+                            <input
+                                id="terms_and_conditions"
+                                name="terms_and_conditions"
+                                type="checkbox"
+                                value="1"
+                            >
+                            <label
+                                class="control-label"
+                                for="terms_and_conditions"
+                            >{{ __('I agree to terms and conditions.') }}</label>
+                        </div>
 
                         {!! apply_filters('ecommerce_checkout_form_after', null, $products) !!}
 
