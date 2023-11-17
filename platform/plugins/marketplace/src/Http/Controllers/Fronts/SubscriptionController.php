@@ -39,30 +39,34 @@ class SubscriptionController extends BaseController
         Stripe::setClientId(setting('payment_stripe_client_id'));
     }
 
-    public function index()
+    public function index(BaseHttpResponse $response)
     {
         PageTitle::setTitle(__('Subscriptions'));
 
         $vendor = auth('customer')->user();
 
-        $options = ['stripe_account' => $vendor->vendorInfo->stripe_connect_id];
-        $subscriptions = Subscription::all(['status' => 'all'], $options);
+        $subscriptionsData = [];
 
-        foreach ($subscriptions as $subscription) {
-            $productId = $subscription->items->data[0]->price->product;
-            $product = Product::retrieve($productId, $options);
-            $customer = Customer::retrieve($subscription->customer, $options);
+        if ($vendor->vendorInfo->stripe_connect_id) {
+            $options = ['stripe_account' => $vendor->vendorInfo->stripe_connect_id];
+            $subscriptions = Subscription::all(['status' => 'all'], $options);
 
-            $subscriptionsData[] = [
-                'id' => $subscription->id,
-                'next_payment' => date('Y-m-d H:i:s', $subscription->current_period_end),
-                'customer_name' => $customer->name,
-                'price' => strtoupper($subscription->currency) . ' ' . $subscription->items->data[0]->price->unit_amount / 100,
-                'period' => $subscription->items->data[0]->price->recurring->interval,
-                'status' => $subscription->status,
-                'product_name' => $product->name,
-                'product_description' => $product->description,
-            ];
+            foreach ($subscriptions as $subscription) {
+                $productId = $subscription->items->data[0]->price->product;
+                $product = Product::retrieve($productId, $options);
+                $customer = Customer::retrieve($subscription->customer, $options);
+
+                $subscriptionsData[] = [
+                    'id' => $subscription->id,
+                    'next_payment' => date('Y-m-d H:i:s', $subscription->current_period_end),
+                    'customer_name' => $customer->name,
+                    'price' => strtoupper($subscription->currency) . ' ' . $subscription->items->data[0]->price->unit_amount / 100,
+                    'period' => $subscription->items->data[0]->price->recurring->interval,
+                    'status' => $subscription->status,
+                    'product_name' => $product->name,
+                    'product_description' => $product->description,
+                ];
+            }
         }
 
         return MarketplaceHelper::view('vendor-dashboard.subscriptions.list', compact('subscriptionsData'));
