@@ -5,7 +5,10 @@
          background-repeat: no-repeat;
          border-radius: 0 0 20px 20px">
     <h1 class="display-2 mb-10">{{ $store->name }}</h1>
-    <p class="mb-20">{{ $store->url }}</p>
+    @php
+        $parsed = parse_url($store->url);
+    @endphp
+    <p class="mb-20">{{ $parsed['host'] . $parsed['path'] }}</p>
     <div class="row">
         <div class="col-12 mb-50">
             @php
