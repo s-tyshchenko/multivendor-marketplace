@@ -130,17 +130,18 @@
                         <div class="table-responsive">
                             <table class="table no-border">
                                 <tbody class="border-0">
-
-                                        <tr>
-                                            <td class="cart_total_label">
-                                                <p class="h6">{{ __('Fee') }}</p>
-                                            </td>
-                                            <td class="cart_total_amount">
-                                                <strong>
-                                                    <p class="text-brand text-end">{{ MarketplaceHelper::getSetting('fee_per_order', 0) }}%</p>
-                                                </strong>
-                                            </td>
-                                        </tr>
+                                @if (EcommerceHelper::isTaxEnabled())
+                                    <tr>
+                                        <td class="cart_total_label">
+                                            <p class="h6">{{ __('Fee') }}</p>
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <strong>
+                                                <p class="text-brand text-end">{{ \Botble\Marketplace\Facades\MarketplaceHelper::getSetting('fee_per_order') }}% - {{ format_price(Cart::instance('cart')->rawTax()) }}</p>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                @endif
                                     @if ($couponDiscountAmount > 0 && session('applied_coupon_code'))
                                         <tr>
                                             <td class="cart_total_label">

@@ -60,15 +60,6 @@
 
                             <div class="row">
                                 <div class="col-6">
-                                    <p>{{ __('Fee') }}:</p>
-                                </div>
-                                <div class="col-6">
-                                    <p class="price-text sub-total-text text-end">{{ MarketplaceHelper::getSetting('fee_per_order') }}% </p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-6">
                                     <p>{{ __('Subtotal') }}:</p>
                                 </div>
                                 <div class="col-6">
@@ -79,11 +70,11 @@
                             @if (EcommerceHelper::isTaxEnabled())
                                 <div class="row">
                                     <div class="col-6">
-                                        <p>{{ __('Tax') }}:</p>
+                                        <p>{{ __('Fee') }}:</p>
                                     </div>
                                     <div class="col-6 float-end">
                                         <p class="price-text tax-price-text">
-                                            {{ format_price(Cart::instance('cart')->rawTax()) }}</p>
+                                            {{ MarketplaceHelper::getSetting('fee_per_order') }}% - {{ format_price(Cart::instance('cart')->rawTax()) }}</p>
                                     </div>
                                 </div>
                             @endif

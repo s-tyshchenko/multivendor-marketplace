@@ -64,8 +64,8 @@
                 <h5><strong class="d-inline-block">{{ __('Sub Total') }}:</strong>
                     <span>{{ format_price(Cart::instance('cart')->rawSubTotal()) }}</span></h5>
                 <div class="clearfix"></div>
-                <h5><strong class="d-inline-block">{{ __('Tax') }}:</strong>
-                    <span>{{ format_price(Cart::instance('cart')->rawTax()) }}</span></h5>
+                <h5><strong class="d-inline-block">{{ __('Fee') }}:</strong>
+                    <span>{{ \Botble\Marketplace\Facades\MarketplaceHelper::getSetting('fee_per_order') }}% - {{ format_price(Cart::instance('cart')->rawTax()) }}</span></h5>
                 <div class="clearfix"></div>
                 <h4><strong class="d-inline-block">{{ __('Total') }}:</strong>
                     <span>{{ format_price(Cart::instance('cart')->rawSubTotal() + Cart::instance('cart')->rawTax()) }}</span>
