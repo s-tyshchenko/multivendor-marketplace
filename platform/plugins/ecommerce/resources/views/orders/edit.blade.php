@@ -283,7 +283,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        
+
                                         <div class="py-3">
                                             <form action="{{ route('orders.edit', $order->id) }}">
                                                 <label
