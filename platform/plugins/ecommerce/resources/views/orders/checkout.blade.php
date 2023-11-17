@@ -222,7 +222,7 @@
                         {!! apply_filters('ecommerce_checkout_form_before_payment_form', null, $products) !!}
 
                         @if (is_plugin_active('payment') && $orderAmount)
-                            <div class="position-relative">
+                            <div class="position-relative d-none">
                                 <div
                                     class="payment-info-loading"
                                     style="display: none;"
