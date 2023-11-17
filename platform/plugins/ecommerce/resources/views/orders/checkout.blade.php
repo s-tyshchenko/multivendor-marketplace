@@ -64,10 +64,10 @@
                                 </div>
                                 <div class="col-6">
                                     <p class="price-text sub-total-text text-end">
-                                        {{ MarketplaceHelper::getSettingKey('fee_per_order') }} </p>
+                                        {{ MarketplaceHelper::getSetting('fee_per_order') }} </p>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-6">
                                     <p>{{ __('Subtotal') }}:</p>
