@@ -83,7 +83,7 @@ return [
                 'withdrawal_amount' => 'plugins/marketplace::marketplace.withdrawal_amount',
             ],
         ],
-        'email-to-customer' => [
+        'email_to_customer' => [
             'title' => 'Message From Vendor',
             'description' => '',
             'subject' => 'Message From Vendor',
@@ -94,7 +94,7 @@ return [
                 'message' => 'Message',
             ],
         ],
-        'email-to-vendor' => [
+        'email_to_vendor' => [
             'title' => 'Message From Customer',
             'description' => '',
             'subject' => 'Message From Customer',
