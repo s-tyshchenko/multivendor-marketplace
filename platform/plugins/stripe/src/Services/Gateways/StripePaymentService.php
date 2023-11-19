@@ -100,20 +100,22 @@ class StripePaymentService extends StripePaymentAbstract
             $lineItems[] = $lineItem;
         }
 
+        $metaData = [
+            'order_id' => json_encode($data['order_id']),
+            'amount' => $this->amount,
+            'currency' => $this->currency,
+            'customer_id' => Arr::get($data, 'customer_id'),
+            'customer_type' => Arr::get($data, 'customer_type'),
+            'return_url' => Arr::get($data, 'return_url'),
+            'callback_url' => Arr::get($data, 'callback_url'),
+        ];
+
         $requestData = [
             'line_items' => $lineItems,
             'mode' => $subscriptionMode ? 'subscription' : 'payment',
             'success_url' => route('payments.stripe.success') . '?' . ($this->isStripeApiConnect() ? "account_id={$data['store']['customer']['vendorInfo']['stripe_connect_id']}&" : '') . 'session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payments.stripe.error'),
-            'metadata' => [
-                'order_id' => json_encode($data['order_id']),
-                'amount' => $this->amount,
-                'currency' => $this->currency,
-                'customer_id' => Arr::get($data, 'customer_id'),
-                'customer_type' => Arr::get($data, 'customer_type'),
-                'return_url' => Arr::get($data, 'return_url'),
-                'callback_url' => Arr::get($data, 'callback_url'),
-            ],
+            'metadata' => $metaData
         ];
 
         $requestOptions = [];
@@ -161,10 +163,12 @@ class StripePaymentService extends StripePaymentAbstract
         if ($this->isStripeApiConnect()) {
             if (!$subscriptionMode) {
                 $requestData['payment_intent_data'] = [
+                    'metadata' => $metaData,
                     'application_fee_amount' => ($this->amount * intval(MarketplaceHelper::getSetting('fee_per_order')) / 100) * 100,
                 ];
             } else {
                 $requestData['subscription_data'] = [
+                    'metadata' => $metaData,
                     'application_fee_percent' => intval(MarketplaceHelper::getSetting('fee_per_order'))
                 ];
             }
