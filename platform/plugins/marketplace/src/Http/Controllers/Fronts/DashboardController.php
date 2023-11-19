@@ -303,8 +303,7 @@ class DashboardController
             ->add(__('Home'), route('public.index'))
             ->add(__('Connect Stripe'), route('marketplace.vendor.connect-stripe'));
 
-        return Theme::scope('marketplace.connect-stripe', compact('countries'), MarketplaceHelper::viewPath('connect-stripe', false))
-            ->render();
+        return MarketplaceHelper::view('vendor-dashboard.connect-stripe', compact('countries'));
     }
 
     public function postConnectStripe(Request $request, BaseHttpResponse $response)

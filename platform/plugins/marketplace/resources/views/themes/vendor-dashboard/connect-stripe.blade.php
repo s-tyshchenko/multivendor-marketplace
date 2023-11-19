@@ -1,4 +1,5 @@
 @extends(MarketplaceHelper::viewPath('vendor-dashboard.layouts.master'))
+
 @section('content')
 
     {!! Form::open([
@@ -45,4 +46,4 @@
     {!! Form::close() !!}
 
 
-@endsection
+@stop
