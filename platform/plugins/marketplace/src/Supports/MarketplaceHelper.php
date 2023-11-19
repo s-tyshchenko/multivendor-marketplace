@@ -97,10 +97,9 @@ class MarketplaceHelper
             return;
         }
 
-        $mailer = EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME)
-            ->setVariableValues(['message' => $message]);
+        $mailer = EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME);
 
-        $this->setEmailVendorVariables($order);
+        $this->setEmailVendorVariables(array_merge($order, ['message' => $message]));
         $mailer->sendUsingTemplate('email_to_customer', $order->address->email);
     }
 
@@ -110,10 +109,9 @@ class MarketplaceHelper
             return;
         }
 
-        $mailer = EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME)
-            ->setVariableValues(['message' => $message]);
+        $mailer = EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME);
 
-        $this->setEmailVendorVariables($order);
+        $this->setEmailVendorVariables(array_merge($order, ['message' => $message]));
         $mailer->sendUsingTemplate('email_to_vendor', $order->store->email);
     }
 
