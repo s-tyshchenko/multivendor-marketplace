@@ -528,7 +528,7 @@ class Product extends BaseModel
             return $this->front_sale_price;
         }
 
-        return $this->front_sale_price + $this->front_sale_price * ($this->total_taxes_percentage / 100);
+        return $this->front_sale_price;
     }
 
     public function getPriceWithTaxesAttribute(): ?float
