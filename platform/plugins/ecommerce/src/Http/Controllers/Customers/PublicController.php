@@ -327,7 +327,9 @@ class PublicController extends Controller
         Stripe::setClientId(setting('payment_stripe_client_id'));
 
         $store = null;
+        $order = null;
         $options = [];
+
         if ($vendor_id) {
             $store = Store::query()->where('customer_id', '=', $vendor_id)->first();
             $options = ['stripe_account' => $store->customer->vendorInfo->stripe_connect_id];
@@ -336,6 +338,11 @@ class PublicController extends Controller
         $subscription = Subscription::retrieve($id, $options);
         $product = Product::retrieve($subscription->items->data[0]->price->product, $options);
         $invoices = Invoice::all(['subscription' => $subscription->id], $options);
+
+        if (isset($subscription->metadata['order_id'])) {
+            $orderId = json_decode($subscription->metadata['order_id']);
+            $order = Order::query()->where('id', '=', $orderId[0])->firstOrFail();
+        }
 
         SeoHelper::setTitle(__('Subscription details - :name', ['name' => $product->name]));
 
@@ -347,7 +354,7 @@ class PublicController extends Controller
 
         return Theme::scope(
             'ecommerce.customers.subscriptions.view',
-            compact('subscription', 'product', 'invoices', 'store'),
+            compact('subscription', 'product', 'invoices', 'store', 'order'),
             'plugins/ecommerce::themes.customers.subscriptions.view'
         )->render();
 

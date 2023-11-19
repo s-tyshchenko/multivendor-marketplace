@@ -83,9 +83,16 @@ class SubscriptionController extends BaseController
         $invoices = Invoice::all(['subscription' => $subscription->id], $options);
         $customer = Customer::retrieve($subscription->customer, $options);
 
+        $order = null;
+
+        if (isset($subscription->metadata['order_id'])) {
+            $orderId = json_decode($subscription->metadata['order_id']);
+            $order = Order::query()->where('id', '=', $orderId[0])->firstOrFail();
+        }
+
         SeoHelper::setTitle(__('Subscription details - :name', ['name' => $product->name]));
 
-        return MarketplaceHelper::view('vendor-dashboard.subscriptions.view', compact('subscription', 'customer', 'product', 'invoices'));
+        return MarketplaceHelper::view('vendor-dashboard.subscriptions.view', compact('subscription', 'customer', 'product', 'invoices', 'order'));
     }
 
 

@@ -17,4 +17,20 @@
         </div>
     </div>
 </div>
+
+<div class="card">
+    <div class="card-body">
+        <h5>Send message to vendor</h5>
+        {!! Form::open(['method' => 'POST', 'route' => ['customer.orders.send-email-to-vendor', $order->id]]) !!}
+        @csrf
+
+        <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-control"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Send</button>
+        {!! Form::close() !!}
+    </div>
+</div>
 @endsection
