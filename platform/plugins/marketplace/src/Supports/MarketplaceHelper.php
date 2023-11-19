@@ -99,7 +99,7 @@ class MarketplaceHelper
 
         $this->setEmailVendorVariables($order)
             ->setVariableValues(['message' => $message])
-            ->sendUsingTemplate('email-to-customer', $order->address->email);
+            ->sendUsingTemplate('email_to_customer', $order->address->email);
     }
 
     public function sendEmailToVendor($order, $message)
@@ -110,7 +110,7 @@ class MarketplaceHelper
 
         $this->setEmailVendorVariables($order)
             ->setVariableValues(['message' => $message])
-            ->sendUsingTemplate('email-to-vendor', $order->store->email);
+            ->sendUsingTemplate('email_to_vendor', $order->store->email);
     }
 
     public function setEmailVendorVariables(OrderModel $order): BaseEmailHandler
