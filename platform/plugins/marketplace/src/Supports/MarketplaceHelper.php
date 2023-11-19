@@ -97,7 +97,7 @@ class MarketplaceHelper
             return;
         }
 
-        $this->setEmailVendorVariables($order)
+        EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME)
             ->setVariableValues(['message' => $message])
             ->sendUsingTemplate('email_to_customer', $order->address->email);
     }
@@ -108,7 +108,7 @@ class MarketplaceHelper
             return;
         }
 
-        $this->setEmailVendorVariables($order)
+        EmailHandler::setModule(MARKETPLACE_MODULE_SCREEN_NAME)
             ->setVariableValues(['message' => $message])
             ->sendUsingTemplate('email_to_vendor', $order->store->email);
     }
