@@ -194,7 +194,7 @@
 
                             @if (EcommerceHelper::isTaxEnabled())
                                 <p>
-                                    <span>{{ __('Tax') }}:</span> <strong> {{ format_price($order->tax_amount) }} </strong>
+                                    <span>{{ __('Fee') }}:</span> <strong> {{ format_price($order->tax_amount) }} </strong>
                                 </p>
                             @endif
 

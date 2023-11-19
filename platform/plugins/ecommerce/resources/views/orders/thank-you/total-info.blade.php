@@ -16,7 +16,7 @@
 
 @if (EcommerceHelper::isTaxEnabled())
     @include('plugins/ecommerce::orders.thank-you.total-row', [
-        'label' => __('Tax'),
+        'label' => __('Fee'),
         'value' => format_price($order->tax_amount),
     ])
 @endif

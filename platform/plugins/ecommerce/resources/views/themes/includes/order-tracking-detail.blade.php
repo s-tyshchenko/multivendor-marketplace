@@ -162,7 +162,7 @@
 
             @if (EcommerceHelper::isTaxEnabled())
                 <p>
-                    <span class="d-inline-block me-1">{{ __('Tax') }}:</span>
+                    <span class="d-inline-block me-1">{{ __('Fee') }}:</span>
                     <strong class="order-detail-value"> {{ format_price($order->tax_amount) }} </strong>
                 </p>
             @endif
