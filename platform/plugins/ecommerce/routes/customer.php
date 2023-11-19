@@ -99,7 +99,7 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
         ], function () {
             Route::get('register/confirm/resend', 'RegisterController@resendConfirmation')
                 ->name('resend_confirmation');
-            Route::get('register/confirm/{user}', 'RegisterController@confirm')
+            Route::get('register/confirm/{id}', 'RegisterController@confirm')
                 ->name('confirm');
         });
 
