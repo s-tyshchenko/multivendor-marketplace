@@ -35,7 +35,7 @@ class SaveVendorInformationListener
                 $store = Store::query()->create([
                     'name' => BaseHelper::clean($this->request->input('shop_name')),
                     'phone' => BaseHelper::clean($this->request->input('shop_phone')),
-                    'email' => BaseHelper::clean($this->request->input('email')),
+                    'email' => BaseHelper::clean($this->request->input('email', $customer->email)),
                     'customer_id' => $customer->getAuthIdentifier(),
                 ]);
             }
