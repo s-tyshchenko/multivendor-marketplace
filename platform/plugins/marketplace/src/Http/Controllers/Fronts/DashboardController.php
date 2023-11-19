@@ -85,6 +85,7 @@ class DashboardController
         }
 
         $store = $user->store;
+        $vendorInfo = $user->vendorInfo;
         $data = compact('startDate', 'endDate', 'predefinedRange');
 
         $revenue = Revenue::query()
@@ -180,7 +181,7 @@ class DashboardController
 
         $totalProducts = $store->products()->count();
         $totalOrders = $store->orders()->count();
-        $compact = compact('user', 'stripeConnectAccount','store', 'data', 'totalProducts', 'totalOrders');
+        $compact = compact('user', 'stripeConnectAccount', 'vendorInfo', 'store', 'data', 'totalProducts', 'totalOrders');
 
         if ($request->ajax()) {
             return $response
@@ -272,9 +273,6 @@ class DashboardController
     public function postBecomeVendor(BecomeVendorRequest $request, BaseHttpResponse $response)
     {
         $customer = auth('customer')->user();
-        if ($customer->is_vendor) {
-            abort(404);
-        }
 
         $existing = SlugHelper::getSlug($request->input('shop_url'), SlugHelper::getPrefix(Store::class));
 

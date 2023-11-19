@@ -53,7 +53,8 @@ class Customer extends BaseModel implements
         'phone',
         'dob',
         'status',
-        'stripe_customer_id'
+        'stripe_customer_id',
+        'is_vendor'
     ];
 
     protected $hidden = [

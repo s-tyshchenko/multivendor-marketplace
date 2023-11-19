@@ -26,13 +26,7 @@
             'name' => __('Subscriptions'),
             'routes' => ['marketplace.vendor.subscriptions.edit'],
             'order' => 3,
-        ],
-        [
-            'key' => 'customer.edit-account',
-            'icon' => 'icon-user',
-            'name' => __('Customer dashboard'),
-            'order' => 7,
-        ],
+        ]
     ]);
 
     $currentRouteName = Route::currentRouteName();

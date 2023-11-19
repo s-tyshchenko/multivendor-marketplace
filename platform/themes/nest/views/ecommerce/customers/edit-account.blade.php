@@ -1,10 +1,5 @@
 @extends(Theme::getThemeNamespace() . '::views.ecommerce.customers.master')
 @section('content')
-
-    @if (!$customer->is_vendor)
-        @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.become-vendor-form'))
-    @endif
-
     <div class="card">
         <div class="card-header">
             <h5>{{ __('Account Details') }}</h5>

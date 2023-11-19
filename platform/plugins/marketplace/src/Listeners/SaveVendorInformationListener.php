@@ -27,9 +27,7 @@ class SaveVendorInformationListener
     public function handle(Registered $event): void
     {
         $customer = $event->user;
-        if (get_class($customer) == Customer::class &&
-            ! $customer->is_vendor &&
-            $this->request->input('is_vendor') == 1) {
+        if (get_class($customer) == Customer::class && $this->request->input('is_vendor') == 1) {
             $store = Store::query()
                 ->where('customer_id', $customer->getAuthIdentifier())
                 ->first();

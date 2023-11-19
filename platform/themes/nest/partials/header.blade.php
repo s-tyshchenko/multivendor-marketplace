@@ -194,18 +194,22 @@
                                         alt="{{ __('Account') }}"
                                         src="{{ auth('customer')->check() ? auth('customer')->user()->avatar_url : Theme::asset()->url('imgs/theme/icons/icon-user.svg') }}" />
                                 </a>
-                                <a href="{{ route('customer.overview') }}"><span class="lable me-1">{{ auth('customer')->check() ? Str::limit(auth('customer')->user()->name, 10) : __('Account') }}</span></a>
+                                <a href="@if(auth('customer')->check() && auth('customer')->user()->is_vendor) {{ route('marketplace.vendor.dashboard') }} @else {{ route('customer.overview') }} @endif"><span class="lable me-1">{{ auth('customer')->check() ? Str::limit(auth('customer')->user()->name, 10) : __('Account') }}</span></a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                     <ul>
                                         @if (auth('customer')->check())
-                                            <li><a href="{{ route('customer.edit-account') }}"><i class="fi fi-rs-user mr-10"></i>{{ __('My Account') }}</a></li>
-                                            @if (EcommerceHelper::isOrderTrackingEnabled())
-                                                <li><a href="{{ route('public.orders.tracking') }}"><i class="fi fi-rs-location-alt mr-10"></i>{{ __('Order Tracking') }}</a></li>
+                                            @if (auth('customer')->user()->is_vendor)
+                                                <li><a href="{{ route('marketplace.vendor.dashboard') }}"><i class="fi fi-rs-user mr-10"></i>{{ __('Dashboard') }}</a></li>
+                                            @else
+                                                <li><a href="{{ route('customer.edit-account') }}"><i class="fi fi-rs-user mr-10"></i>{{ __('My Account') }}</a></li>
+                                                @if (EcommerceHelper::isOrderTrackingEnabled())
+                                                    <li><a href="{{ route('public.orders.tracking') }}"><i class="fi fi-rs-location-alt mr-10"></i>{{ __('Order Tracking') }}</a></li>
+                                                @endif
+                                                @if (EcommerceHelper::isWishlistEnabled())
+                                                    <li><a href="{{ route('public.wishlist') }}"><i class="fi fi-rs-heart mr-10"></i>{{ __('My Wishlist') }}</a></li>
+                                                @endif
+                                                <li><a href="{{ route('customer.edit-account') }}"><i class="fi fi-rs-settings-sliders mr-10"></i>{{ __('Update profile') }}</a></li>
                                             @endif
-                                            @if (EcommerceHelper::isWishlistEnabled())
-                                                <li><a href="{{ route('public.wishlist') }}"><i class="fi fi-rs-heart mr-10"></i>{{ __('My Wishlist') }}</a></li>
-                                            @endif
-                                            <li><a href="{{ route('customer.edit-account') }}"><i class="fi fi-rs-settings-sliders mr-10"></i>{{ __('Update profile') }}</a></li>
                                             <li><a href="{{ route('customer.logout') }}"><i class="fi fi-rs-sign-out mr-10"></i>{{ __('Sign out') }}</a></li>
                                         @else
                                             <li><a href="{{ route('customer.login') }}"><i class="fi fi-rs-user mr-10"></i>{{ __('Login') }}</a></li>

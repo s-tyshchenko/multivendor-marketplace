@@ -99,6 +99,7 @@ class RegisterController extends Controller
             'name' => (isset($data['name']) && !empty($data['name'])) ? BaseHelper::clean($data['name']) : null,
             'email' => BaseHelper::clean($data['email']),
             'password' => Hash::make($data['password']),
+            'is_vendor' => 1
         ]);
     }
 

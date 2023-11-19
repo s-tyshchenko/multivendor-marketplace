@@ -90,7 +90,7 @@ class LoginController extends Controller
 
     public function redirectPath(): string
     {
-        return route('customer.edit-account');
+        return route('marketplace.vendor.dashboard');
     }
 
     public function logout(Request $request)

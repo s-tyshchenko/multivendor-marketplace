@@ -33,6 +33,7 @@ use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Theme\Facades\Theme;
 use Carbon\Carbon;
+use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -66,6 +67,14 @@ class PublicController extends Controller
                 ->container('footer')
                 ->add('location-js', 'vendor/core/plugins/location/js/location.js', ['jquery']);
         }
+
+        $this->middleware(function (Request $request, Closure $next) {
+            if (auth('customer')->user()->is_vendor) {
+                return redirect(route('marketplace.vendor.dashboard'));
+            }
+
+            return $next($request);
+        });
     }
 
     public function getOverview()
@@ -77,6 +86,10 @@ class PublicController extends Controller
             ->add(__('Account information'), route('customer.edit-account'));
 
         $customer = auth('customer')->user();
+
+        if ($customer->is_vendor) {
+
+        }
 
         return Theme::scope('ecommerce.customers.overview', compact('customer'), 'plugins/ecommerce::themes.customers.overview')
             ->render();

@@ -3,9 +3,7 @@
         'class' => 'ps-form--account-setting',
         'method' => 'POST',
     ]) !!}
-<div class="card-header">
-    <h3 class="mb-0">{{ __('Become vendor!') }}</h3>
-</div>
+
 <div class="ps-form__content">
     <input
         name="is_vendor"

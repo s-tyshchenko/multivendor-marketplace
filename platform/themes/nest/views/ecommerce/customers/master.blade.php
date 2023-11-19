@@ -136,22 +136,6 @@
                                     </li>
                                 @endforeach
 
-                                @if (is_plugin_active('marketplace'))
-                                    @if (auth('customer')->user()->is_vendor)
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('marketplace.vendor.dashboard') }}">
-                                                <i class="fi-rs-shopping-cart mr-10"></i> {{ __('Vendor dashboard') }}
-                                            </a>
-                                        </li>
-                                    @elseif (apply_filters('marketplace_enabled_register_form', true))
-                                        <li class="nav-item @if (Route::currentRouteName() == 'marketplace.vendor.become-vendor') active @endif">
-                                            <a class="nav-link" href="{{ route('marketplace.vendor.become-vendor') }}">
-                                                <i class="fi-rs-shopping-cart mr-10"></i> {{ __('Become a vendor') }}
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endif
-
                                 <li class="nav-item">
                                     <a class="nav-link"
                                        href="{{ route('customer.logout') }}"
