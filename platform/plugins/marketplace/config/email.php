@@ -83,5 +83,28 @@ return [
                 'withdrawal_amount' => 'plugins/marketplace::marketplace.withdrawal_amount',
             ],
         ],
+        'email-to-customer' => [
+            'title' => 'Message From Vendor',
+            'description' => '',
+            'subject' => 'Message From Vendor',
+            'can_off' => true,
+            'enabled' => true,
+            'variables' => [
+                'store_name' => 'plugins/marketplace::marketplace.store_name',
+                'message' => 'Message',
+                'withdrawal_amount' => 'plugins/marketplace::marketplace.withdrawal_amount',
+            ],
+        ],
+        'email-to-vendor' => [
+            'title' => 'Message From Customer',
+            'description' => '',
+            'subject' => 'Message From Customer',
+            'can_off' => true,
+            'enabled' => true,
+            'variables' => [
+                'customer_name' => 'plugins/ecommerce::ecommerce.customer_name',
+                'message' => 'Message',
+            ],
+        ]
     ],
 ];

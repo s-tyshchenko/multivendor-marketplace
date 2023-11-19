@@ -97,10 +97,9 @@ class MarketplaceHelper
             return;
         }
 
-        $mailer = $this->setEmailVendorVariables($order)
-            ->setVariableValues(['message' => $message]);
-        
-        $mailer->sendUsingTemplate('email_to_customer', $order->address->email);
+        $this->setEmailVendorVariables($order)
+            ->setVariableValues(['message' => $message])
+            ->sendUsingTemplate('email-to-customer', $order->address->email);
     }
 
     public function sendEmailToVendor($order, $message)
@@ -109,10 +108,9 @@ class MarketplaceHelper
             return;
         }
 
-        $mailer = $this->setEmailVendorVariables($order)
-            ->setVariableValues(['message' => $message]);
-
-        $mailer->sendUsingTemplate('email_to_vendor', $order->store->email);
+        $this->setEmailVendorVariables($order)
+            ->setVariableValues(['message' => $message])
+            ->sendUsingTemplate('email-to-vendor', $order->store->email);
     }
 
     public function setEmailVendorVariables(OrderModel $order): BaseEmailHandler
