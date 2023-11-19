@@ -3,13 +3,11 @@
 @section('content')
     @if (empty($store->name))
         @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.become-vendor-form'))
-    @elseif (is_null($user->vendor_verified_at))
-        @if (is_null($vendorInfo->stripe_connect_id))
-            @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.stripe-banner'))
-        @else
-            @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.stripe-banner'))
-        @endif
+    @elseif (is_null($user->vendor_verified_at) || is_null($vendorInfo->stripe_connect_id))
+        @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.stripe-banner'))
     @else
+        @include(MarketplaceHelper::viewPath('vendor-dashboard.partials.stripe-banner'))
+
         <div class="ps-card__content">
             {!! Form::open([
                 'route' => 'marketplace.vendor.settings',

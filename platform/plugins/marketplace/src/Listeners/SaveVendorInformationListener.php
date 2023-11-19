@@ -75,8 +75,6 @@ class SaveVendorInformationListener
                         ->action(trans('plugins/marketplace::unverified-vendor.new_vendor_notifications.view'), route('marketplace.unverified-vendors.view', $customer->id))
                         ->permission('marketplace.unverified-vendors.edit')
                 ));
-            } else {
-                $customer->vendor_verified_at = Carbon::now();
             }
 
             if (! $customer->vendorInfo->id) {

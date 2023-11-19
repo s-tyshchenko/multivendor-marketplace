@@ -1,4 +1,4 @@
-@extends(Theme::getThemeNamespace() . '::views.ecommerce.customers.master')
+@extends(MarketplaceHelper::viewPath('vendor-dashboard.layouts.master'))
 @section('content')
 
     {!! Form::open([
