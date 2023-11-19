@@ -92,7 +92,6 @@ return [
             'variables' => [
                 'store_name' => 'plugins/marketplace::marketplace.store_name',
                 'message' => 'Message',
-                'withdrawal_amount' => 'plugins/marketplace::marketplace.withdrawal_amount',
             ],
         ],
         'email-to-vendor' => [
