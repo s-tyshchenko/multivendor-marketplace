@@ -93,13 +93,13 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
             'middleware' => [
                 'web',
                 'core',
-                !EcommerceHelper::isEnableEmailVerification() ? 'customer' : 'customer.guest',
+                EcommerceHelper::isEnableEmailVerification() ? 'customer' : 'customer.guest',
             ],
             'as' => 'customer.',
         ], function () {
             Route::get('register/confirm/resend', 'RegisterController@resendConfirmation')
                 ->name('resend_confirmation');
-            Route::get('register/confirm/{id}', 'RegisterController@confirm')
+            Route::get('register/confirm/{user}', 'RegisterController@confirm')
                 ->name('confirm');
         });
 
