@@ -74,7 +74,7 @@ class PublicController extends Controller
             }
 
             return $next($request);
-        });
+        }, ['except' => 'getEmailConfirmed']);
     }
 
 
