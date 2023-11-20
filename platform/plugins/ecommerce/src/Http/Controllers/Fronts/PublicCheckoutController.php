@@ -108,6 +108,10 @@ class PublicCheckoutController
                 ->setMessage(__('Your shopping cart has digital product(s), so you need to sign in to continue!'));
         }
 
+        if (auth('customer')->user()->is_vendor) {
+            auth('customer')->logout();
+        }
+
         /*if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
             return $response
                 ->setError()
@@ -593,6 +597,10 @@ class PublicCheckoutController
             return $response
                 ->setError()
                 ->setMessage(__('No products in cart'));
+        }
+
+        if (auth('customer')->user()->is_vendor) {
+            auth('customer')->logout();
         }
 
         $products = Cart::instance('cart')->products();
