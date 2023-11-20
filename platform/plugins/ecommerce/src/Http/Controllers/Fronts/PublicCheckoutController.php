@@ -108,7 +108,7 @@ class PublicCheckoutController
                 ->setMessage(__('Your shopping cart has digital product(s), so you need to sign in to continue!'));
         }
 
-        if (auth('customer')->user()->is_vendor) {
+        if (auth('customer')->check() &&  auth('customer')->user()->is_vendor) {
             return $response
                 ->setError()
                 ->setNextUrl(url()->previous())
@@ -602,7 +602,7 @@ class PublicCheckoutController
                 ->setMessage(__('No products in cart'));
         }
 
-        if (auth('customer')->user()->is_vendor) {
+        if (auth('customer')->check() && auth('customer')->user()->is_vendor) {
             return $response
                 ->setError()
                 ->setNextUrl(url()->previous())
