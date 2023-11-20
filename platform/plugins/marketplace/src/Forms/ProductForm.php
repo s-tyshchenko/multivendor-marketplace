@@ -33,7 +33,6 @@ class ProductForm extends BaseProductForm
 
         $productId = null;
         $store = Store::query()->where('customer_id', '=', auth('customer')->id())->first();
-        $isFirstProduct = !Product::query()->where('store_id', '=', $store->id)->exists();
         $tags = null;
 
         if ($this->getModel()) {
