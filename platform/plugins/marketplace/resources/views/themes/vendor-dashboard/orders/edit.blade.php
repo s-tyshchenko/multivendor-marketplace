@@ -230,22 +230,9 @@
                                     </table>
                                 </div>
                                 <div class="pd-all-20">
-                                    <form action="{{ route('marketplace.vendor.orders.edit', $order->id) }}">
-                                        <label
-                                            class="text-title-field">{{ trans('plugins/ecommerce::order.note') }}</label>
-                                        <textarea
-                                            class="ui-text-area textarea-auto-height"
-                                            name="description"
-                                            rows="3"
-                                            placeholder="{{ trans('plugins/ecommerce::order.add_note') }}"
-                                        >{{ $order->description }}</textarea>
-                                        <div class="mt10">
-                                            <button
-                                                class="btn btn-primary btn-update-order"
-                                                type="button"
-                                            >{{ trans('plugins/ecommerce::order.save') }}</button>
-                                        </div>
-                                    </form>
+                                    <label
+                                        class="text-title-field">{{ trans('plugins/ecommerce::order.note') }}</label>
+                                    <p>{{ $order->description }}</p>
                                 </div>
                             </div>
                         </div>
