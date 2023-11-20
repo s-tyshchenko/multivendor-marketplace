@@ -103,6 +103,9 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 ->name('confirm');
         });
 
+        Route::get('register/email-confirmed', 'RegisterController@getEmailConfirmed')
+            ->name('email-confirmed');
+
         Route::group([
             'namespace' => 'Botble\Ecommerce\Http\Controllers\Customers',
             'middleware' => ['web', 'core', 'customer'],
