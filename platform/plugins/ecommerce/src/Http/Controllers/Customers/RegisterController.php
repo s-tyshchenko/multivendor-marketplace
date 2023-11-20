@@ -108,12 +108,6 @@ class RegisterController extends Controller
         return auth('customer');
     }
 
-    public function getEmailConfirmed(Request $request, BaseHttpResponse $response)
-    {
-        return Theme::scope('ecommerce.customers.email-confirmed', [], 'plugins/ecommerce::themes.customers.email-confirmed')
-            ->render();
-    }
-
     public function confirm(int|string $id, Request $request, BaseHttpResponse $response)
     {
         if (! URL::hasValidSignature($request)) {

@@ -93,7 +93,7 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
             'middleware' => [
                 'web',
                 'core',
-                EcommerceHelper::isEnableEmailVerification() ? 'customer' : 'customer.guest',
+                !EcommerceHelper::isEnableEmailVerification() ? 'customer' : 'customer.guest',
             ],
             'as' => 'customer.',
         ], function () {
@@ -102,9 +102,6 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
             Route::get('register/confirm/{user}', 'RegisterController@confirm')
                 ->name('confirm');
         });
-
-        Route::get('register/email-confirmed', 'RegisterController@getEmailConfirmed')
-            ->name('email-confirmed');
 
         Route::group([
             'namespace' => 'Botble\Ecommerce\Http\Controllers\Customers',
@@ -118,6 +115,9 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 'as' => 'overview',
                 'uses' => 'PublicController@getOverview',
             ]);
+
+            Route::get('register/email-confirmed', 'PublicController@getEmailConfirmed')
+                ->name('email-confirmed');
 
             Route::get('edit-account', [
                 'as' => 'edit-account',

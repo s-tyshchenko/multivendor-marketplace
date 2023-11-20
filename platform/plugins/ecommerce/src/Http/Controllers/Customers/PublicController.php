@@ -77,6 +77,13 @@ class PublicController extends Controller
         });
     }
 
+
+    public function getEmailConfirmed(Request $request, BaseHttpResponse $response)
+    {
+        return Theme::scope('ecommerce.customers.email-confirmed', [], 'plugins/ecommerce::themes.customers.email-confirmed')
+            ->render();
+    }
+
     public function getOverview()
     {
         SeoHelper::setTitle(__('Account information'));
