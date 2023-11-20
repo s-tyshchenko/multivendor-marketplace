@@ -109,7 +109,10 @@ class PublicCheckoutController
         }
 
         if (auth('customer')->user()->is_vendor) {
-            auth('customer')->logout();
+            return $response
+                ->setError()
+                ->setNextUrl(url()->previous())
+                ->setMessage(__('You can\'t proceed from vendor\'s account.'));
         }
 
         /*if (! EcommerceHelper::canCheckoutForSubscriptionProducts($products)) {
@@ -600,7 +603,10 @@ class PublicCheckoutController
         }
 
         if (auth('customer')->user()->is_vendor) {
-            auth('customer')->logout();
+            return $response
+                ->setError()
+                ->setNextUrl(url()->previous())
+                ->setMessage(__('You can\'t proceed from vendor\'s account.'));
         }
 
         $products = Cart::instance('cart')->products();
