@@ -33,7 +33,7 @@ class ProductForm extends BaseProductForm
 
         $productId = null;
         $store = Store::query()->where('customer_id', '=', auth('customer')->id())->first();
-        $isFirstProduct = $store && !Product::query()->where('store_id', '=', $store->id)->exists();
+        $isFirstProduct = !($store && Product::query()->where('store_id', '=', $store->id)->exists());
         $tags = null;
 
         if ($this->getModel()) {
@@ -51,6 +51,14 @@ class ProductForm extends BaseProductForm
             ->setFormOption('enctype', 'multipart/form-data')
             ->setValidatorClass(ProductRequest::class)
             ->setActionButtons(MarketplaceHelper::view('vendor-dashboard.forms.actions')->render())
+            ->addMetaBoxes([
+                'attribute-sets' => [
+                    'content' => '',
+                    'before_wrapper' => sprintf('<div class="d-none product-attribute-sets-url" data-url="%s">', route('marketplace.vendor.products.product-attribute-sets')),
+                    'after_wrapper' => '</div>',
+                    'priority' => 3,
+                ],
+            ])
             ->add('name', 'text', [
                 'label' => trans('plugins/ecommerce::products.form.name'),
                 'label_attr' => ['class' => 'text-title-field required'],
