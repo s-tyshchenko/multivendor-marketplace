@@ -8,6 +8,7 @@ use Botble\Base\Facades\BaseHelper;
 use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Ecommerce\Facades\Cart;
 use Botble\Ecommerce\Facades\EcommerceHelper;
+use Botble\Ecommerce\Models\Product;
 use Botble\Ecommerce\Services\Products\GetProductService;
 use Botble\Marketplace\Facades\MarketplaceHelper;
 use Botble\Marketplace\Http\Requests\CheckStoreUrlRequest;
@@ -104,6 +105,12 @@ class PublicStoreController
         $meta->setUrl($store->url);
         $meta->setTitle($store->name);
 
+        $subscription = Product::query()
+            ->where('store_id', '=', $store->id)
+            ->where('price_recurring_interval', '=', 'month')
+            ->where('is_custom', '=', 1)
+            ->first();
+
         SeoHelper::setSeoOpenGraph($meta);
 
         Theme::breadcrumb()
@@ -132,7 +139,7 @@ class PublicStoreController
                 ->setMessage($message);
         }
 
-        return Theme::scope('marketplace.store', compact('store', 'products'), MarketplaceHelper::viewPath('store', false))->render();
+        return Theme::scope('marketplace.store', compact('store', 'products', 'subscription'), MarketplaceHelper::viewPath('store', false))->render();
     }
 
     public function checkStoreUrl(CheckStoreUrlRequest $request, BaseHttpResponse $response)

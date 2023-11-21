@@ -687,32 +687,19 @@ class Cart
 
         $productsInCart = new EloquentCollection();
 
-//        if ($products->count()) {
+        if ($products->count()) {
             foreach ($cartContent as $cartItem) {
-                if ($cartItem->isCustom) {
-                    $productInCart = new CustomProduct([
-                        'id' => $cartItem->id,
-                        'title' => 'Custom product',
-                        'description' => $cartItem->options['note'],
-                        'price_recurring_interval' => null,
-                        'store_id' => $cartItem->options['store']->id
-                    ]);
-
+                $product = $products->firstWhere('id', $cartItem->id);
+                if ($product->original_product->status != BaseStatusEnum::PUBLISHED) {
+                    $this->remove($cartItem->rowId);
+                } else {
+                    $productInCart = clone $product;
                     $productInCart->cartItem = $cartItem;
                     $productsInCart->push($productInCart);
-                } else {
-                    $product = $products->firstWhere('id', $cartItem->id);
-                    if ($product->original_product->status != BaseStatusEnum::PUBLISHED) {
-                        $this->remove($cartItem->rowId);
-                    } else {
-                        $productInCart = clone $product;
-                        $productInCart->cartItem = $cartItem;
-                        $productsInCart->push($productInCart);
-                        $weight += $product->weight * $cartItem->qty;
-                    }
+                    $weight += $product->weight * $cartItem->qty;
                 }
             }
-//        }
+        }
 
         $weight = EcommerceHelper::validateOrderWeight($weight);
 

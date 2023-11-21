@@ -241,6 +241,11 @@ Route::group([
                     'as' => 'cancel',
                     'uses' => 'SubscriptionController@getCancelSubscription',
                 ]);
+
+                Route::get('create-subscription', [
+                    'as' => 'create',
+                    'uses' => 'SubscriptionController@getCreateSubscription',
+                ]);
             });
 
             Route::group(['prefix' => 'order-returns', 'as' => 'order-returns.'], function () {

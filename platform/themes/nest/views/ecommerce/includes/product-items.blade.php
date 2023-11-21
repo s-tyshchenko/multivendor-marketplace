@@ -21,9 +21,11 @@
 
 <div class="row product-grid">
     @forelse ($products as $product)
+        @if (!$product->is_custom)
         <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-12 col-sm-6">
             @include(Theme::getThemeNamespace() . '::views.ecommerce.includes.product-item', compact('product'))
         </div>
+        @endif
     @empty
         <div class="mt__60 mb__60 text-center">
             <p>{{ __('No products found!') }}</p>

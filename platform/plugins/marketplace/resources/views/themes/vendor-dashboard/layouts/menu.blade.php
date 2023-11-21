@@ -26,6 +26,13 @@
             'name' => __('Subscriptions'),
             'routes' => ['marketplace.vendor.subscriptions.edit'],
             'order' => 3,
+        ],
+        [
+            'key' => 'marketplace.vendor.subscriptions.create',
+            'icon' => 'icon-credit-card',
+            'name' => __('Create subscription'),
+            'routes' => ['marketplace.vendor.subscriptions.create'],
+            'order' => 3,
         ]
     ]);
 

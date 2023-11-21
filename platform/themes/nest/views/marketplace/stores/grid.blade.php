@@ -52,6 +52,14 @@
                 <div class="vendor-des">
                     <button type="button" data-toggle="modal" data-target="#create-custom-order-modal"
                             class="btn btn-primary">{{ __('Custom order') }}</button>
+                    @if ($subscription)
+                    <a
+                        class="btn btn-rounded btn-sm add-to-cart-button"
+                        data-id="{{ $subscription->id }}"
+                        data-url="{{ route('public.cart.add-to-cart') }}"
+                        href="#"
+                    >{{ __('Subscribe') }}</a>
+                    @endif
                 </div>
 
                 <div class="vendor-des mb-30">

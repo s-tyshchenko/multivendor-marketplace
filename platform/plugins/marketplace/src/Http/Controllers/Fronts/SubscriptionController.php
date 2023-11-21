@@ -19,12 +19,15 @@ use Botble\Ecommerce\Models\Order;
 use Botble\Ecommerce\Models\OrderAddress;
 use Botble\Ecommerce\Models\OrderHistory;
 use Botble\Marketplace\Facades\MarketplaceHelper;
+use Botble\Marketplace\Forms\ProductForm;
+use Botble\Marketplace\Forms\SubscriptionForm;
 use Botble\Marketplace\Tables\OrderTable;
 use Botble\Payment\Models\Payment;
 use Botble\SeoHelper\Facades\SeoHelper;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Kris\LaravelFormBuilder\FormBuilder;
 use Stripe\Customer;
 use Stripe\Invoice;
 use Stripe\Product;
@@ -105,4 +108,33 @@ class SubscriptionController extends BaseController
 
         return $response->setNextUrl(route('marketplace.vendor.subscriptions.view', ['id' => $id]));
     }
+
+    public function getCreateSubscription(FormBuilder $formBuilder)
+    {
+        $store = auth('customer')->user()->store;
+        $subscription = \Botble\Ecommerce\Models\Product::query()
+            ->where('store_id', '=', $store->id)
+            ->where('price_recurring_interval', '=', 'month')
+            ->where('is_custom', '=', 1)
+            ->firstOrNew([
+                'name' => 'Subscription',
+                'is_custom' => 1,
+                'price_recurring_interval' => 'month',
+                'sale_type' => 0,
+                'store_id' => $store->id
+            ]);
+
+        $subscription->save();
+
+        PageTitle::setTitle(trans('plugins/ecommerce::products.edit', ['name' => $subscription->name]));
+
+        $route = !$subscription->id ?
+            route('marketplace.vendor.products.create') :
+            route('marketplace.vendor.products.edit', $subscription->id);
+
+        return $formBuilder
+            ->create(SubscriptionForm::class, ['url' => $route, 'model' => $subscription])
+            ->renderForm();
+    }
+
 }

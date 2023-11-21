@@ -374,7 +374,6 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
         $this->model = $this->model
             ->distinct()
             ->wherePublished()
-            ->where('is_custom', '=', 0)
             ->join(DB::raw('
                 (
                     SELECT DISTINCT
