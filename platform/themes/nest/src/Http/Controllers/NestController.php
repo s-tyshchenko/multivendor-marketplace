@@ -57,6 +57,7 @@ class NestController extends PublicController
             'condition' => [
                 'ec_products.id' => $id,
                 'ec_products.status' => BaseStatusEnum::PUBLISHED,
+                'ec_products.is_custom' => 0
             ],
             'take' => 1,
             'with' => [

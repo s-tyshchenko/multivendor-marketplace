@@ -42,6 +42,7 @@ class PublicStoreController
             $with['reviews'] = function ($query) {
                 $query->where([
                     'ec_products.status' => BaseStatusEnum::PUBLISHED,
+                    'ec_products.is_custom' => 0,
                     'ec_reviews.status' => BaseStatusEnum::PUBLISHED,
                 ]);
             };

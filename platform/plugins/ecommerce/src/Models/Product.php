@@ -40,6 +40,7 @@ class Product extends BaseModel
         'name',
         'description',
         'content',
+        'product_type',
         'image', // Featured image
         'images',
         'sku',
@@ -66,7 +67,8 @@ class Product extends BaseModel
         'barcode',
         'cost_per_item',
         'generate_license_code',
-        'store_id'
+        'store_id',
+        'is_custom'
     ];
 
     protected $appends = [

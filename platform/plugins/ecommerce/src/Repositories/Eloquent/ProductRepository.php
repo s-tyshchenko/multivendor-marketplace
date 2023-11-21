@@ -70,6 +70,7 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
         $params = array_merge([
             'condition' => [
                 'is_variation' => 0,
+                'is_custom' => 0
             ],
             'order_by' => [
                 'order' => 'ASC',
@@ -126,6 +127,7 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
         $params = array_merge([
             'condition' => [
                 'is_variation' => 0,
+                'is_custom' => 0
             ],
             'order_by' => [
                 'order' => 'ASC',
@@ -347,6 +349,7 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
         $params = array_merge([
             'condition' => [
                 'ec_products.is_variation' => 0,
+                'ec_products.is_custom' => 0
             ],
             'order_by' => Arr::get($filters, 'order_by'),
             'take' => null,
@@ -371,6 +374,7 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
         $this->model = $this->model
             ->distinct()
             ->wherePublished()
+            ->where('is_custom', '=', 0)
             ->join(DB::raw('
                 (
                     SELECT DISTINCT
@@ -649,6 +653,7 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
             'condition' => [
                 'ec_products.status' => BaseStatusEnum::PUBLISHED,
                 'ec_products.is_variation' => 0,
+                'ec_products.is_custom' => 0
             ],
             'paginate' => [
                 'per_page' => null,
@@ -678,6 +683,7 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
             'condition' => [
                 'ec_products.status' => BaseStatusEnum::PUBLISHED,
                 'ec_products.is_variation' => 0,
+                'ec_products.is_custom' => 0
             ],
             'paginate' => [
                 'per_page' => null,
@@ -703,6 +709,7 @@ class ProductRepository extends RepositoriesAbstract implements ProductInterface
             'condition' => [
                 'ec_products.status' => BaseStatusEnum::PUBLISHED,
                 'ec_products.is_variation' => 0,
+                'ec_products.is_custom' => 0
             ],
             'paginate' => [
                 'per_page' => null,

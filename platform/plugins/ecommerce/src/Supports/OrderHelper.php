@@ -3,12 +3,14 @@
 namespace Botble\Ecommerce\Supports;
 
 use Barryvdh\DomPDF\PDF as PDFHelper;
+use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Facades\BaseHelper;
 use Botble\Base\Facades\EmailHandler;
 use Botble\Base\Facades\Html;
 use Botble\Base\Supports\EmailHandler as EmailHandlerSupport;
 use Botble\Ecommerce\Enums\OrderAddressTypeEnum;
 use Botble\Ecommerce\Enums\OrderStatusEnum;
+use Botble\Ecommerce\Enums\ProductTypeEnum;
 use Botble\Ecommerce\Enums\ShippingMethodEnum;
 use Botble\Ecommerce\Events\OrderCancelledEvent;
 use Botble\Ecommerce\Events\OrderCompletedEvent;
@@ -23,6 +25,7 @@ use Botble\Ecommerce\Facades\InvoiceHelper as InvoiceHelperFacade;
 use Botble\Ecommerce\Http\Requests\CheckoutRequest;
 use Botble\Ecommerce\Http\Requests\CustomCartRequest;
 use Botble\Ecommerce\Models\Address;
+use Botble\Ecommerce\Models\Customer;
 use Botble\Ecommerce\Models\Option;
 use Botble\Ecommerce\Models\OptionValue;
 use Botble\Ecommerce\Models\Order;
@@ -33,6 +36,7 @@ use Botble\Ecommerce\Models\Product;
 use Botble\Ecommerce\Models\Shipment;
 use Botble\Ecommerce\Models\ShipmentHistory;
 use Botble\Ecommerce\Models\ShippingRule;
+use Botble\Ecommerce\Services\Products\StoreProductService;
 use Botble\Marketplace\Models\Store;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Botble\Payment\Enums\PaymentStatusEnum;
@@ -493,20 +497,24 @@ class OrderHelper
 
     public function handleAddCustomCart(CustomCartRequest $request): array
     {
-        Cart::instance('cart')->add(
-            time(),
-            'Custom order',
-            $request->input('qty', 1),
-            $request->price,
-            [
-                'image' => null,
-                'store' => Store::query()->where('customer_id', '=', $request->vendor_id)->first(),
-                'note' => $request->input('note')
-            ],
-            true
-        );
+        $store = Store::query()->where('customer_id', '=', $request->input('vendor_id'))->firstOrFail();
 
-        return Cart::instance('cart')->content()->toArray();
+        $product = new Product([
+            'name' => 'Custom Product',
+            'description' => $request->input('note'),
+            'price' => $request->input('price'),
+            'store_id' => $store->id,
+            'product_type' => ProductTypeEnum::DIGITAL,
+            'is_custom' => true
+        ]);
+
+        $product->save();
+
+        $product->taxes()->sync([get_ecommerce_setting('default_tax_rate')]);
+
+        $product = (new StoreProductService)->execute($request, $product);
+
+        return $this->handleAddCart($product, $request);
     }
 
     public function handleAddCart(Product $product, Request $request): array

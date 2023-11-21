@@ -328,9 +328,9 @@ class CartItem implements Arrayable, Jsonable
      * @param string $type
      * @return \Botble\Ecommerce\Cart\CartItem
      */
-    public static function fromAttributes($id, $name, $price, array $options = [], $type = 'regular')
+    public static function fromAttributes($id, $name, $price, array $options = [], $isCustom = false)
     {
-        return new self($id, $name, $price, $options, $type);
+        return new self($id, $name, $price, $options, $isCustom);
     }
 
     /**
