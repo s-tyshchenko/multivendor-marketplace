@@ -55,6 +55,8 @@ class PublicCartController extends Controller
             ) ?: collect();
         }
 
+//        die(var_dump($products));
+
         SeoHelper::setTitle(__('Shopping Cart'));
 
         Theme::breadcrumb()->add(__('Home'), route('public.index'))->add(__('Shopping Cart'), route('public.cart'));

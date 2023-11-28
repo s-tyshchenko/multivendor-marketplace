@@ -135,6 +135,13 @@ class ProductController extends BaseController
                 ->sendUsingTemplate('pending-product-approval');
         }
 
+        if ($product->is_custom && $product->price_recurring_interval !== null) {
+            return $response
+                ->setPreviousUrl(route('marketplace.vendor.subscriptions.index'))
+                ->setNextUrl(route('marketplace.vendor.subscriptions.edit', $product->getKey()))
+                ->setMessage(trans('core/base::notices.create_success_message'));
+        }
+
         return $response
             ->setPreviousUrl(route('marketplace.vendor.products.index'))
             ->setNextUrl(route('marketplace.vendor.products.edit', $product->getKey()))
@@ -230,6 +237,12 @@ class ProductController extends BaseController
                     'qty' => 1,
                 ];
             }, array_filter(explode(',', $request->input('grouped_products', '')))));
+        }
+
+        if ($product->is_custom && $product->price_recurring_interval !== null) {
+            return $response
+                ->setPreviousUrl(route('marketplace.vendor.subscriptions.index'))
+                ->setMessage(trans('core/base::notices.create_success_message'));
         }
 
         return $response

@@ -30,6 +30,12 @@
                     <strong class="text-info">{{ $customer->name }}</strong>
                 </p>
                 @endif
+                @if (isset($orderProduct) && !empty($orderProduct))
+                    <p>
+                        <span class="d-inline-block me-1">{{ __('Note') }}: </span>
+                        <strong class="text-info">{{ $orderProduct->options['note'] ?? '' }}</strong>
+                    </p>
+                @endif
                 <p>
                     <span class="d-inline-block me-1">{{ __('Product') }}: </span>
                     <strong class="text-info">{{ $product->name }}</strong>

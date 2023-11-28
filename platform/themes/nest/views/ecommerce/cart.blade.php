@@ -55,6 +55,11 @@
                                                         </small>
                                                     </p>
                                                 @endif
+                                                    @if ($product->cartItem->options['note'])
+                                                        <p class="mb-0">
+                                                            <span class="text-muted">{{ $product->cartItem->options['note'] }}</span>
+                                                        </p>
+                                                    @endif
                                                 <p class="mb-0">
                                                     <small>{{ Arr::get($cartItem->options, 'attributes') }}</small>
                                                 </p>

@@ -543,6 +543,7 @@ class OrderHelper
                 'extras' => $request->input('extras', []),
                 'sku' => $product->sku,
                 'weight' => $product->weight,
+                'note' => $request->input('note')
             ]
         );
 

@@ -97,7 +97,6 @@
                                                                             <span
                                                                                 class="text-muted">{{ $cartItem->options['attributes'] ?? '' }}</span>
                                                                         </p>
-
                                                                         @if (!empty($cartItem->options['options']))
                                                                             {!! render_product_options_html(
                                                                                 $cartItem->options['options'],

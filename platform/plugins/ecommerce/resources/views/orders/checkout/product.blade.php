@@ -21,14 +21,14 @@
             <p class="mb-0">
                 <small>{{ $product->variation_attributes }}</small>
             </p>
-        @else
-            <p class="mb-0">Custom order</p>
-            @if ($cartItem->options['note'])
-            <p class="mb-0">
-                <small>{{ $cartItem->options['note'] }}</small>
-            </p>
-            @endif
         @endif
+
+            @if ($cartItem->options['note'])
+                <p class="mb-0">Note</p>
+                <p class="mb-0">
+                    <small>{{ $cartItem->options['note'] }}</small>
+                </p>
+            @endif
 
         @include('plugins/ecommerce::themes.includes.cart-item-options-extras', [
             'options' => $cartItem->options,

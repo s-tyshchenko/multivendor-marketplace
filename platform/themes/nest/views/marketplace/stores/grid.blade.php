@@ -46,19 +46,16 @@
                 <div class="product-category">
                     <span class="text-muted">{{ __('Since :year', ['year' => $store->created_at->year]) }}</span>
                 </div>
-                <h4 class="mb-5"><a href="{{ $store->url }}"
-                                    class="text-heading">{!! BaseHelper::clean($store->name) !!}</a></h4>
+                <h4 class="mb-5"><a href="{{ $store->url }}" class="text-heading">{!! BaseHelper::clean($store->name) !!}</a></h4>
 
                 <div class="vendor-des">
                     <button type="button" data-toggle="modal" data-target="#create-custom-order-modal"
                             class="btn btn-primary">{{ __('Custom order') }}</button>
                     @if ($subscription)
-                    <a
+                    <button
+                        data-toggle="modal" data-target="#create-custom-subscription-modal"
                         class="btn btn-rounded btn-sm add-to-cart-button"
-                        data-id="{{ $subscription->id }}"
-                        data-url="{{ route('public.cart.add-to-cart') }}"
-                        href="#"
-                    >{{ __('Subscribe') }}</a>
+                    >{{ __('Subscribe') }}</button>
                     @endif
                 </div>
 

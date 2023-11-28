@@ -349,6 +349,7 @@ class PublicController extends Controller
         if (isset($subscription->metadata['order_id'])) {
             $orderId = json_decode($subscription->metadata['order_id']);
             $order = Order::query()->where('id', '=', $orderId[0])->firstOrFail();
+            $orderProduct = OrderProduct::query()->where('order_id', '=', $orderId[0])->firstOrFail();
         }
 
         SeoHelper::setTitle(__('Subscription details - :name', ['name' => $product->name]));
@@ -361,7 +362,7 @@ class PublicController extends Controller
 
         return Theme::scope(
             'ecommerce.customers.subscriptions.view',
-            compact('subscription', 'product', 'invoices', 'store', 'order'),
+            compact('subscription', 'product', 'invoices', 'store', 'order', 'orderProduct'),
             'plugins/ecommerce::themes.customers.subscriptions.view'
         )->render();
 

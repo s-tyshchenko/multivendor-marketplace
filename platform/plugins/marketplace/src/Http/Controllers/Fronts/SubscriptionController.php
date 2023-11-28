@@ -18,6 +18,7 @@ use Botble\Ecommerce\Http\Requests\UpdateOrderRequest;
 use Botble\Ecommerce\Models\Order;
 use Botble\Ecommerce\Models\OrderAddress;
 use Botble\Ecommerce\Models\OrderHistory;
+use Botble\Ecommerce\Models\OrderProduct;
 use Botble\Marketplace\Facades\MarketplaceHelper;
 use Botble\Marketplace\Forms\ProductForm;
 use Botble\Marketplace\Forms\SubscriptionForm;
@@ -91,11 +92,12 @@ class SubscriptionController extends BaseController
         if (isset($subscription->metadata['order_id'])) {
             $orderId = json_decode($subscription->metadata['order_id']);
             $order = Order::query()->where('id', '=', $orderId[0])->firstOrFail();
+            $orderProduct = OrderProduct::query()->where('order_id', '=', $orderId[0])->firstOrFail();
         }
 
         SeoHelper::setTitle(__('Subscription details - :name', ['name' => $product->name]));
 
-        return MarketplaceHelper::view('vendor-dashboard.subscriptions.view', compact('subscription', 'customer', 'product', 'invoices', 'order'));
+        return MarketplaceHelper::view('vendor-dashboard.subscriptions.view', compact('subscription', 'customer', 'product', 'invoices', 'order', 'orderProduct'));
     }
 
 

@@ -42,7 +42,6 @@ class SubscriptionForm extends BaseProductForm
             ->setupModel(new Product())
             ->withCustomFields()
             ->addCustomField('customEditor', CustomEditorField::class)
-            ->addCustomField('customImages', CustomImagesField::class)
             ->addCustomField('multiCheckList', MultiCheckListField::class)
             ->addCustomField('tags', TagField::class)
             ->setFormOption('template', MarketplaceHelper::viewPath('vendor-dashboard.forms.base'))
@@ -59,10 +58,6 @@ class SubscriptionForm extends BaseProductForm
                     'placeholder' => trans('core/base::forms.description_placeholder'),
                     'data-counter' => 1000,
                 ],
-            ])
-            ->add('images', 'customImages', [
-                'label' => trans('plugins/ecommerce::products.form.image'),
-                'values' => $productId ? $this->getModel()->images : [],
             ])
             ->add('product_type', 'hidden', [
                 'value' => ProductTypeEnum::DIGITAL,
