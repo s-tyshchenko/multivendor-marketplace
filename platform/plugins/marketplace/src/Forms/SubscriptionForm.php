@@ -51,6 +51,11 @@ class SubscriptionForm extends BaseProductForm
             ->add('name', 'hidden', [
                 'label' => trans('core/base::forms.name'),
             ])
+            ->add('status', 'customSelect', [
+                'label' => trans('core/base::tables.status'),
+                'required' => true,
+                'choices' => ["published"=> "Active", "draft" => "Inactive"]
+            ])
             ->add('description', 'textarea', [
                 'label' => trans('core/base::forms.description'),
                 'attr' => [

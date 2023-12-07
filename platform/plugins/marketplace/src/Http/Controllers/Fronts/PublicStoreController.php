@@ -109,6 +109,7 @@ class PublicStoreController
             ->where('store_id', '=', $store->id)
             ->where('price_recurring_interval', '=', 'month')
             ->where('is_custom', '=', 1)
+            ->where('status', '=', BaseStatusEnum::PUBLISHED())
             ->first();
 
         SeoHelper::setSeoOpenGraph($meta);

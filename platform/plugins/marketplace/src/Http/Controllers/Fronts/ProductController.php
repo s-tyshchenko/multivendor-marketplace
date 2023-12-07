@@ -60,7 +60,8 @@ class ProductController extends BaseController
         BaseHttpResponse $response,
         StoreAttributesOfProductService $storeAttributesOfProductService,
         StoreProductTagService $storeProductTagService
-    ) {
+    )
+    {
         $request = $this->processRequestData($request);
 
         $product = new Product();
@@ -169,7 +170,8 @@ class ProductController extends BaseController
         StoreProductService $service,
         BaseHttpResponse $response,
         StoreProductTagService $storeProductTagService
-    ) {
+    )
+    {
         $product = Product::query()->findOrFail($id);
 
         if ($product->is_variation || $product->store_id != auth('customer')->user()->store->id) {
@@ -261,7 +263,6 @@ class ProductController extends BaseController
 
         $except = [
             'is_featured',
-            'status',
         ];
 
         foreach ($except as $item) {
@@ -293,7 +294,8 @@ class ProductController extends BaseController
         ProductVersionRequest $request,
         int|string $id,
         BaseHttpResponse $response
-    ) {
+    )
+    {
         $request->merge([
             'images' => array_filter((array)$request->input('images', [])),
         ]);
@@ -305,7 +307,8 @@ class ProductController extends BaseController
         ProductVersionRequest $request,
         $id,
         BaseHttpResponse $response
-    ) {
+    )
+    {
         $request->merge([
             'images' => array_filter((array)$request->input('images', [])),
         ]);
@@ -352,7 +355,7 @@ class ProductController extends BaseController
 
         $product = $variation->product()->first();
 
-        if (! $product || $product->original_product->store_id != auth('customer')->user()->store->id) {
+        if (!$product || $product->original_product->store_id != auth('customer')->user()->store->id) {
             abort(404);
         }
 
@@ -362,7 +365,8 @@ class ProductController extends BaseController
     public function deleteVersions(
         Request $request,
         BaseHttpResponse $response
-    ) {
+    )
+    {
         $ids = (array)$request->input('ids');
 
         if (empty($ids)) {
@@ -382,7 +386,7 @@ class ProductController extends BaseController
         foreach ($variations as $variation) {
             $product = $variation->product;
 
-            if (! $product || $product->original_product->store_id != auth('customer')->user()->store->id) {
+            if (!$product || $product->original_product->store_id != auth('customer')->user()->store->id) {
                 abort(404);
             }
         }
@@ -420,7 +424,8 @@ class ProductController extends BaseController
     public function ajaxProductOptionInfo(
         Request $request,
         BaseHttpResponse $response,
-    ): BaseHttpResponse {
+    ): BaseHttpResponse
+    {
         $optionsValues = GlobalOption::query()->with(['values'])->findOrFail($request->input('id'));
 
         return $response->setData($optionsValues);
