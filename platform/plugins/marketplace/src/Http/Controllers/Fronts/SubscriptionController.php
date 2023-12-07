@@ -88,6 +88,7 @@ class SubscriptionController extends BaseController
         $customer = Customer::retrieve($subscription->customer, $options);
 
         $order = null;
+        $orderProduct = null;
 
         if (isset($subscription->metadata['order_id'])) {
             $orderId = json_decode($subscription->metadata['order_id']);

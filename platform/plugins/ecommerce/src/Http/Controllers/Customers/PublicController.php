@@ -336,6 +336,7 @@ class PublicController extends Controller
         $store = null;
         $order = null;
         $options = [];
+        $orderProduct = null;
 
         if ($vendor_id) {
             $store = Store::query()->where('customer_id', '=', $vendor_id)->first();
